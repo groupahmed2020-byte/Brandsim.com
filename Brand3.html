@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>براند سيم - Brand SIM</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+        
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: #0d1b2a; 
+            color: #ffffff; 
+            padding: 15px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 25px 10px;
+            background: linear-gradient(135deg, #1b263b, #415a77);
+            color: #ffffff;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            border: 1px solid #778da9;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            color: #e0e1dd;
+        }
+
+        .section-card {
+            background: #1b263b; 
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 1px solid #415a77;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: #e0e1dd;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #778da9;
+            display: inline-block;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: #e0e1dd;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #415a77;
+            border-radius: 8px;
+            font-size: 1rem;
+            background-color: #0d1b2a;
+            color: #ffffff;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #778da9;
+        }
+
+        select option {
+            background-color: #0d1b2a;
+            color: #ffffff;
+        }
+
+        .price-display {
+            background-color: #415a77;
+            border: 1px dashed #778da9;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #ffffff;
+            font-size: 1.1rem;
+        }
+
+        .price-number {
+            color: #e0e1dd;
+            font-size: 1.4rem;
+            display: block;
+            margin-top: 5px;
+            font-weight: 700;
+        }
+
+        .whatsapp-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #25d366;
+            color: white;
+            text-decoration: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .whatsapp-btn svg {
+            width: 24px;
+            height: 24px;
+            margin-left: 10px;
+            fill: white;
+        }
+
+        /* تنسيقات لوحة تحكم الأدمن */
+        .admin-section {
+            display: none; 
+            background: #112233;
+            border: 2px solid #e74c3c;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .admin-table th, .admin-table td {
+            border: 1px solid #415a77;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .admin-table th {
+            background-color: #1b263b;
+            color: #e0e1dd;
+        }
+
+        .admin-input {
+            width: 100%;
+            padding: 6px;
+            background: #0d1b2a;
+            border: 1px solid #778da9;
+            color: #fff;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .save-btn {
+            background-color: #e74c3c;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            width: 100%;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        .password-box {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 2px dashed #415a77;
+        }
+
+        .admin-toggle-btn {
+            background: none;
+            border: 1px solid #415a77;
+            color: #778da9;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 0.8rem;
+            color: #778da9;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- صفحة الزبون الرئيسية -->
+        <div id="customer-page">
+            <header>
+                <h1>براند سيم | Brand SIM</h1>
+                <p>أفضل خيارات الشريحة والاشتراكات بين يديك</p>
+            </header>
+
+            <!-- 1. قسم الفيزيكال -->
+            <div class="section-card">
+                <h2 class="section-title">قسم الفيزيكال (Physical SIM)</h2>
+                
+                <div class="form-group">
+                    <label>اختر المنطقة:</label>
+                    <select id="physical-region" class="form-control">
+                        <option value="">-- اختر المنطقة --</option>
+                        <option value="غزة">غزة</option>
+                        <option value="خانيونس">خانيونس</option>
+                        <option value="الشيخ رضوان">الشيخ رضوان</option>
+                        <option value="جباليا">جباليا</option>
+                        <option value="بيت لاهيا">بيت لاهيا</option>
+                        <option value="دير البلح">دير البلح</option>
+                        <option value="النصيرات">النصيرات</option>
+                        <option value="المغازي">المغازي</option>
+                        <option value="القرارة">القرارة</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>صنف الشريحة:</label>
+                    <select id="physical-company" class="form-control">
+                        <option value="">-- اختر الشركة --</option>
+                        <option value="هوت موبايل">هوت موبايل</option>
+                        <option value="بارتنر">بارتنر</option>
+                        <option value="بيليفون">بيليفون</option>
+                        <option value="رامي ليفي">رامي ليفي</option>
+                        <option value="019">019</option>
+                        <option value="الوها">الوها</option>
+                        <option value="سيلكوم">سيلكوم</option>
+                        <option value="ويكوم">ويكوم</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>مدة الاشتراك:</label>
+                    <select id="physical-duration" class="form-control">
+                        <option value="">-- اختر المدة --</option>
+                        <option value="شهر واحد">اشتراك شهر</option>
+                        <option value="3 شهور">اشتراك 3 شهور</option>
+                    </select>
+                </div>
+
+                <div class="price-display">
+                    حالة الطلب: 
+                    <span class="price-number" id="physical-price-text">يرجى تحديد الاختيارات أعلاه</span>
+                </div>
+
+                <button class="whatsapp-btn" onclick="sendPhysicalOrder()">
+                    <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.503-5.713-1.458L0 24zm6.59-2.531c1.558.925 3.31 1.414 5.399 1.417 5.483.002 9.944-4.461 9.947-9.95.002-2.661-1.025-5.163-2.89-7.03-1.866-1.867-4.35-2.895-7.012-2.896-5.488 0-9.954 4.465-9.957 9.954-.001 2.056.522 4.061 1.514 5.825L1.314 22.22l4.433-1.162zM17.7 15.35c-.302-.151-1.791-.882-2.073-.984-.283-.103-.489-.151-.69.151-.201.303-.78.984-.956 1.186-.176.201-.353.227-.655.075-1.2-.6-2.155-1.047-3.013-2.51-.225-.384.225-.357.643-1.196.075-.151.038-.283-.019-.395-.056-.113-.489-1.181-.67-1.615-.176-.424-.37-.365-.507-.365h-.433c-.151 0-.395.056-.602.283-.207.227-.79.771-.79 1.881 0 1.11.806 2.182.918 2.333.113.151 1.584 2.418 3.839 3.393.536.232.954.37 1.28.474.538.172 1.027.147 1.413.09.431-.064 1.791-.733 2.043-1.442.253-.709.253-1.314.177-1.442-.077-.128-.283-.204-.585-.356z"/></svg>
+                    أرسل الطلب عبر واتساب
+                </button>
+            </div>
+
+            <!-- 2. قسم الإلكتروني -->
+            <div class="section-card">
+                <h2 class="section-title">قسم الإلكتروني (eSIM)</h2>
+                
+                <div class="form-group">
+                    <label>صنف الشريحة:</label>
+                    <select id="digital-company" class="form-control" onchange="calculateDigitalPrice()">
+                        <option value="">-- اختر الشركة --</option>
+                        <option value="hot">هوت موبايل</option>
+                        <option value="partner">بارتنر</option>
+                        <option value="pelephone">بيليفون</option>
+                        <option value="rami">رامي ليفي</option>
+                        <option value="019">019</option>
+                        <option value="aloha">الوها</option>
+                        <option value="cellcom">سيلكوم</option>
+                        <option value="wecom">ويكوم</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>مدة الاشتراك:</label>
+                    <select id="digital-duration" class="form-control" onchange="calculateDigitalPrice()">
+                        <option value="">-- اختر المدة --</option>
+                        <option value="1">اشتراك شهري</option>
+                        <option value="3">اشتراك 3 شهور</option>
+                    </select>
+                </div>
+
+                <div class="price-display">
+                    السعر الفوري: 
+                    <span class="price-number" id="digital-price-text">يرجى تحديد الاختيارات أعلاه</span>
+                </div>
+
+                <button class="whatsapp-btn" onclick="sendDigitalOrder()">
+                    <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.503-5.713-1.458L0 24zm6.59-2.531c1.558.925 3.31 1.414 5.399 1.417 5.483.002 9.944-4.461 9.947-9.95.002-2.661-1.025-5.163-2.89-7.03-1.866-1.867-4.35-2.895-7.012-2.896-5.488 0-9.954 4.465-9.957 9.954-.001 2.056.522 4.061 1.514 5.825L1.314 22.22l4.433-1.162zM17.7 15.35c-.302-.151-1.791-.882-2.073-.984-.283-.103-.489-.151-.69.151-.201.303-.78.984-.956 1.186-.176.201-.353.227-.655.075-1.2-.6-2.155-1.047-3.013-2.51-.225-.384.225-.357.643-1.196.075-.151.038-.283-.019-.395-.056-.113-.489-1.181-.67-1.615-.176-.424-.37-.365-.507-.365h-.433c-.151 0-.395.056-.602.283-.207.227-.79.771-.79 1.881 0 1.11.806 2.182.918 2.333.113.151 1.584 2.418 3.839 3.393.536.232.954.37 1.28.474.538.172 1.027.147 1.413.09.431-.064 1.791-.733 2.043-1.442.253-.709.253-1.314.177-1.442-.077-.128-.283-.204-.585-.356z"/></svg>
+                    أرسل الطلب عبر واتساب
+                </button>
+            </div>
+        </div>
+
+        <!-- 3. لوحة تحكم الأدمن الخفية -->
+        <div id="admin-page" class="section-card admin-section">
+            <h2 class="section-title" style="border-bottom-color: #e74c3c;">لوحة تحكم المدير (Admin Dashboard)</h2>
+            <p style="font-size: 0.85rem; color: #ff6b6b; margin-bottom: 10px;">يمكنك تعديل الأسعار الفورية هنا أولاً:</p>
+            
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>الشركة</th>
+                        <th>سعر شهر</th>
+                        <th>سعر 3 شهور</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-table-body">
+                    <!-- سيتم البناء هنا بالجاوا سكريبت -->
+                </tbody>
+            </table>
+            
+            <button class="save-btn" onclick="saveAdminPrices()">حفظ الأسعار وتحديث الموقع</button>
+
+            <!-- 🛠️ صندوق تعديل كلمة المرور الجديد 🛠️ -->
+            <div class="password-box">
+                <h3 style="font-size: 1.1rem; color: #e0e1dd; margin-bottom: 10px;">🔐 تعديل كلمة مرور لوحة التحكم:</h3>
+                <div class="form-group">
+                    <label>كلمة المرور الجديدة:</label>
+                    <input type="text" id="new-admin-password" class="form-control" placeholder="اكتب الباسورد الجديد هنا">
+                </div>
+                <button class="save-btn" style="background-color: #3498db;" onclick="changeAdminPassword()">تحديث كلمة المرور</button>
+            </div>
+            
+            <hr style="border: none; border-top: 1px solid #415a77; margin: 20px 0;">
+            <button class="save-btn" style="background-color: #7f8c8d;" onclick="closeAdmin()">إغلاق لوحة التحكم</button>
+        </div>
+
+        <!-- تذييل وزر الدخول للأدمن -->
+        <footer>
+            <p>&copy; 2026 براند سيم - جميع الحقوق محفوظة</p>
+            <button class="admin-toggle-btn" onclick="loginAdmin()">دخول لوحة التحكم 🔐</button>
+        </footer>
+
+    </div>
+
+    <script>
+        // قاعدة البيانات الأساسية
+        let digitalPrices = {
+            hot: { name: "هوت موبايل", 1: "50 شيكل", 3: "120 شيكل" },
+            partner: { name: "بارتنر", 1: "50 شيكل", 3: "غير متوفر" },
+            pelephone: { name: "بيليفون", 1: "60 شيكل", 3: "120 شيكل" },
+            rami: { name: "رامي ليفي", 1: "60 شيكل", 3: "120 شيكل" },
+            "019": { name: "019", 1: "60 شيكل", 3: "150 شيكل" },
+            aloha: { name: "الوها", 1: "50 شيكل", 3: "130 شيكل" },
+            cellcom: { name: "سيلكوم", 1: "60 شيكل", 3: "100 شيكل" },
+            wecom: { name: "ويكوم", 1: "50 شيكل", 3: "120 شيكل" }
+        };
+
+        const whatsappNumber = "00972599783984";
+        
+        // متغير كلمة السر يبدأ بالقيمة الافتراضية
+        let adminPassword = "admin123"; 
+
+        function calculateDigitalPrice() {
+            const company = document.getElementById('digital-company').value;
+            const duration = document.getElementById('digital-duration').value;
+            const priceText = document.getElementById('digital-price-text');
+
+            if (company && duration) {
+                const price = digitalPrices[company][duration];
+                priceText.innerText = price;
+            } else {
+                priceText.innerText = "يرجى تحديد الاختيارات أعلاه";
+            }
+        }
+
+        document.querySelectorAll('#physical-region, #physical-company, #physical-duration').forEach(element => {
+            element.addEventListener('change', () => {
+                const region = document.getElementById('physical-region').value;
+                const company = document.getElementById('physical-company').value;
+                const duration = document.getElementById('physical-duration').value;
+                const physicalPriceText = document.getElementById('physical-price-text');
+
+                if (region && company && duration) {
+                    physicalPriceText.innerText = "جاهز للإرسال والتأكيد عبر واتساب";
+                } else {
+                    physicalPriceText.innerText = "يرجى تحديد الاختيارات أعلاه";
+                }
+            });
+        });
+
+        function sendPhysicalOrder() {
+            const region = document.getElementById('physical-region').value;
+            const company = document.getElementById('physical-company').value;
+            const duration = document.getElementById('physical-duration').value;
+
+            if (!region || !company || !duration) {
+                alert("يرجى اختيار جميع الحقول أولاً!");
+                return;
+            }
+
+            const text = `مرحبا براند سيم، أريد طلب شريحة فيزيكال:\n📍 المنطقة: ${region}\n📶 الشركة: ${company}\n⏱️ مدة الاشتراك: ${duration}`;
+            window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        function sendDigitalOrder() {
+            const companyKey = document.getElementById('digital-company').value;
+            const durationKey = document.getElementById('digital-duration').value;
+
+            if (!companyKey || !durationKey) {
+                alert("يرجى اختيار جميع الحقول أولاً!");
+                return;
+            }
+
+            const companyName = digitalPrices[companyKey].name;
+            const price = digitalPrices[companyKey][durationKey];
+            const durationText = durationKey === "1" ? "شهر واحد" : "3 شهور";
+
+            if (price === "غير متوفر") {
+                alert("عذراً، هذا العرض غير متوفر حالياً!");
+                return;
+            }
+
+            const text = `مرحبا براند سيم، أريد طلب شريحة إلكترونية (eSIM):\n📶 الشركة: ${companyName}\n⏱️ مدة الاشتراك: ${durationText}\n💰 السعر: ${price}`;
+            window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        // ووظائف الإدارة وتغيير كلمة السر
+        function loginAdmin() {
+            const pass = prompt("الرجاء إدخال كلمة مرور الإدارة الحالية للوصول:");
+            if (pass === adminPassword) {
+                buildAdminTable();
+                document.getElementById('admin-page').style.display = "block";
+                document.getElementById('admin-page').scrollIntoView({ behavior: 'smooth' });
+            } else if (pass !== null) {
+                alert("كلمة المرور خاطئة!");
+            }
+        }
+
+        function buildAdminTable() {
+            const tbody = document.getElementById('admin-table-body');
+            tbody.innerHTML = "";
+            for (let key in digitalPrices) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${digitalPrices[key].name}</strong></td>
+                    <td><input type="text" class="admin-input" id="p-${key}-1" value="${digitalPrices[key][1]}"></td>
+                    <td><input type="text" class="admin-input" id="p-${key}-3" value="${digitalPrices[key][3]}"></td>
+                `;
+                tbody.appendChild(tr);
+            }
+        }
+
+        function saveAdminPrices() {
+            for (let key in digitalPrices) {
+                digitalPrices[key][1] = document.getElementById(`p-${key}-1`).value;
+                digitalPrices[key][3] = document.getElementById(`p-${key}-3`).value;
+            }
+            alert("تم حفظ الأسعار الجديدة بنجاح!");
+            calculateDigitalPrice();
+        }
+
+        // دالة تغيير كلمة المرور للمشرف
+        function changeAdminPassword() {
+            const newPass = document.getElementById('new-admin-password').value.trim();
+            if (newPass === "") {
+                alert("الرجاء كتابة كلمة مرور صالحة وغير فارغة!");
+                return;
+            }
+            adminPassword = newPass; // تحديث المتغير
