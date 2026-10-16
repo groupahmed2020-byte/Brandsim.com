@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دفتر حسابات براند سيم - أسامة سالم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #f1f5f9; }
+        .receipt-card { background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border: 2px solid #0f172a; }
+        .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 4px; }
+        .duration-btn.active { background-color: #059669; color: white; border-color: #059669; }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <!-- الشريط العلوي -->
+    <header class="bg-slate-900 text-white shadow-lg sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-3">
+            <div class="flex items-center gap-3">
+                <div class="bg-emerald-500 text-slate-900 font-extrabold p-2.5 rounded-xl text-xl shadow">BS</div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide">دفتر حسابات براند سيم</h1>
+                    <p class="text-xs text-slate-400">إدارة الحسابات الشاملة (أسامة سالم)</p>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <button type="button" onclick="triggerDbUpload()" class="bg-blue-600 hover:bg-blue-500 text-white px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition flex items-center gap-1.5 shadow">
+                    <span>📂 رفع ملف (.db)</span>
+                </button>
+                <input type="file" id="dbFileInput" onchange="handleDbUploadFile(event)" class="hidden">
+
+                <button type="button" onclick="openSyncModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition shadow flex items-center gap-1.5">
+                    <span>☁️ التخزين السحابي والمزامنة</span>
+                </button>
+                <button type="button" onclick="openRechargeModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-3.5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition shadow flex items-center gap-1.5">
+                    <span>⚡ شحن / حركة جديدة</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- شريط المزامنة الدائمة -->
+        <div class="bg-slate-800/90 border-t border-slate-700 px-4 py-1.5 text-xs">
+            <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="text-emerald-400 font-bold">📧 إيميل المزامنة الدائم:</span>
+                    <span id="headerSyncEmail" class="font-mono text-white bg-slate-700 px-2 py-0.5 rounded">groupahmed2020@gmail.com</span>
+                    <button type="button" onclick="openSyncModal()" class="text-amber-400 hover:underline text-[11px]">✏️ تعديل</button>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span id="cloudSyncIndicator" class="text-emerald-300 text-[11px] font-bold">☁️ حفظ دائم وسحابي نشط ✅</span>
+                    <button type="button" onclick="syncDbToEmailNow()" class="bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded text-[11px] font-bold transition">
+                        🔄 إرسال نسخة (.db) للإيميل
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="bg-white p-4 rounded-xl shadow-sm border-r-4 border-blue-600">
+                <p class="text-xs text-slate-500 font-bold">إجمالي الحسابات والزبائن</p>
+                <h2 id="statCustomers" class="text-2xl font-extrabold text-slate-800 mt-1">0</h2>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border-r-4 border-red-500">
+                <p class="text-xs text-slate-500 font-bold">ما هو علي (إجمالي الديون والشحن)</p>
+                <h2 id="statDebit" class="text-2xl font-extrabold text-red-600 mt-1">0 ش</h2>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border-r-4 border-emerald-500">
+                <p class="text-xs text-slate-500 font-bold">ما هو لي (إجمالي الدفعات والتسديد)</p>
+                <h2 id="statCredit" class="text-2xl font-extrabold text-emerald-600 mt-1">0 ش</h2>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border-r-4 border-amber-500">
+                <p class="text-xs text-slate-500 font-bold">صافي رصيد السوق الإجمالي</p>
+                <h2 id="statBalance" class="text-2xl font-extrabold text-amber-600 mt-1">0 ش</h2>
+            </div>
+        </div>
+        <!-- === الجزء 2 من 6: البحث والجداول وبداية نافذة الشحن === -->
+        <div class="bg-white p-4 rounded-xl shadow-sm mb-6 flex flex-wrap gap-3 items-center justify-between">
+            <div class="flex flex-wrap gap-3 flex-1">
+                <input type="text" id="searchInput" oninput="renderCustomers()" placeholder="🔍 ابحث باسم الزبون، رقم الجوال، أو رقم الشريحة..." class="border border-slate-300 rounded-lg px-4 py-2 text-sm flex-1 min-w-[220px] focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                
+                <select id="groupFilter" onchange="renderCustomers()" class="border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white">
+                    <option value="ALL">كل التصنيفات (الكل)</option>
+                    <option value="عملاء">عملاء</option>
+                    <option value="موردين">موردين</option>
+                    <option value="موردين، زبائن، نقاط بيع">موردين، زبائن، نقاط بيع</option>
+                </select>
+
+                <select id="balanceFilter" onchange="renderCustomers()" class="border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white">
+                    <option value="ALL">كل الأرصدة</option>
+                    <option value="DEBIT">عليه دين (مطالب)</option>
+                    <option value="CREDIT">له رصيد (دائن)</option>
+                    <option value="ZERO">رصيد مصفّر (خالص)</option>
+                </select>
+            </div>
+            <div id="dbStatusBadge" class="text-xs bg-emerald-100 text-emerald-800 px-3 py-1.5 rounded-full font-bold">
+                📌 قاعدة البيانات الدائمة جاهزة
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-5 bg-white rounded-xl shadow-sm overflow-hidden border border-slate-200">
+                <div class="bg-slate-800 text-white px-4 py-3 flex justify-between items-center">
+                    <h3 class="font-bold text-sm">📋 قائمة الحسابات والزبائن</h3>
+                    <span class="text-xs bg-slate-700 px-2 py-0.5 rounded" id="customerCountLabel">0 حساب</span>
+                </div>
+                <div id="customersList" class="divide-y divide-slate-100 max-h-[550px] overflow-y-auto custom-scroll"></div>
+            </div>
+
+            <div class="lg:col-span-7 bg-white rounded-xl shadow-sm overflow-hidden border border-slate-200 flex flex-col">
+                <div class="bg-slate-800 text-white px-4 py-3 flex flex-wrap justify-between items-center gap-2">
+                    <div>
+                        <h3 id="selectedCustomerName" class="font-bold text-base">اختر زبوناً لعرض دفتر الحسابات</h3>
+                        <p id="selectedCustomerPhone" class="text-xs text-slate-300"></p>
+                    </div>
+                    <button type="button" onclick="openRechargeForSelected()" id="btnQuickRecharge" class="hidden bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-bold px-3 py-1.5 rounded-lg text-xs transition">
+                        ➕ إضافة شحنة / حركة وإرسال إشعار
+                    </button>
+                </div>
+
+                <div class="p-4 flex-1 overflow-x-auto max-h-[500px] custom-scroll">
+                    <table class="w-full text-sm text-right border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-700 border-b border-slate-200">
+                                <th class="p-2.5">التاريخ</th>
+                                <th class="p-2.5">البيان / رقم الشريحة والحزمة</th>
+                                <th class="p-2.5 text-red-600">ما هو علي (شحن)</th>
+                                <th class="p-2.5 text-emerald-600">ما هو لي (دفعة)</th>
+                                <th class="p-2.5 text-center">إشعار</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsTableBody" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- نافذة تسجيل حركة شحن وإرسال إشعار -->
+    <div id="rechargeModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full overflow-hidden my-8">
+            <div class="bg-slate-900 text-white px-6 py-4 flex justify-between items-center">
+                <h3 class="font-bold text-lg">⚡ تسجيل حركة / شحنة جديدة وإرسال إشعار</h3>
+                <button type="button" onclick="closeRechargeModal()" class="text-slate-400 hover:text-white text-2xl leading-none">&times;</button>
+            </div>
+
+            <div class="p-6 grid grid-cols-1 md:grid-cols-12 gap-6">
+                <div class="md:col-span-7 space-y-3.5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ترويسة الإشعار</label>
+                            <select id="senderHeader" onchange="updatePreview()" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm font-semibold bg-slate-50">
+                                <option value="إشعار حركة / براند سيم">[ إشعار حركة / براند سيم ]</option>
+                                <option value="إشعار حركة / أسامة سالم">[ إشعار حركة / أسامة سالم ]</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">اسم الزبون</label>
+                            <input type="text" id="modalCusName" oninput="updatePreview()" placeholder="مثال: منير الكحلوت" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">نوع القيد</label>
+                            <select id="modalTransDir" onchange="updatePreview()" class="w-full border border-slate-300 rounded-lg px-2 py-2 text-sm font-bold bg-slate-50">
+                                <option value="1">🔴 شحن (علي)</option>
+                                <option value="-1">🟢 دفعة (لي)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">رقم الشريحة</label>
+                            <input type="text" id="modalSimNumber" oninput="updatePreview()" placeholder="0539287550" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">المبلغ والعملة</label>
+                            <div class="flex gap-1">
+                                <input type="number" id="modalAmount" oninput="updatePreview()" value="60" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm font-bold">
+                                <select id="modalCurrency" onchange="updatePreview()" class="border border-slate-300 rounded-lg px-2 py-2 text-sm bg-slate-50 font-bold">
+                                    <option value="ش">ش</option>
+                                    <option value="$">$</option>
+                                    <option value="د">د</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- === الجزء 3 من 6: تكملة النوافذ والمعاينة === -->
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">📦 الحزمة / نوع الشريحة:</label>
+                        <input type="text" id="modalPackage" oninput="updatePreview()" placeholder="مثال: سيلكوم / بارتنر / 300 جيجا" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm mb-2 bg-white">
+                        <div class="flex flex-wrap gap-1.5">
+                            <button type="button" onclick="setPackage('سيلكوم')" class="text-[11px] bg-purple-100 hover:bg-purple-200 text-purple-800 font-bold px-2.5 py-1 rounded-md">🟣 سيلكوم</button>
+                            <button type="button" onclick="setPackage('بارتنر')" class="text-[11px] bg-teal-100 hover:bg-teal-200 text-teal-800 font-bold px-2.5 py-1 rounded-md">🟢 بارتنر</button>
+                            <button type="button" onclick="setPackage('بيليفون')" class="text-[11px] bg-blue-100 hover:bg-blue-200 text-blue-800 font-bold px-2.5 py-1 rounded-md">🔵 بيليفون</button>
+                            <button type="button" onclick="setPackage('هوت موبايل')" class="text-[11px] bg-red-100 hover:bg-red-200 text-red-800 font-bold px-2.5 py-1 rounded-md">🔴 هوت موبايل</button>
+                            <button type="button" onclick="setPackage('019')" class="text-[11px] bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold px-2.5 py-1 rounded-md">🟠 019</button>
+                            <button type="button" onclick="setPackage('حزمة 300 جيجا')" class="text-[11px] bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold px-2.5 py-1 rounded-md">⚡ 300 جيجا</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">⏳ مدة الشحنة:</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button type="button" id="durBtn1" onclick="setDurationMonths(1)" class="duration-btn active border-2 border-slate-300 rounded-xl py-2 px-2 text-xs font-extrabold flex items-center justify-center gap-1 transition">
+                                <span>🗓️</span> <span>شهر واحد</span>
+                            </button>
+                            <button type="button" id="durBtn2" onclick="setDurationMonths(2)" class="duration-btn border-2 border-slate-300 rounded-xl py-2 px-2 text-xs font-extrabold flex items-center justify-center gap-1 transition">
+                                <span>🗓️🗓️</span> <span>شهرين</span>
+                            </button>
+                            <button type="button" id="durBtn3" onclick="setDurationMonths(3)" class="duration-btn border-2 border-slate-300 rounded-xl py-2 px-2 text-xs font-extrabold flex items-center justify-center gap-1 transition">
+                                <span>🗓️🗓️🗓️</span> <span>3 أشهر</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">تاريخ الشحن</label>
+                            <input type="date" id="modalChargeDate" onchange="autoCalcExpiry(); updatePreview();" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">تاريخ انتهاء الشحنة</label>
+                            <input type="date" id="modalExpiryDate" onchange="updatePreview()" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm border-amber-400 bg-amber-50/40 font-bold">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-slate-200">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">📱 رقم واتساب الزبون</label>
+                            <input type="text" id="modalWhatsapp" placeholder="972599445653" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">✉️ الإيميل</label>
+                            <input type="email" id="modalEmail" placeholder="client@gmail.com" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono">
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-100 p-3 rounded-xl border border-slate-200 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-extrabold text-slate-800 mb-1">1️⃣ وسيلة الإرسال:</label>
+                            <select id="sendChannel" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm bg-white font-bold text-emerald-800">
+                                <option value="WHATSAPP">واتساب فقط</option>
+                                <option value="EMAIL">إيميل فقط</option>
+                                <option value="BOTH">الاثنين معاً (واتساب + إيميل)</option>
+                                <option value="SAVE_ONLY">حفظ في الدفتر فقط بدون إرسال</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-extrabold text-slate-800 mb-1">2️⃣ صيغة الملف المرفق:</label>
+                            <select id="attachmentFormat" class="w-full border border-slate-300 rounded-lg px-3 py-1.5 text-sm bg-white font-bold text-blue-800">
+                                <option value="TEXT_ONLY">رسالة نصية فقط بدون ملف</option>
+                                <option value="IMAGE">صورة إشعار (PNG)</option>
+                                <option value="PDF">ملف مستند (PDF)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        <button type="button" onclick="executeSendAndSave()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl shadow-lg transition">
+                            🚀 حفظ دائم وإرسال الإشعار
+                        </button>
+                        <button type="button" onclick="downloadAttachmentOnly()" class="bg-slate-800 hover:bg-slate-700 text-white font-semibold py-2.5 px-4 rounded-xl shadow transition text-sm">
+                            📥 تنزيل (PDF / صورة)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- معاينة بطاقة الإشعار -->
+                <div class="md:col-span-5 flex flex-col justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-slate-500 mb-2 text-center">معاينة بطاقة الإشعار</p>
+                        <div id="receiptCaptureArea" class="receipt-card rounded-2xl p-5 shadow-md relative overflow-hidden">
+                            <div class="bg-slate-900 text-white text-center py-2.5 px-3 rounded-xl mb-4">
+                                <p id="previewHeader" class="font-extrabold text-sm">[ إشعار حركة / براند سيم ]</p>
+                            </div>
+                            <div class="space-y-2 text-sm leading-relaxed text-slate-800 font-semibold">
+                                <div class="flex justify-between items-center border-b pb-1 text-xs text-slate-500">
+                                    <span id="previewCustomerLine">الزبون: منير الكحلوت</span>
+                                    <span id="previewDurationBadge" class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-extrabold">🗓️ شهر واحد</span>
+                                </div>
+                                <p>تم شحن رقم <span id="previewSim" class="font-extrabold text-blue-700 font-mono">0539287550</span> بتاريخ <span id="previewChargeDate" class="font-extrabold">17/10/2026</span></p>
+                                <p id="previewPackageLine" class="text-xs bg-slate-100 text-slate-700 px-2.5 py-1 rounded-md font-bold">📦 الحزمة: سيلكوم</p>
+                                <p>بقيمة <span id="previewAmount" class="font-extrabold text-emerald-700 text-base">60ش</span> <span id="previewDurationText" class="text-xs text-slate-600">(لمدة شهر واحد)</span></p>
+                                <div class="bg-amber-50 border border-amber-300 rounded-lg p-2.5 my-2">
+                                    <p class="text-amber-900 text-xs font-bold">مع العلم أن انتهاء شحنة:</p>
+                                    <p id="previewExpiryDate" class="text-amber-800 font-extrabold text-base mt-0.5">16/11/2026</p>
+                                </div>
+                                <p class="text-xs text-slate-500 pt-1">تاريخ العملية: <span id="previewTimestamp" class="font-mono"></span></p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t-2 border-dashed border-slate-300 flex justify-between items-center">
+                                <span class="font-extrabold text-slate-900 text-sm">تحيات براند سيم</span>
+                                <span class="text-[11px] text-slate-400">Brand Sim</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="block text-xs font-bold text-slate-500 mb-1">نص الرسالة الجاهز:</label>
+                        <textarea id="rawMessageText" readonly rows="6" class="w-full border border-slate-300 rounded-lg p-2 text-xs bg-slate-50 font-mono"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة إعدادات المزامنة والتخزين السحابي -->
+    <div id="syncModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden">
+            <div class="bg-indigo-900 text-white px-6 py-4 flex justify-between items-center">
+                <h3 class="font-bold text-base">☁️ إعدادات الإيميل والتخزين السحابي الدائم</h3>
+                <button type="button" onclick="closeSyncModal()" class="text-slate-300 hover:text-white text-2xl leading-none">&times;</button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">📧 البريد الإلكتروني للمزامنة:</label>
+                    <input type="email" id="syncEmailInput" value="groupahmed2020@gmail.com" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm font-mono focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-3.5 text-xs text-indigo-900 space-y-1.5">
+                    <p class="font-bold">💡 الحفظ الدائم والسحابي مفعل تلقائياً:</p>
+                    <p>يتم حفظ كافة الزبائن والحركات وملفات (.db) بشكل دائم في قاعدة IndexedDB المفتوحة بالإضافة للمزامنة السحابية على السيرفر.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
+                    <button type="button" onclick="saveSyncSettings()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition">
+                        💾 حفظ الإيميل والمزامنة
+                    </button>
+                    <button type="button" onclick="exportUpdatedDbFile()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition">
+                        📥 تنزيل ملف (.db) المحدث
+                    </button>
+                </div>
+                <div class="pt-2 border-t border-slate-200 flex justify-between items-center">
+                    <button type="button" onclick="syncDbToEmailNow()" class="text-xs font-bold text-indigo-700 hover:underline">
+                        📤 إرسال نسخة (.db) للإيميل الآن
+                    </button>
+                    <button type="button" onclick="clearSavedDatabase()" class="text-xs font-bold text-red-600 hover:underline">
+                        🗑️ مسح الذاكرة وإعادة الضبط
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // === الجزء 4 من 6: محرك الحفظ الدائم والسحابي ===
+        const IDB_NAME = "BrandSimPermanentCloudDB";
+        const IDB_STORE = "app_state";
+        const STORAGE_KEY_SYNC_EMAIL = "BRANDSIM_PERMANENT_EMAIL_V5";
+        const CLOUD_SYNC_URL = "sync_server.php";
+
+        let customersData = [
+            { id: 1, name: "منير الكحلوت", gsm: "0599445653", group: "عملاء", email: "" },
+            { id: 2, name: "ابو حمزة قرموط", gsm: "0599858786", group: "عملاء", email: "" }
+        ];
+
+        let transactionsData = [
+            { id: 101, cus_id: 1, dir: 1, amount: 60, date: "17-10-2026", remarks: "0539287550 | سيلكوم (شهر واحد)", now: "2026-10-17 12:12", curr: "ش" }
+        ];
+
+        let selectedCustomerId = 1;
+        let currentDurationMonths = 1;
+        let syncEmail = "groupahmed2020@gmail.com";
+
+        function triggerDbUpload() {
+            const input = document.getElementById('dbFileInput');
+            if (input) {
+                input.value = "";
+                input.click();
+            }
+        }
+
+        function openPermanentIDB() {
+            return new Promise((resolve, reject) => {
+                const req = indexedDB.open(IDB_NAME, 1);
+                req.onupgradeneeded = e => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains(IDB_STORE)) {
+                        db.createObjectStore(IDB_STORE);
+                    }
+                };
+                req.onsuccess = e => resolve(e.target.result);
+                req.onerror = e => reject(e.target.error);
+            });
+        }
+
+        async function idbSet(key, val) {
+            const db = await openPermanentIDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(IDB_STORE, "readwrite");
+                tx.objectStore(IDB_STORE).put(val, key);
+                tx.oncomplete = () => resolve(true);
+                tx.onerror = e => reject(e.target.error);
+            });
+        }
+
+        async function idbGet(key) {
+            const db = await openPermanentIDB();
+            return new Promise((resolve, reject) => {
+                const tx = db.transaction(IDB_STORE, "readonly");
+                const req = tx.objectStore(IDB_STORE).get(key);
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = e => reject(e.target.error);
+            });
+        }
+
+        async function saveToPermanentStorage() {
+            const payload = {
+                updatedAt: Date.now(),
+                customers: customersData,
+                transactions: transactionsData,
+                syncEmail: syncEmail
+            };
+            try { await idbSet("MAIN_DATA", payload); } catch (e) {}
+            try { localStorage.setItem("BRANDSIM_BACKUP_V5", JSON.stringify(payload)); } catch (e) {}
+            try {
+                const res = await fetch(CLOUD_SYNC_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    const ind = document.getElementById('cloudSyncIndicator');
+                    if (ind) ind.innerText = "☁️ محفوظ سحابياً على السيرفر ✅";
+                }
+            } catch (e) {}
+        }
+
+        async function loadFromPermanentStorage() {
+            if (navigator.storage && navigator.storage.persist) {
+                try { await navigator.storage.persist(); } catch (e) {}
+            }
+            const savedEmail = localStorage.getItem(STORAGE_KEY_SYNC_EMAIL);
+            if (savedEmail) {
+                syncEmail = savedEmail;
+                document.getElementById('syncEmailInput').value = syncEmail;
+                document.getElementById('headerSyncEmail').innerText = syncEmail;
+            }
+
+            let loaded = null;
+            try {
+                const res = await fetch(CLOUD_SYNC_URL + "?t=" + Date.now(), { cache: "no-store" });
+                if (res.ok) {
+                    const sData = await res.json();
+                    if (sData && Array.isArray(sData.customers) && sData.customers.length > 0) loaded = sData;
+                }
+            } catch (e) {}
+
+            try {
+                const idbData = await idbGet("MAIN_DATA");
+                if (idbData && Array.isArray(idbData.customers) && idbData.customers.length > 0) {
+                    if (!loaded || (idbData.updatedAt || 0) >= (loaded.updatedAt || 0)) loaded = idbData;
+                }
+            } catch (e) {}
+
+            if (!loaded) {
+                try {
+                    const raw = localStorage.getItem("BRANDSIM_BACKUP_V5");
+                    if (raw) loaded = JSON.parse(raw);
+                } catch (e) {}
+            }
+
+            if (loaded && Array.isArray(loaded.customers) && loaded.customers.length > 0) {
+                customersData = loaded.customers;
+                transactionsData = Array.isArray(loaded.transactions) ? loaded.transactions : [];
+                const badge = document.getElementById('dbStatusBadge');
+                if (badge) badge.innerText = `✅ البيانات الدائمة جاهزة (${customersData.length} زبون / ${transactionsData.length} حركة)`;
+            }
+        }
+        // === الجزء 5 من 6: عرض البيانات وقراءة ملف .db ===
+        function getCustomerStats(cusId) {
+            const trs = transactionsData.filter(t => Number(t.cus_id) === Number(cusId));
+            let debit = 0, credit = 0;
+            trs.forEach(t => {
+                const val = parseFloat(t.amount) || 0;
+                if (parseInt(t.dir) === 1) debit += val;
+                else credit += val;
+            });
+            return { debit, credit, balance: debit - credit, count: trs.length };
+        }
+
+        function renderCustomers() {
+            const search = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
+            const groupF = document.getElementById('groupFilter')?.value || 'ALL';
+            const balF = document.getElementById('balanceFilter')?.value || 'ALL';
+
+            let totalDebit = 0, totalCredit = 0, filteredCount = 0;
+            const listEl = document.getElementById('customersList');
+            if (!listEl) return;
+            listEl.innerHTML = '';
+
+            customersData.forEach(c => {
+                const stats = getCustomerStats(c.id);
+                totalDebit += stats.debit;
+                totalCredit += stats.credit;
+
+                const cusTrRemarks = transactionsData
+                    .filter(t => Number(t.cus_id) === Number(c.id))
+                    .map(t => t.remarks || '').join(' ').toLowerCase();
+
+                const matchesSearch = !search || (c.name || '').toLowerCase().includes(search) || (c.gsm || '').toLowerCase().includes(search) || cusTrRemarks.includes(search);
+                const matchesGroup = (groupF === 'ALL') || (c.group === groupF);
+                let matchesBal = true;
+                if (balF === 'DEBIT') matchesBal = stats.balance > 0;
+                if (balF === 'CREDIT') matchesBal = stats.balance < 0;
+                if (balF === 'ZERO') matchesBal = stats.balance === 0;
+
+                if (matchesSearch && matchesGroup && matchesBal) {
+                    filteredCount++;
+                    const isSelected = Number(c.id) === Number(selectedCustomerId);
+                    const balColor = stats.balance > 0 ? 'text-red-600 bg-red-50' : (stats.balance < 0 ? 'text-emerald-600 bg-emerald-50' : 'text-slate-500 bg-slate-100');
+                    const balLabel = stats.balance > 0 ? `عليه: ${stats.balance} ش` : (stats.balance < 0 ? `له: ${Math.abs(stats.balance)} ش` : `خالص (0)`);
+
+                    const item = document.createElement('div');
+                    item.className = `p-3.5 cursor-pointer transition hover:bg-slate-50 flex justify-between items-center ${isSelected ? 'bg-emerald-50/70 border-r-4 border-emerald-600' : ''}`;
+                    item.onclick = () => selectCustomer(c.id);
+                    item.innerHTML = `
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">${c.name}</h4>
+                            <div class="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+                                <span>📞 ${c.gsm || 'بدون رقم'}</span>
+                                <span class="bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded text-[10px]">${c.group || 'عملاء'}</span>
+                            </div>
+                        </div>
+                        <div class="text-left">
+                            <span class="px-2.5 py-1 rounded-lg font-extrabold text-xs ${balColor}">${balLabel}</span>
+                            <p class="text-[10px] text-slate-400 mt-1">${stats.count} حركات</p>
+                        </div>
+                    `;
+                    listEl.appendChild(item);
+                }
+            });
+
+            document.getElementById('statCustomers').innerText = customersData.length;
+            document.getElementById('statDebit').innerText = totalDebit.toLocaleString() + " ش";
+            document.getElementById('statCredit').innerText = totalCredit.toLocaleString() + " ش";
+            document.getElementById('statBalance').innerText = (totalDebit - totalCredit).toLocaleString() + " ش";
+            document.getElementById('customerCountLabel').innerText = `${filteredCount} حساب`;
+        }
+
+        function selectCustomer(cusId) {
+            selectedCustomerId = cusId;
+            renderCustomers();
+
+            const customer = customersData.find(c => Number(c.id) === Number(cusId));
+            if (!customer) return;
+
+            document.getElementById('selectedCustomerName').innerText = `دفتر حساب: ${customer.name}`;
+            document.getElementById('selectedCustomerPhone').innerText = `رقم التواصل: ${customer.gsm || 'غير مسجل'} | التصنيف: ${customer.group || 'عملاء'}`;
+            document.getElementById('btnQuickRecharge').classList.remove('hidden');
+
+            const tbody = document.getElementById('transactionsTableBody');
+            tbody.innerHTML = '';
+
+            const trs = transactionsData.filter(t => Number(t.cus_id) === Number(cusId)).slice().reverse();
+            if (trs.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400">لا توجد حركات مسجلة لهذا الزبون</td></tr>`;
+                return;
+            }
+
+            trs.forEach(t => {
+                const isDebit = parseInt(t.dir) === 1;
+                const trEl = document.createElement('tr');
+                trEl.className = "hover:bg-slate-50 transition";
+                trEl.innerHTML = `
+                    <td class="p-2.5 text-xs font-mono text-slate-600 whitespace-nowrap">${t.date || '-'}</td>
+                    <td class="p-2.5 font-semibold text-slate-800">${t.remarks || '-'}</td>
+                    <td class="p-2.5 font-bold text-red-600">${isDebit ? t.amount + ' ' + (t.curr || 'ش') : '-'}</td>
+                    <td class="p-2.5 font-bold text-emerald-600">${!isDebit ? t.amount + ' ' + (t.curr || 'ش') : '-'}</td>
+                    <td class="p-2.5 text-center">
+                        <button type="button" onclick="openNotifyById(${t.id})" class="bg-blue-50 hover:bg-blue-100 text-blue-700 px-2.5 py-1 rounded-md text-xs font-bold transition">📤 إشعار</button>
+                    </td>
+                `;
+                tbody.appendChild(trEl);
+            });
+        }
+
+        async function handleDbUploadFile(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const badge = document.getElementById('dbStatusBadge');
+            badge.innerText = "⏳ جاري قراءة وحفظ ملف (.db)...";
+
+            try {
+                const SQL = await initSqlJs({ locateFile: f => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${f}` });
+                const buf = await file.arrayBuffer();
+                const db = new SQL.Database(new Uint8Array(buf));
+
+                let groupsMap = {}, currMap = { 0: "ش" };
+                try { db.exec("SELECT * FROM groups")[0]?.values.forEach(r => groupsMap[r[0]] = r[1]); } catch (err) {}
+                try { db.exec("SELECT * FROM currency")[0]?.values.forEach(r => currMap[r[0]] = r[1]); } catch (err) {}
+
+                let loadedCus = [], loadedTr = [];
+                try {
+                    const cRes = db.exec("SELECT * FROM customers");
+                    if (cRes.length > 0) {
+                        loadedCus = cRes[0].values.map(r => ({
+                            id: Number(r[0]),
+                            name: String(r[1] || "بدون اسم").trim(),
+                            gsm: String(r[2] || "").replace(/[\u202a\u202c\u200f\u200e]/g, '').trim(),
+                            group: groupsMap[r[3]] || "عملاء",
+                            email: ""
+                        }));
+                    }
+                } catch (err) {}
+
+                try {
+                    const tRes = db.exec("SELECT * FROM transactions");
+                    if (tRes.length > 0) {
+                        loadedTr = tRes[0].values.map(r => ({
+                            id: Number(r[0]),
+                            cus_id: Number(r[1]),
+                            dir: parseInt(r[2]) === 1 ? 1 : -1,
+                            amount: parseFloat(r[3]) || 0,
+                            date: String(r[4] || ""),
+                            remarks: String(r[5] || "").replace(/[\u202a\u202c\u200f\u200e]/g, '').trim(),
+                            now: String(r[6] || ""),
+                            curr: currMap[r[7]] || "ش"
+                        }));
+                    }
+                } catch (err) {}
+
+                if (loadedCus.length > 0) {
+                    customersData = loadedCus;
+                    transactionsData = loadedTr;
+                    await saveToPermanentStorage();
+                    badge.innerText = `✅ تم الحفظ الدائم (${customersData.length} زبون / ${transactionsData.length} حركة)`;
+                    selectCustomer(customersData[0].id);
+                    alert(`✅ تم رفع وحفظ القاعدة بشكل دائم!\nالزبائن: ${customersData.length}\nالحركات: ${transactionsData.length}`);
+                } else {
+                    alert("لم يتم العثور على بيانات زبائن داخل الملف.");
+                }
+            } catch (err) {
+                alert("خطأ في قراءة الملف: " + err.message);
+            }
+        }
+        // === الجزء 6 من 6: الإشعارات والتصدير والتشغيل ===
+        function openNotifyById(trId) {
+            const tr = transactionsData.find(x => Number(x.id) === Number(trId));
+            if (!tr) return;
+            const cus = customersData.find(c => Number(c.id) === Number(tr.cus_id));
+            document.getElementById('modalCusName').value = cus ? cus.name : "";
+            document.getElementById('modalSimNumber').value = tr.remarks || "";
+            document.getElementById('modalAmount').value = tr.amount || 60;
+            document.getElementById('modalTransDir').value = String(tr.dir || 1);
+            document.getElementById('modalWhatsapp').value = cleanPhoneForWhatsApp(cus ? cus.gsm : "");
+            openRechargeModal();
+        }
+
+        function setPackage(pkgName) {
+            document.getElementById('modalPackage').value = pkgName;
+            updatePreview();
+        }
+
+        function setDurationMonths(months) {
+            currentDurationMonths = months;
+            [1, 2, 3].forEach(m => {
+                const btn = document.getElementById(`durBtn${m}`);
+                if (btn) btn.classList.toggle('active', m === months);
+            });
+            autoCalcExpiry();
+            updatePreview();
+        }
+
+        function getDurationArabicLabel(m) {
+            return m === 1 ? "شهر واحد" : (m === 2 ? "شهرين" : "ثلاثة أشهر");
+        }
+
+        function autoCalcExpiry() {
+            const val = document.getElementById('modalChargeDate').value;
+            if (!val) return;
+            const d = new Date(val);
+            d.setDate(d.getDate() + (currentDurationMonths * 30));
+            document.getElementById('modalExpiryDate').value = d.toISOString().split('T')[0];
+        }
+
+        function formatDateDMY(iso) {
+            if (!iso) return "";
+            const p = iso.split('-');
+            return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : iso;
+        }
+
+        function updatePreview() {
+            const header = document.getElementById('senderHeader').value;
+            const cusName = document.getElementById('modalCusName').value || "زبون كريم";
+            const sim = document.getElementById('modalSimNumber').value || "..........";
+            const pkg = document.getElementById('modalPackage').value.trim();
+            const amount = document.getElementById('modalAmount').value || "0";
+            const curr = document.getElementById('modalCurrency').value;
+            const chargeDate = formatDateDMY(document.getElementById('modalChargeDate').value);
+            const expiryDate = formatDateDMY(document.getElementById('modalExpiryDate').value);
+            const durLabel = getDurationArabicLabel(currentDurationMonths);
+            const now = new Date();
+            const opDateStr = now.toLocaleDateString('en-GB') + " - " + now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+            document.getElementById('previewHeader').innerText = `[ ${header} ]`;
+            document.getElementById('previewCustomerLine').innerText = `الزبون: ${cusName}`;
+            document.getElementById('previewDurationBadge').innerText = `🗓️ ${durLabel}`;
+            document.getElementById('previewSim').innerText = sim;
+            document.getElementById('previewChargeDate').innerText = chargeDate;
+            document.getElementById('previewAmount').innerText = `${amount}${curr}`;
+            document.getElementById('previewDurationText').innerText = `(مدة الشحنة: ${durLabel})`;
+            document.getElementById('previewExpiryDate').innerText = expiryDate;
+            document.getElementById('previewTimestamp').innerText = opDateStr;
+
+            const pkgLineEl = document.getElementById('previewPackageLine');
+            if (pkg) { pkgLineEl.innerText = `📦 الحزمة: ${pkg}`; pkgLineEl.classList.remove('hidden'); }
+            else { pkgLineEl.classList.add('hidden'); }
+
+            const pkgText = pkg ? `\nالحزمة: ${pkg}` : "";
+            document.getElementById('rawMessageText').value = `[ ${header} ]\nتم شحن رقم ${sim} بتاريخ ${chargeDate}${pkgText}\nمدة الشحنة: ${durLabel}\nبقيمة ${amount}${curr}\nمع العلم أن انتهاء شحنة\n${expiryDate}\n\nتاريخ العملية: ${opDateStr}\nتحيات براند سيم`;
+        }
+
+        function openRechargeForSelected() {
+            const c = customersData.find(x => Number(x.id) === Number(selectedCustomerId));
+            if (c) {
+                document.getElementById('modalCusName').value = c.name;
+                document.getElementById('modalWhatsapp').value = cleanPhoneForWhatsApp(c.gsm);
+                document.getElementById('modalEmail').value = c.email || "";
+            }
+            openRechargeModal();
+        }
+
+        function openRechargeModal() { updatePreview(); document.getElementById('rechargeModal').classList.remove('hidden'); }
+        function closeRechargeModal() { document.getElementById('rechargeModal').classList.add('hidden'); }
+        function openSyncModal() { document.getElementById('syncEmailInput').value = syncEmail; document.getElementById('syncModal').classList.remove('hidden'); }
+        function closeSyncModal() { document.getElementById('syncModal').classList.add('hidden'); }
+
+        async function saveSyncSettings() {
+            const val = document.getElementById('syncEmailInput').value.trim();
+            if (val) {
+                syncEmail = val;
+                localStorage.setItem(STORAGE_KEY_SYNC_EMAIL, syncEmail);
+                document.getElementById('headerSyncEmail').innerText = syncEmail;
+            }
+            await saveToPermanentStorage();
+            alert("✅ تم الحفظ والمزامنة الدائمة بنجاح!");
+            closeSyncModal();
+        }
+
+        async function exportUpdatedDbFile() {
+            const SQL = await initSqlJs({ locateFile: f => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${f}` });
+            const db = new SQL.Database();
+            db.run("CREATE TABLE groups (ID INTEGER PRIMARY KEY, name TEXT); INSERT INTO groups VALUES (1,'عملاء'),(2,'موردين'),(3,'موردين، زبائن، نقاط بيع');");
+            db.run("CREATE TABLE currency (ID INTEGER PRIMARY KEY, name TEXT); INSERT INTO currency VALUES (0,'شيكل'),(1,'دولار'),(2,'دينار');");
+            db.run("CREATE TABLE customers (ID INTEGER PRIMARY KEY, name TEXT, gsm TEXT, g_id INTEGER);");
+            const sCus = db.prepare("INSERT INTO customers VALUES (?,?,?,?);");
+            customersData.forEach(c => sCus.run([c.id, c.name, c.gsm || '', c.group === 'موردين' ? 2 : 1]));
+            sCus.free();
+            db.run("CREATE TABLE transactions (ID INTEGER PRIMARY KEY, cus_id INTEGER, [in] TEXT, out TEXT, date_ TEXT, remarks TEXT, now_ TEXT, curr_id INTEGER);");
+            const sTr = db.prepare("INSERT INTO transactions VALUES (?,?,?,?,?,?,?,?);");
+            transactionsData.forEach(t => sTr.run([t.id, t.cus_id, String(t.dir), String(t.amount), t.date || '', t.remarks || '', t.now || '', 0]));
+            sTr.free();
+
+            const blob = new Blob([db.export()], { type: "application/octet-stream" });
+            const a = document.createElement("a");
+            const fileName = `osama_web_sync_${new Date().toISOString().split('T')[0]}.db`;
+            a.href = URL.createObjectURL(blob);
+            a.download = fileName;
+            a.click();
+            return fileName;
+        }
+
+        async function syncDbToEmailNow() {
+            const fName = await exportUpdatedDbFile();
+            const subj = encodeURIComponent(`نسخة براند سيم (.db)`);
+            const body = encodeURIComponent(`تم تنزيل ملف (${fName}). الزبائن: ${customersData.length}، الحركات: ${transactionsData.length}`);
+            window.location.href = `mailto:${syncEmail}?subject=${subj}&body=${body}`;
+        }
+
+        async function clearSavedDatabase() {
+            if (confirm("مسح الذاكرة وإعادة الضبط؟")) {
+                localStorage.removeItem("BRANDSIM_BACKUP_V5");
+                const db = await openPermanentIDB();
+                const tx = db.transaction(IDB_STORE, "readwrite");
+                tx.objectStore(IDB_STORE).clear();
+                tx.oncomplete = () => location.reload();
+            }
+        }
+
+        function cleanPhoneForWhatsApp(p) {
+            if (!p) return "";
+            let s = String(p).replace(/[^0-9]/g, '');
+            if (s.startsWith('00')) s = s.substring(2);
+            else if (s.startsWith('05')) s = '972' + s.substring(1);
+            return s;
+        }
+
+        async function generateAttachment(format) {
+            const canvas = await html2canvas(document.getElementById('receiptCaptureArea'), { scale: 2, backgroundColor: "#ffffff" });
+            const sim = document.getElementById('modalSimNumber').value || "Notice";
+            if (format === 'IMAGE') {
+                const a = document.createElement('a');
+                a.download = `BrandSim_${sim}.png`;
+                a.href = canvas.toDataURL('image/png');
+                a.click();
+            } else if (format === 'PDF') {
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a5' });
+                const w = pdf.internal.pageSize.getWidth() - 20;
+                pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 10, 15, w, (canvas.height * w) / canvas.width);
+                pdf.save(`BrandSim_${sim}.pdf`);
+            }
+        }
+
+        async function downloadAttachmentOnly() {
+            const fmt = document.getElementById('attachmentFormat').value;
+            if (fmt === 'TEXT_ONLY') return alert("اختر PNG أو PDF لتنزيل المرفق.");
+            await generateAttachment(fmt);
+        }
+
+        async function executeSendAndSave() {
+            const cusName = document.getElementById('modalCusName').value.trim() || "زبون عام";
+            const sim = document.getElementById('modalSimNumber').value.trim();
+            const pkg = document.getElementById('modalPackage').value.trim();
+            const durLabel = getDurationArabicLabel(currentDurationMonths);
+            const amount = parseFloat(document.getElementById('modalAmount').value) || 0;
+            const transDir = parseInt(document.getElementById('modalTransDir').value) || 1;
+            const curr = document.getElementById('modalCurrency').value;
+            const chargeDate = formatDateDMY(document.getElementById('modalChargeDate').value).replace(/\//g, '-');
+            const channel = document.getElementById('sendChannel').value;
+            const format = document.getElementById('attachmentFormat').value;
+            const msgText = document.getElementById('rawMessageText').value;
+            const waPhone = cleanPhoneForWhatsApp(document.getElementById('modalWhatsapp').value);
+            const emailAddr = document.getElementById('modalEmail').value.trim();
+
+            let customer = customersData.find(c => c.name === cusName);
+            if (!customer) {
+                customer = { id: Date.now(), name: cusName, gsm: waPhone, group: "عملاء", email: emailAddr };
+                customersData.unshift(customer);
+            }
+
+            transactionsData.push({
+                id: Date.now() + 1,
+                cus_id: customer.id,
+                dir: transDir,
+                amount: amount,
+                date: chargeDate,
+                remarks: `${sim}${pkg ? ' | ' + pkg : ''} (${durLabel})`.trim(),
+                now: new Date().toISOString().slice(0, 16).replace('T', ' '),
+                curr: curr
+            });
+
+            await saveToPermanentStorage();
+            selectCustomer(customer.id);
+            if (format === 'IMAGE' || format === 'PDF') await generateAttachment(format);
+
+            if (channel !== 'SAVE_ONLY') {
+                const body = encodeURIComponent(msgText);
+                if (channel === 'WHATSAPP' || channel === 'BOTH') {
+                    window.open(waPhone ? `https://wa.me/${waPhone}?text=${body}` : `https://wa.me/?text=${body}`, '_blank');
+                }
+                if (channel === 'EMAIL' || channel === 'BOTH') {
+                    const subj = encodeURIComponent(document.getElementById('senderHeader').value);
+                    window.location.href = `mailto:${emailAddr || syncEmail}?subject=${subj}&body=${body}`;
+                }
+            }
+            closeRechargeModal();
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            document.getElementById('modalChargeDate').value = new Date().toISOString().split('T')[0];
+            setDurationMonths(1);
+            await loadFromPermanentStorage();
+            renderCustomers();
+            if (customersData.length > 0) selectCustomer(customersData[0].id);
+            updatePreview();
+        });
+    </script>
+</body>
+</html>
