@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>براند ستور - BRAND STORE | شرائح بلاستيك وإلكترونية</title>
+    <!-- خط تجوال العربي وتصميم Tailwind -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+        }
+        .card-gradient {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            border: 1px solid #334155;
+        }
+        .card-gradient:hover {
+            border-color: #f59e0b;
+            transform: translateY(-4px);
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- الشريط العلوي (الهيدر) -->
+    <header class="bg-slate-900/90 backdrop-blur sticky top-0 z-40 border-b border-slate-800 shadow-lg">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center text-slate-950 font-extrabold text-2xl shadow-md">
+                    B
+                </div>
+                <div>
+                    <h1 class="text-2xl font-extrabold text-amber-400 tracking-wide">براند ستور | BRAND STORE</h1>
+                    <p class="text-xs text-slate-400">لبيع الشرائح البلاستيكية والإلكترونية (eSIM)</p>
+                </div>
+            </div>
+
+            <!-- شارة الدفع عند الاستلام -->
+            <div class="bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2">
+                <span>🚚</span>
+                <span>الدفع عند الاستلام</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- القسم الترحيبي -->
+    <section class="max-w-6xl mx-auto px-4 pt-8 pb-4 text-center">
+        <div class="bg-gradient-to-r from-amber-500/20 via-slate-800 to-emerald-500/20 border border-slate-700 rounded-2xl p-6 shadow-xl">
+            <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-2">أقوى عروض الشرائح البلاستيكية والإلكترونية (eSIM)</h2>
+            <p class="text-slate-300 text-sm md:text-base mb-4">اختر شريحتك المفضلة لمدّة شهر أو 3 شهور بأفضل الأسعار — <span class="text-amber-400 font-bold">الدفع عند الاستلام</span></p>
+            
+            <!-- أزرار فلترة سريعة -->
+            <div class="flex flex-wrap justify-center gap-2 mt-4">
+                <button onclick="filterSim('all')" id="filter-all" class="px-4 py-2 rounded-xl text-sm font-bold bg-amber-500 text-slate-950 transition">الكل</button>
+                <button onclick="filterSim('بلاستيك')" id="filter-plastic" class="px-4 py-2 rounded-xl text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">شرائح بلاستيك</button>
+                <button onclick="filterSim('إلكترونية')" id="filter-esim" class="px-4 py-2 rounded-xl text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">شرائح إلكترونية (eSIM)</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- شبكة عرض الشرائح والأسعار -->
+    <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full">
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- يتم تحميل الشرائح هنا تلقائياً -->
+        </div>
+    </main>
+
+    <!-- نافذة حجز الطلب (Modal) -->
+    <div id="booking-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
+            <button onclick="closeModal()" class="absolute top-4 left-4 text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
+            
+            <h3 class="text-xl font-extrabold text-amber-400 mb-1">حجز طلب جديد</h3>
+            <p id="modal-product-name" class="text-slate-300 font-bold text-lg mb-4"></p>
+
+            <form id="booking-form" onsubmit="submitOrder(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm text-slate-300 mb-1 font-medium">نوع الشريحة المطلوبة:</label>
+                    <select id="order-sim-type" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-amber-500" required>
+                        <option value="شريحة بلاستيك">شريحة بلاستيك</option>
+                        <option value="شريحة إلكترونية (eSIM)">شريحة إلكترونية (eSIM)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm text-slate-300 mb-1 font-medium">مدة الاشتراك:</label>
+                    <select id="order-duration" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-amber-500" required>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm text-slate-300 mb-1 font-medium">الاسم الكامل:</label>
+                    <input type="text" id="customer-name" placeholder="أدخل اسمك الثلاثي" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-amber-500" required>
+                </div>
+
+                <div>
+                    <label class="block text-sm text-slate-300 mb-1 font-medium">رقم التواصل / واتساب:</label>
+                    <input type="tel" id="customer-phone" placeholder="مثال: 059xxxxxxx" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-amber-500" required>
+                </div>
+
+                <div>
+                    <label class="block text-sm text-slate-300 mb-1 font-medium">العنوان / ملاحظات الاستلام:</label>
+                    <input type="text" id="customer-address" placeholder="المدينة / الحي" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-amber-500" required>
+                </div>
+
+                <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3 text-center">
+                    <span class="text-emerald-400 font-bold text-sm">✅ الدفع عند الاستلام</span>
+                </div>
+
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-lg">
+                    <span>إرسال وتأكيد الحجز عبر واتساب</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- زر واتساب عائم للتواصل المباشر -->
+    <a id="floating-whatsapp" href="#" target="_blank" class="fixed bottom-5 left-5 bg-emerald-500 hover:bg-emerald-400 text-white px-5 py-3 rounded-full shadow-2xl flex items-center gap-2 font-bold z-40 transition transform hover:scale-105">
+        <span>💬</span>
+        <span>تواصل عبر واتساب</span>
+    </a>
+
+    <!-- الفوتر -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-6 text-center text-slate-400 text-sm mt-10">
+        <p class="font-bold text-amber-400 mb-1">براند ستور - BRAND STORE</p>
+        <p>جميع أنواع الشرائح البلاستيكية والإلكترونية | الدفع عند الاستلام</p>
+    </footer>
+
+    <script>
+        // البيانات الأساسية للشرائح
+        const defaultProducts = [
+            { id: 1, name: "بارتنر (Partner)", type: "بلاستيك + إلكترونية (eSIM)", price1M: "50", price3M: "140", note: "تغطية قوية وسرعة عالية" },
+            { id: 2, name: "سيلكوم (Cellcom)", type: "بلاستيك + إلكترونية (eSIM)", price1M: "50", price3M: "140", note: "ثبات ممتاز في الإشارة" },
+            { id: 3, name: "ويكوم (Wecom)", type: "بلاستيك + إلكترونية (eSIM)", price1M: "45", price3M: "125", note: "باقات إنترنت ضخمة" },
+            { id: 4, name: "هوت موبايل (HOT Mobile)", type: "بلاستيك + إلكترونية (eSIM)", price1M: "45", price3M: "125", note: "سرعة تصفح وتحميل عالية" },
+            { id: 5, name: "019 موبايل (019 Mobile)", type: "بلاستيك + إلكترونية (eSIM)", price1M: "40", price3M: "110", note: "اقتصادية وعملية جداً" },
+            { id: 6, name: "ألوها (Aloha)", type: "بلاستيك + إلكترونية (eSIM)", price1M: "55", price3M: "150", note: "أداء مميز واتصال مستقر" },
+            { id: 7, name: "بيليفون (Pelephone)", type: "بلاستيك + إلكترونية (eSIM)", price1M: "55", price3M: "150", note: "تغطية ممتازة وترددات قوية" },
+            { id: 8, name: "رامي ليفي (Rami Levy)", type: "بلاستيك + إلكترونية (eSIM)", price1M: "45", price3M: "125", note: "تعمل على شبكة بيليفون القوية" },
+            { id: 9, name: "سيمفوني (Simfony)", type: "بلاستيك + إلكترونية (eSIM)", price1M: "45", price3M: "120", note: "خيار ممتاز للإنترنت اليومي" },
+            { id: 10, name: "كلام (Kalam)", type: "بلاستيك + إلكترونية (eSIM)", price1M: "45", price3M: "120", note: "باقات متنوعة وسريعة" },
+            { id: 11, name: "جولان تليكوم (Golan)", type: "بلاستيك + إلكترونية (eSIM)", price1M: "45", price3M: "125", note: "اتصال مستقر وباقات كبيرة" }
+        ];
+
+        const defaultWhatsapp = "972590000000";
+
+        let products = JSON.parse(localStorage.getItem('brandStore_products')) || defaultProducts;
+        let whatsappNumber = localStorage.getItem('brandStore_whatsapp') || defaultWhatsapp;
+        let currentSelectedProduct = null;
+
+        // جلب التعديلات المحفوظة على السيرفر (تعمل في المتصفح المخفي وعند جميع الزبائن)
+        async function fetchServerUpdates() {
+            try {
+                const res = await fetch('data.json?t=' + Date.now(), { cache: "no-store" });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.products && Array.isArray(data.products)) {
+                        products = data.products;
+                        localStorage.setItem('brandStore_products', JSON.stringify(products));
+                    }
+                    if (data.whatsapp) {
+                        whatsappNumber = data.whatsapp;
+                        localStorage.setItem('brandStore_whatsapp', whatsappNumber);
+                    }
+                    updateFloatingWhatsapp();
+                    renderProducts();
+                }
+            } catch (e) {
+                // في حال عدم وجود ملف data.json يعرض البيانات المثبتة في الملف
+            }
+        }
+
+        function updateFloatingWhatsapp() {
+            const cleanNum = whatsappNumber.replace(/[^0-9]/g, '');
+            const msg = encodeURIComponent("مرحباً براند ستور، أود الاستفسار عن الشرائح المتوفرة.");
+            document.getElementById('floating-whatsapp').href = `https://wa.me/${cleanNum}?text=${msg}`;
+        }
+
+        function renderProducts(filterText = 'all') {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = '';
+
+            const filtered = products.filter(p => {
+                if (filterText === 'all') return true;
+                return p.type.includes(filterText);
+            });
+
+            filtered.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'card-gradient rounded-2xl p-5 flex flex-col justify-between shadow-lg';
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start gap-2 mb-3">
+                            <h3 class="text-xl font-extrabold text-white">${product.name}</h3>
+                            <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold px-2.5 py-1 rounded-lg">
+                                ${product.type}
+                            </span>
+                        </div>
+                        <p class="text-slate-400 text-sm mb-5">${product.note || 'متوفرة شريحة بلاستيك وشريحة إلكترونية'}</p>
+
+                        <div class="grid grid-cols-2 gap-3 mb-5">
+                            <div class="bg-slate-800/90 border border-slate-700 rounded-xl p-3 text-center">
+                                <span class="block text-xs text-slate-400 mb-1">اشتراك شهر</span>
+                                <span class="text-2xl font-extrabold text-amber-400">${product.price1M}</span>
+                                <span class="text-xs text-slate-300"> ₪</span>
+                            </div>
+                            <div class="bg-slate-800/90 border border-slate-700 rounded-xl p-3 text-center">
+                                <span class="block text-xs text-slate-400 mb-1">اشتراك 3 شهور</span>
+                                <span class="text-2xl font-extrabold text-emerald-400">${product.price3M}</span>
+                                <span class="text-xs text-slate-300"> ₪</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="text-center text-xs text-emerald-400 font-medium mb-3">
+                            ✔ متوفر الدفع عند الاستلام
+                        </div>
+                        <button onclick="openBookingModal(${product.id})" class="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-extrabold py-3 rounded-xl shadow-md transition">
+                            حجز طلب الآن
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterSim(type) {
+            renderProducts(type);
+            document.getElementById('filter-all').className = type === 'all' ? 'px-4 py-2 rounded-xl text-sm font-bold bg-amber-500 text-slate-950' : 'px-4 py-2 rounded-xl text-sm font-bold bg-slate-800 text-slate-300';
+            document.getElementById('filter-plastic').className = type === 'بلاستيك' ? 'px-4 py-2 rounded-xl text-sm font-bold bg-amber-500 text-slate-950' : 'px-4 py-2 rounded-xl text-sm font-bold bg-slate-800 text-slate-300';
+            document.getElementById('filter-esim').className = type === 'إلكترونية' ? 'px-4 py-2 rounded-xl text-sm font-bold bg-amber-500 text-slate-950' : 'px-4 py-2 rounded-xl text-sm font-bold bg-slate-800 text-slate-300';
+        }
+
+        function openBookingModal(id) {
+            currentSelectedProduct = products.find(p => p.id === id);
+            if (!currentSelectedProduct) return;
+
+            document.getElementById('modal-product-name').textContent = currentSelectedProduct.name;
+            const durationSelect = document.getElementById('order-duration');
+            durationSelect.innerHTML = `
+                <option value="شهر واحد (${currentSelectedProduct.price1M} ₪)">شهر واحد - السعر: ${currentSelectedProduct.price1M} ₪</option>
+                <option value="3 شهور (${currentSelectedProduct.price3M} ₪)">3 شهور - السعر: ${currentSelectedProduct.price3M} ₪</option>
+            `;
+
+            const modal = document.getElementById('booking-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('booking-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function submitOrder(e) {
+            e.preventDefault();
+            if (!currentSelectedProduct) return;
+
+            const simType = document.getElementById('order-sim-type').value;
+            const duration = document.getElementById('order-duration').value;
+            const name = document.getElementById('customer-name').value;
+            const phone = document.getElementById('customer-phone').value;
+            const address = document.getElementById('customer-address').value;
+
+            const message = `*طلب حجز جديد - براند ستور (BRAND STORE)* 🛒\n` +
+                            `--------------------------\n` +
+                            `📌 *الشركة:* ${currentSelectedProduct.name}\n` +
+                            `💳 *نوع الشريحة:* ${simType}\n` +
+                            `⏳ *المدة والسعر:* ${duration}\n` +
+                            `👤 *اسم الزبون:* ${name}\n` +
+                            `📱 *رقم الهاتف:* ${phone}\n` +
+                            `📍 *العنوان:* ${address}\n` +
+                            `💵 *طريقة الدفع:* الدفع عند الاستلام`;
+
+            const cleanNum = whatsappNumber.replace(/[^0-9]/g, '');
+            const whatsappUrl = `https://wa.me/${cleanNum}?text=${encodeURIComponent(message)}`;
+            
+            closeModal();
+            window.open(whatsappUrl, '_blank');
+        }
+
+        updateFloatingWhatsapp();
+        renderProducts();
+        fetchServerUpdates();
+    </script>
+</body>
+</html>
