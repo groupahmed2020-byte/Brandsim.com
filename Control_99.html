@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الأدمن | براند ستور - BRAND STORE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background-color: #0f172a; color: #f8fafc; }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+
+    <!-- واجهة تسجيل الدخول بكلمة سر -->
+    <div id="login-screen" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md flex items-center justify-center z-50 p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-5 text-center">
+            <div class="w-16 h-16 bg-amber-500/10 border border-amber-500/30 rounded-2xl flex items-center justify-center mx-auto text-3xl">🔐</div>
+            <div>
+                <h1 class="text-2xl font-extrabold text-amber-400">دخول لوحة تحكم الأدمن</h1>
+                <p class="text-sm text-slate-400 mt-1">براند ستور - BRAND STORE</p>
+            </div>
+
+            <div class="space-y-4 text-right">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1.5">كلمة المرور:</label>
+                    <div class="relative">
+                        <input type="password" id="login-password" placeholder="أدخل كلمة المرور..." onkeydown="if(event.key==='Enter') handleLogin()" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-amber-500 pl-12">
+                        <button type="button" onclick="togglePass('login-password')" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-sm">👁️</button>
+                    </div>
+                </div>
+                <p id="login-error" class="text-xs text-red-400 font-bold hidden">❌ كلمة المرور غير صحيحة، تأكد من كتابة Aa@@2468 بشكل صحيح.</p>
+                <button type="button" onclick="handleLogin()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold py-3 rounded-xl transition shadow-lg">
+                    دخول للوحة التحكم
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- محتوى لوحة التحكم -->
+    <div id="admin-dashboard" class="max-w-6xl mx-auto space-y-6 hidden">
+        
+        <!-- الهيدر -->
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 flex flex-wrap justify-between items-center gap-4 shadow-xl">
+            <div>
+                <h1 class="text-xl md:text-2xl font-extrabold text-amber-400">⚙️ لوحة تحكم الأدمن - براند ستور</h1>
+                <p class="text-xs md:text-sm text-slate-400">إدارة الشرائح، التوفر، الأسعار، وحفظ التعديلات</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <button type="button" onclick="saveAndDownloadFile()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl font-bold text-sm transition flex items-center gap-2 shadow-lg">
+                    <span>💾</span><span>حفظ وتنزيل Control_99.html</span>
+                </button>
+                <a href="index.html" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-amber-400 border border-amber-500/40 px-4 py-2.5 rounded-xl font-bold text-sm transition">
+                    👁️ معاينة صفحة الزبون
+                </a>
+                <button type="button" onclick="logoutAdmin()" class="bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white px-3 py-2.5 rounded-xl font-bold text-sm transition">
+                    🔒 خروج
+                </button>
+            </div>
+        </div>
+
+        <!-- إعدادات الواتساب وكلمة السر -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-xl">
+                <h2 class="text-base font-bold text-white mb-3">📱 رقم واتساب المتجر (لاستقبال الحجوزات)</h2>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <input type="text" id="admin-whatsapp" value="972599783984" class="flex-grow bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-amber-500">
+                    <button type="button" onclick="saveWhatsapp()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-2 rounded-xl transition">حفظ الرقم</button>
+                </div>
+                <p class="text-xs text-slate-400 mt-2">الرقم الحالي: <span class="text-amber-400 font-bold" id="current-whatsapp-display">972599783984</span></p>
+            </div>
+
+            <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-xl">
+                <h2 class="text-base font-bold text-amber-400 mb-3">🔑 تعديل كلمة مرور الأدمن</h2>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative flex-grow">
+                        <input type="password" id="new-admin-password" placeholder="أدخل كلمة السر الجديدة..." class="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-amber-500 pl-10">
+                        <button type="button" onclick="togglePass('new-admin-password')" class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-sm">👁️</button>
+                    </div>
+                    <button type="button" onclick="changeAdminPassword()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold px-5 py-2 rounded-xl transition">تحديث كلمة السر</button>
+                </div>
+                <p class="text-xs text-slate-400 mt-2">كلمة السر الحالية: <span id="current-pass-display" class="text-slate-300 font-mono">Aa@@2468</span></p>
+            </div>
+        </div>
+
+        <!-- إضافة شريحة جديدة -->
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-xl">
+            <h2 class="text-base font-bold text-amber-400 mb-4">➕ إضافة صنف / شريحة جديدة</h2>
+            <form onsubmit="addNewProduct(event)" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">اسم الشركة / الصنف:</label>
+                    <input type="text" id="new-name" placeholder="مثال: بارتنر (Partner)" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white" required>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">نوع الشريحة:</label>
+                    <select id="new-type" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white">
+                        <option value="بلاستيك + إلكترونية (eSIM)">بلاستيك + إلكترونية (eSIM)</option>
+                        <option value="شريحة بلاستيك فقط">شريحة بلاستيك فقط</option>
+                        <option value="شريحة إلكترونية (eSIM) فقط">شريحة إلكترونية (eSIM) فقط</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">حالة التوفر:</label>
+                    <select id="new-available" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-emerald-400 font-bold">
+                        <option value="متوفر">✅ متوفر</option>
+                        <option value="غير متوفر">❌ غير متوفر</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">وصف مختصر / حجم الباقة:</label>
+                    <input type="text" id="new-note" placeholder="مثال: 300 جيجا" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">سعر الشهر الواحد (₪):</label>
+                    <input type="number" id="new-price1m" placeholder="مثال: 45" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white" required>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">سعر 3 شهور (₪):</label>
+                    <input type="number" id="new-price3m" placeholder="مثال: 120" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-white" required>
+                </div>
+                <div class="sm:col-span-2 lg:col-span-3 flex justify-end">
+                    <button type="submit" class="w-full sm:w-auto bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold px-8 py-2.5 rounded-xl transition">+ إضافة الصنف للمتجر</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- جدول الشرائح -->
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-5 shadow-xl">
+            <div class="flex flex-wrap justify-between items-center gap-4 mb-4">
+                <h2 class="text-base font-bold text-white">📋 الشرائح الحالية وتعديل الأسعار والتوفر (<span id="products-count">20</span> شريحة)</h2>
+                <div class="flex flex-wrap items-center gap-3">
+                    <button type="button" onclick="saveAndDownloadFile()" class="text-xs bg-emerald-600/20 hover:bg-emerald-600 text-emerald-400 hover:text-white border border-emerald-500/40 px-3 py-1.5 rounded-lg font-bold transition">💾 حفظ وتنزيل Control_99.html</button>
+                    <button type="button" onclick="resetToDefaults()" class="text-xs text-red-400 hover:underline">استعادة القائمة الأساسية</button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-right border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-700 text-slate-400 text-xs sm:text-sm">
+                            <th class="py-3 px-2">#</th>
+                            <th class="py-3 px-2">الصنف / الشركة</th>
+                            <th class="py-3 px-2">الباقة / الوصف</th>
+                            <th class="py-3 px-2">النوع</th>
+                            <th class="py-3 px-2">التوفر</th>
+                            <th class="py-3 px-2">شهر (₪)</th>
+                            <th class="py-3 px-2">3 شهور (₪)</th>
+                            <th class="py-3 px-2">حذف</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-products-table" class="divide-y divide-slate-800 text-sm"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script id="store-config">
+        window.DEFAULT_CONFIG = {
+            whatsapp: "972599783984",
+            password: "Aa@@2468",
+            products: [
+                { id: 1, name: "بارتنر (Partner)", type: "شريحة بلاستيك فقط", available: "متوفر", price1M: "100", price3M: "170", note: "تغطية قوية وسرعة عالية" },
+                { id: 2, name: "سيلكوم (Cellcom)", type: "شريحة بلاستيك فقط", available: "متوفر", price1M: "70", price3M: "130", note: "ثبات ممتاز في الإشارة" },
+                { id: 3, name: "ويكوم (Wecom)", type: "شريحة بلاستيك فقط", available: "متوفر", price1M: "80", price3M: "130", note: "باقات إنترنت ضخمة" },
+                { id: 4, name: "هوت موبايل (HOT Mobile)", type: "شريحة بلاستيك فقط", available: "متوفر", price1M: "80", price3M: "150", note: "سرعة تصفح وتحميل عالية" },
+                { id: 5, name: "019 موبايل (019 Mobile)", type: "شريحة بلاستيك فقط", available: "متوفر", price1M: "100", price3M: "150", note: "اقتصادية وعملية جداً" },
+                { id: 6, name: "ألوها (Aloha)", type: "شريحة بلاستيك فقط", available: "متوفر", price1M: "100", price3M: "150", note: "أداء مميز واتصال مستقر" },
+                { id: 7, name: "بيليفون (Pelephone)", type: "شريحة بلاستيك فقط", available: "متوفر", price1M: "100", price3M: "150", note: "تغطية ممتازة وترددات قوية" },
+                { id: 8, name: "رامي ليفي (Rami Levy)", type: "شريحة بلاستيك فقط", available: "متوفر", price1M: "100", price3M: "150", note: "تعمل على شبكة بيليفون القوية" },
+                { id: 9, name: "سيمفوني (Simfony)", type: "شريحة إلكترونية (eSIM) فقط", available: "متوفر", price1M: "60", price3M: "120", note: "خيار ممتاز للإنترنت اليومي" },
+                { id: 10, name: "كلام (Kalam)", type: "شريحة إلكترونية (eSIM) فقط", available: "متوفر", price1M: "60", price3M: "120", note: "باقات متنوعة وسريعة" },
+                { id: 11, name: "جولان تليكوم (Golan)", type: "شريحة إلكترونية (eSIM) فقط", available: "متوفر", price1M: "60", price3M: "125", note: "اتصال مستقر وباقات كبيرة" },
+                { id: 1792218254242, name: "بارتنر (Partner)", type: "شريحة إلكترونية (eSIM) فقط", available: "متوفر", price1M: "45", price3M: "120", note: "300 جيجا" },
+                { id: 1792218290392, name: "بارتنر (Partner)", type: "شريحة إلكترونية (eSIM) فقط", available: "متوفر", price1M: "60", price3M: "130", note: "500 جيجا لكل شهر" },
+                { id: 1792218405033, name: "سيلكوم (Cellcom)", type: "شريحة إلكترونية (eSIM) فقط", available: "متوفر", price1M: "45", price3M: "100", note: "300 جيجا" },
+                { id: 1792218454744, name: "سيلكوم (Cellcom)", type: "شريحة إلكترونية (eSIM) فقط", available: "متوفر", price1M: "60", price3M: "120", note: "400 جيجا لكل شهر" },
+                { id: 1792218759794, name: "ويكوم(wecom)", type: "شريحة إلكترونية (eSIM) فقط", available: "متوفر", price1M: "45", price3M: "100", note: "500 جيجا" },
+                { id: 1792218828036, name: "هوت موبايل (HOT Mobile)", type: "شريحة إلكترونية (eSIM) فقط", available: "متوفر", price1M: "40", price3M: "120", note: "300 جيجا شهر ،600 جيجا 3 شهور" },
+                { id: 1792218866760, name: "019 موبايل (019 Mobile)", type: "شريحة إلكترونية (eSIM) فقط", available: "متوفر", price1M: "45", price3M: "120", note: "100 جيجا" },
+                { id: 1792218913358, name: "ألوها (Aloha)", type: "شريحة إلكترونية (eSIM) فقط", available: "متوفر", price1M: "15", price3M: "120", note: "150 جيجا" },
+                { id: 1792218990842, name: "بيليفون (Pelephone)", type: "شريحة إلكترونية (eSIM) فقط", available: "متوفر", price1M: "45", price3M: "120", note: "300جيجا شهر ، 1500 جيجا 3 شهور" }
+            ]
+        };
+    </script>
+
+    <script>
+        function safeGet(key) {
+            try { return localStorage.getItem(key); } catch (e) { return null; }
+        }
+        function safeSet(key, val) {
+            try { localStorage.setItem(key, val); } catch (e) {}
+        }
+
+        const defaultProducts = window.DEFAULT_CONFIG.products;
+        let adminPassword = safeGet('brandStore_admin_pass') || window.DEFAULT_CONFIG.password || "Aa@@2468";
+        document.getElementById('current-pass-display').textContent = adminPassword;
+
+        let savedWhatsapp = safeGet('brandStore_whatsapp') || window.DEFAULT_CONFIG.whatsapp || "972599783984";
+        document.getElementById('admin-whatsapp').value = savedWhatsapp;
+        document.getElementById('current-whatsapp-display').textContent = savedWhatsapp;
+
+        let products = null;
+        try { products = JSON.parse(safeGet('brandStore_products')); } catch (e) { products = null; }
+        if (!products || !safeGet('brandStore_synced_index2')) {
+            products = JSON.parse(JSON.stringify(defaultProducts));
+            safeSet('brandStore_products', JSON.stringify(products));
+            safeSet('brandStore_synced_index2', 'true');
+        } else {
+            products = products.map(p => ({ ...p, available: p.available || "متوفر" }));
+        }
+
+        function togglePass(id) {
+            const el = document.getElementById(id);
+            el.type = el.type === 'password' ? 'text' : 'password';
+        }
+
+        function handleLogin() {
+            const entered = document.getElementById('login-password').value.trim();
+            const err = document.getElementById('login-error');
+            if (entered === adminPassword || entered === "Aa@@2468") {
+                err.classList.add('hidden');
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                document.getElementById('login-password').value = '';
+                renderAdminTable();
+            } else {
+                err.classList.remove('hidden');
+            }
+        }
+
+        function logoutAdmin() {
+            document.getElementById('admin-dashboard').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+
+        function changeAdminPassword() {
+            const newPass = document.getElementById('new-admin-password').value.trim();
+            if (!newPass) { alert("⚠️ يرجى كتابة كلمة المرور الجديدة أولاً."); return; }
+            adminPassword = newPass;
+            safeSet('brandStore_admin_pass', adminPassword);
+            document.getElementById('current-pass-display').textContent = adminPassword;
+            document.getElementById('new-admin-password').value = '';
+            alert("✅ تم تحديث كلمة المرور بنجاح!");
+        }
+
+        function saveToStorage() {
+            safeSet('brandStore_products', JSON.stringify(products));
+            renderAdminTable();
+        }
+
+        function saveWhatsapp() {
+            const num = document.getElementById('admin-whatsapp').value.trim();
+            safeSet('brandStore_whatsapp', num);
+            document.getElementById('current-whatsapp-display').textContent = num;
+            alert("✅ تم حفظ رقم الواتساب بنجاح!");
+        }
+
+        function renderAdminTable() {
+            const tbody = document.getElementById('admin-products-table');
+            document.getElementById('products-count').textContent = products.length;
+            tbody.innerHTML = '';
+
+            products.forEach((p, i) => {
+                const isAvail = (p.available || "متوفر") === "متوفر";
+                const tr = document.createElement('tr');
+                tr.className = isAvail ? "" : "opacity-60 bg-red-950/10";
+                tr.innerHTML = `
+                    <td class="py-2.5 px-2 text-slate-400 font-bold">${i + 1}</td>
+                    <td class="py-2.5 px-2"><input type="text" value="${p.name}" onchange="updateField(${i},'name',this.value)" class="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-white w-36"></td>
+                    <td class="py-2.5 px-2"><input type="text" value="${p.note || ''}" onchange="updateField(${i},'note',this.value)" class="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-slate-200 text-xs w-36"></td>
+                    <td class="py-2.5 px-2">
+                        <select onchange="updateField(${i},'type',this.value)" class="bg-slate-800 border border-slate-700 rounded-lg px-2 py-1 text-slate-200 text-xs">
+                            <option value="بلاستيك + إلكترونية (eSIM)" ${p.type.includes('+') ? 'selected' : ''}>بلاستيك + إلكترونية</option>
+                            <option value="شريحة بلاستيك فقط" ${p.type === 'شريحة بلاستيك فقط' ? 'selected' : ''}>بلاستيك فقط</option>
+                            <option value="شريحة إلكترونية (eSIM) فقط" ${p.type === 'شريحة إلكترونية (eSIM) فقط' ? 'selected' : ''}>إلكترونية فقط</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-2">
+                        <select onchange="updateField(${i},'available',this.value)" class="bg-slate-800 border ${isAvail ? 'border-emerald-500/50 text-emerald-400' : 'border-red-500/50 text-red-400'} rounded-lg px-2 py-1 text-xs font-bold">
+                            <option value="متوفر" ${isAvail ? 'selected' : ''}>✅ متوفر</option>
+                            <option value="غير متوفر" ${!isAvail ? 'selected' : ''}>❌ غير متوفر</option>
+                        </select>
+                    </td>
+                    <td class="py-2.5 px-2"><input type="number" value="${p.price1M}" onchange="updateField(${i},'price1M',this.value)" class="bg-slate-800 border border-amber-500/50 rounded-lg px-2 py-1 text-amber-400 font-bold w-16 text-center"></td>
+                    <td class="py-2.5 px-2"><input type="number" value="${p.price3M}" onchange="updateField(${i},'price3M',this.value)" class="bg-slate-800 border border-emerald-500/50 rounded-lg px-2 py-1 text-emerald-400 font-bold w-16 text-center"></td>
+                    <td class="py-2.5 px-2"><button type="button" onclick="deleteProduct(${i})" class="bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white px-2.5 py-1 rounded-lg text-xs font-bold">حذف</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateField(i, field, val) {
+            products[i][field] = val;
+            saveToStorage();
+        }
+
+        function addNewProduct(e) {
+            e.preventDefault();
+            products.push({
+                id: Date.now(),
+                name: document.getElementById('new-name').value.trim(),
+                type: document.getElementById('new-type').value,
+                available: document.getElementById('new-available').value,
+                note: document.getElementById('new-note').value.trim() || "متوفرة شريحة بلاستيك وشريحة إلكترونية",
+                price1M: document.getElementById('new-price1m').value.trim(),
+                price3M: document.getElementById('new-price3m').value.trim()
+            });
+            saveToStorage();
+            e.target.reset();
+            alert("✅ تمت إضافة الصنف الجديد بنجاح!");
+        }
+
+        function deleteProduct(i) {
+            if (confirm("هل أنت متأكد من حذف هذا الصنف؟")) {
+                products.splice(i, 1);
+                saveToStorage();
+            }
+        }
+
+        function resetToDefaults() {
+            if (confirm("هل تريد استعادة قائمة الشرائح الـ 20 الأساسية؟")) {
+                products = JSON.parse(JSON.stringify(defaultProducts));
+                saveToStorage();
+            }
+        }
+
+        function saveAndDownloadFile() {
+            const currentWhatsapp = document.getElementById('admin-whatsapp').value.trim() || "972599783984";
+            safeSet('brandStore_whatsapp', currentWhatsapp);
+            safeSet('brandStore_products', JSON.stringify(products));
+            safeSet('brandStore_admin_pass', adminPassword);
+
+            const clone = document.documentElement.cloneNode(true);
+            clone.querySelector('#login-screen').classList.remove('hidden');
+            clone.querySelector('#admin-dashboard').classList.add('hidden');
+            clone.querySelector('#login-password').value = '';
+            clone.querySelector('#admin-whatsapp').setAttribute('value', currentWhatsapp);
+            clone.querySelector('#admin-products-table').innerHTML = '';
+
+            const updatedConfig = { whatsapp: currentWhatsapp, password: adminPassword, products: products };
+            clone.querySelector('#store-config').textContent = `\n        window.DEFAULT_CONFIG = ${JSON.stringify(updatedConfig, null, 8)};\n    `;
+
+            const blob = new Blob(['<!DOCTYPE html>\n' + clone.outerHTML], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Control_99.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        renderAdminTable();
+    </script>
+</body>
+</html>
