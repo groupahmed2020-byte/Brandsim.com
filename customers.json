@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1792275920331,
+    "name": "محمد",
+    "simPhone": "0523141414",
+    "packageInfo": "بيليفون (Pelephone) - 300 جيجا",
+    "expiryDate": "2027-02-17",
+    "priceNote": "120",
+    "contactPhone": "0599783984"
+  },
+  {
+    "id": 1792274532693,
+    "name": "أسامة سالم",
+    "simPhone": "0599783984",
+    "packageInfo": "سيلكوم (Cellcom) - 400 جيجا eSIM",
+    "expiryDate": "2027-02-17",
+    "priceNote": "120",
+    "contactPhone": "0599783984"
+  }
+]
