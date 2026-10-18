@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استعلام عن الاشتراك | براند ستور - BRAND STORE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #090d16;
+            color: #f8fafc;
+            background-image: radial-gradient(circle at top right, rgba(245, 158, 11, 0.08), transparent 40%),
+                              radial-gradient(circle at bottom left, rgba(56, 189, 248, 0.08), transparent 40%);
+        }
+        .glass-card {
+            background: rgba(30, 41, 59, 0.75);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(51, 65, 85, 0.85);
+        }
+        .progress-ring__circle {
+            transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.4s ease;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between p-4 md:p-6">
+
+    <!-- الهيدر -->
+    <header class="max-w-xl mx-auto w-full pt-2 pb-4">
+        <div class="glass-card rounded-2xl p-4 flex items-center justify-between shadow-lg">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center text-slate-950 font-black text-2xl shadow-md">
+                    B
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-extrabold text-amber-400 tracking-wide">براند ستور | BRAND STORE</h1>
+                    <p class="text-xs text-slate-400">بوابة استعلام المشتركين عن صلاحية الحزم</p>
+                </div>
+            </div>
+            <span class="bg-sky-500/10 border border-sky-500/30 text-sky-400 text-xs font-bold px-3 py-1.5 rounded-full">
+                📡 استعلام فوري
+            </span>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="max-w-xl mx-auto w-full flex-grow space-y-5 my-2">
+
+        <!-- صندوق البحث برقم الشريحة -->
+        <div class="glass-card rounded-3xl p-6 shadow-2xl">
+            <h2 class="text-lg font-extrabold text-white mb-1 text-center">استعلم عن رقمك واشتراكك</h2>
+            <p class="text-xs text-slate-400 text-center mb-5">أدخل رقم الشريحة (05********) لعرض الأيام المتبقية وتفاصيل الحزمة</p>
+
+            <form onsubmit="handleSearch(event)" class="space-y-3">
+                <div class="relative">
+                    <input
+                        type="tel"
+                        id="phoneInput"
+                        placeholder="مثال: 0523121212"
+                        class="w-full bg-slate-900/90 border border-slate-700 focus:border-amber-500 rounded-2xl px-4 py-3.5 text-center text-lg font-bold tracking-wider text-white placeholder-slate-500 focus:outline-none transition font-mono"
+                        required
+                    >
+                </div>
+                <button
+                    type="submit"
+                    id="searchBtn"
+                    class="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-extrabold py-3.5 rounded-2xl shadow-lg transition flex items-center justify-center gap-2 text-base"
+                >
+                    <span>🔍</span>
+                    <span>عرض تفاصيل الاشتراك</span>
+                </button>
+            </form>
+
+            <!-- رسالة خطأ عند عدم العثور على الرقم -->
+            <div id="notFoundBox" class="hidden mt-4 bg-rose-950/60 border border-rose-500/40 rounded-2xl p-4 text-center fade-in">
+                <p class="text-rose-300 font-bold text-sm mb-1">❌ الرقم المدخل غير مسجل في قاعدة البيانات</p>
+                <p class="text-slate-400 text-xs">تأكد من كتابة رقم الشريحة بشكل صحيح (مثال: 052xxxxxxx) أو تواصل معنا عبر واتساب.</p>
+            </div>
+        </div>
+
+        <!-- نتيجة الاستعلام (تظهر بعد البحث) -->
+        <div id="resultContainer" class="hidden space-y-5 fade-in">
+
+            <!-- بطاقة الدائرة البيانية للأيام المتبقية -->
+            <div class="glass-card rounded-3xl p-6 text-center shadow-2xl relative overflow-hidden">
+                <div id="statusBadgeTop" class="inline-flex items-center gap-1.5 px-4 py-1 rounded-full text-xs font-extrabold border mb-4">
+                    <!-- يتم تعبئته برمجياً -->
+                </div>
+
+                <!-- الدائرة البيانية SVG -->
+                <div class="relative w-52 h-52 mx-auto flex items-center justify-center">
+                    <svg class="w-52 h-52" viewBox="0 0 180 180">
+                        <!-- خلفية الدائرة -->
+                        <circle
+                            cx="90" cy="90" r="76"
+                            stroke="#1e293b"
+                            stroke-width="14"
+                            fill="transparent"
+                        />
+                        <!-- شريط التقدم الدائري -->
+                        <circle
+                            id="progressCircle"
+                            class="progress-ring__circle"
+                            cx="90" cy="90" r="76"
+                            stroke="#10b981"
+                            stroke-width="14"
+                            stroke-linecap="round"
+                            fill="transparent"
+                            stroke-dasharray="477.5"
+                            stroke-dashoffset="477.5"
+                        />
+                    </svg>
+
+                    <!-- النص داخل الدائرة -->
+                    <div class="absolute inset-0 flex flex-col items-center justify-center">
+                        <span id="daysCountText" class="text-5xl font-black text-white tracking-tight">0</span>
+                        <span id="daysLabelText" class="text-sm font-bold text-slate-300 mt-1">يوم متبقي</span>
+                        <span id="percentText" class="text-[11px] font-bold text-slate-400 mt-1 bg-slate-900/80 px-2.5 py-0.5 rounded-full border border-slate-800">0%</span>
+                    </div>
+                </div>
+
+                <p id="expirySummaryText" class="text-xs text-slate-300 mt-3 font-medium"></p>
+            </div>
+
+            <!-- بطاقة تفاصيل الاشتراك والباقة -->
+            <div class="glass-card rounded-3xl p-6 shadow-2xl space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-700/80 pb-3">
+                    <h3 class="text-base font-extrabold text-amber-400 flex items-center gap-2">
+                        <span>📋</span>
+                        <span>تفاصيل الاشتراك والحزمة</span>
+                    </h3>
+                    <span id="simTypeTag" class="text-xs font-bold px-3 py-1 rounded-lg bg-sky-500/15 text-sky-300 border border-sky-500/30">
+                        شريحة اتصال
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                    <!-- اسم المشترك -->
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-3.5">
+                        <span class="block text-xs text-slate-400 mb-1">👤 اسم المشترك</span>
+                        <span id="resName" class="font-extrabold text-white text-base">-</span>
+                    </div>
+
+                    <!-- رقم الشريحة -->
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-3.5">
+                        <span class="block text-xs text-slate-400 mb-1">📱 رقم الشريحة</span>
+                        <span id="resSimPhone" class="font-extrabold text-sky-400 text-base font-mono">-</span>
+                    </div>
+
+                    <!-- الحزمة والشركة -->
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-3.5 sm:col-span-2">
+                        <span class="block text-xs text-slate-400 mb-1">📦 الحزمة ونوع الاشتراك</span>
+                        <span id="resPackage" class="font-extrabold text-amber-300 text-base">-</span>
+                    </div>
+
+                    <!-- تاريخ انتهاء الاشتراك -->
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-3.5">
+                        <span class="block text-xs text-slate-400 mb-1">📅 تاريخ انتهاء الاشتراك</span>
+                        <span id="resExpiry" class="font-extrabold text-white font-mono">-</span>
+                    </div>
+
+                    <!-- قيمة التجديد -->
+                    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-3.5">
+                        <span class="block text-xs text-slate-400 mb-1">💵 قيمة التجديد</span>
+                        <span id="resPrice" class="font-extrabold text-emerald-400">-</span>
+                    </div>
+                </div>
+
+                <!-- أزرار التفاعل (تجديد عبر واتساب + نسخ رابط الرقم) -->
+                <div class="pt-2 space-y-2.5">
+                    <a
+                        id="renewWhatsappBtn"
+                        href="#"
+                        target="_blank"
+                        class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3.5 rounded-2xl shadow-lg transition flex items-center justify-center gap-2 text-sm"
+                    >
+                        <span>💬</span>
+                        <span>طلب تجديد الاشتراك عبر واتساب</span>
+                    </a>
+
+                    <button
+                        type="button"
+                        onclick="copyDirectCustomerLink()"
+                        class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-2xl border border-slate-700 transition text-xs flex items-center justify-center gap-1.5"
+                    >
+                        <span>🔗</span>
+                        <span id="copyLinkBtnText">نسخ رابط الاستعلام المباشر لهذا الرقم</span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- الفوتر -->
+    <footer class="max-w-xl mx-auto w-full text-center py-4 text-xs text-slate-500">
+        <p class="font-bold text-slate-400">براند ستور - BRAND STORE</p>
+        <p class="mt-0.5">لبيع وتجديد كافة الشرائح البلاستيكية والإلكترونية (eSIM)</p>
+    </footer>
+
+    <script>
+        const DEFAULT_REPO = 'groupahmed2020-byte/BrandSim.com';
+        const DEFAULT_WHATSAPP = '972599783984';
+        const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 76; // 477.52
+
+        let customersDB = [];
+        let currentCustomer = null;
+
+        // قراءة آمنة من LocalStorage
+        function safeGet(key, def = null) {
+            try {
+                const val = localStorage.getItem(key);
+                if (val !== null) return val;
+            } catch (e) {}
+            return def;
+        }
+
+        // تحويل الأرقام العربية إلى إنجليزية وتوحيد صيغة الرقم
+        function normalizeDigits(str) {
+            if (!str) return '';
+            const ar = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+            let out = String(str);
+            for (let i = 0; i < 10; i++) {
+                out = out.replace(new RegExp(ar[i], 'g'), i);
+            }
+            return out;
+        }
+
+        function normalizeSimPhone(raw) {
+            let c = normalizeDigits(raw).replace(/[^0-9]/g, '');
+            if (c.startsWith('00972') || c.startsWith('00970')) c = '0' + c.slice(5);
+            else if ((c.startsWith('972') || c.startsWith('970')) && c.length >= 11) c = '0' + c.slice(3);
+            else if (c.length === 9 && c.startsWith('5')) c = '0' + c;
+            return c;
+        }
+
+        // جلب بيانات المشتركين من نفس مصادر صفحة sms.html
+        async function loadCustomersData() {
+            // 1. قراءة مبدئية من LocalStorage (إن وجدت على نفس الجهاز)
+            try {
+                const localData = JSON.parse(safeGet('xone1_customers_db'));
+                if (Array.isArray(localData) && localData.length > 0) {
+                    customersDB = localData;
+                }
+            } catch (e) {}
+
+            // 2. جلب ملف customers.json المباشر من الموقع
+            try {
+                const res = await fetch('customers.json?t=' + Date.now(), { cache: 'no-store' });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data) && data.length > 0) {
+                        customersDB = data;
+                        return;
+                    }
+                }
+            } catch (e) {}
+
+            // 3. جلب احتياطي مباشر من مستودع GitHub لضمان التحديث الفوري
+            try {
+                const repo = safeGet('xone1_gh_repo', DEFAULT_REPO);
+                const rawRes = await fetch(`https://raw.githubusercontent.com/${repo}/main/customers.json?t=${Date.now()}`, { cache: 'no-store' });
+                if (rawRes.ok) {
+                    const rawData = await rawRes.json();
+                    if (Array.isArray(rawData)) {
+                        customersDB = rawData;
+                    }
+                }
+            } catch (e) {}
+        }
+
+        // حساب الأيام المتبقية وحالة الاشتراك
+        function calculateStatus(expiryDateStr) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            const exp = new Date(expiryDateStr);
+            exp.setHours(0, 0, 0, 0);
+
+            const diffDays = Math.ceil((exp - today) / 86400000);
+
+            // تحديد سقف الدورة البيانية (30 يوماً للاشتراك الشهري، أو 90 يوماً لـ 3 شهور)
+            const totalCycleDays = diffDays > 31 ? 90 : 30;
+
+            if (diffDays < 0) {
+                return {
+                    code: 'expired',
+                    days: diffDays,
+                    displayNum: 0,
+                    label: `منتهي منذ ${Math.abs(diffDays)} يوم`,
+                    badgeText: '❌ الاشتراك منتهي',
+                    badgeClass: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+                    strokeColor: '#f43f5e',
+                    percent: 0
+                };
+            } else if (diffDays <= 3) {
+                const pct = Math.max(5, Math.round((diffDays / totalCycleDays) * 100));
+                return {
+                    code: 'soon',
+                    days: diffDays,
+                    displayNum: diffDays,
+                    label: diffDays === 0 ? 'ينتهي اليوم!' : 'أيام متبقية',
+                    badgeText: diffDays === 0 ? '⚠️ ينتهي الاشتراك اليوم' : `⚠️ ينتهي قريباً (خلال ${diffDays} أيام)`,
+                    badgeClass: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                    strokeColor: '#f59e0b',
+                    percent: pct
+                };
+            } else {
+                const pct = Math.min(100, Math.round((diffDays / totalCycleDays) * 100));
+                return {
+                    code: 'active',
+                    days: diffDays,
+                    displayNum: diffDays,
+                    label: 'يوم متبقي',
+                    badgeText: '✅ اشتراك نشط وساري',
+                    badgeClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+                    strokeColor: '#10b981',
+                    percent: pct
+                };
+            }
+        }
+
+        // استنتاج نوع الشريحة من نص الحزمة
+        function detectSimType(pkgText) {
+            if (!pkgText) return 'شريحة اتصال';
+            const lower = pkgText.toLowerCase();
+            if (lower.includes('esim') || lower.includes('إلكترونية') || lower.includes('الكترونية')) {
+                return '⚡ شريحة إلكترونية (eSIM)';
+            }
+            if (lower.includes('بلاستيك')) {
+                return '💳 شريحة بلاستيك';
+            }
+            return '📡 حزمة إنترنت واتصال';
+        }
+
+        // تحديث الدائرة البيانية والواجهة
+        function renderCustomerResult(customer) {
+            currentCustomer = customer;
+            document.getElementById('notFoundBox').classList.add('hidden');
+            const container = document.getElementById('resultContainer');
+            container.classList.remove('hidden');
+
+            const status = calculateStatus(customer.expiryDate);
+
+            // تحديث الشارة العلوية
+            const badgeTop = document.getElementById('statusBadgeTop');
+            badgeTop.className = `inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-extrabold border mb-4 ${status.badgeClass}`;
+            badgeTop.textContent = status.badgeText;
+
+            // تحديث الدائرة البيانية
+            const circle = document.getElementById('progressCircle');
+            circle.style.strokeDasharray = `${CIRCLE_CIRCUMFERENCE}`;
+            const offset = CIRCLE_CIRCUMFERENCE - (status.percent / 100) * CIRCLE_CIRCUMFERENCE;
+            circle.style.strokeDashoffset = CIRCLE_CIRCUMFERENCE; // إعادة ضبط سريعة للأنيميشن
+            circle.style.stroke = status.strokeColor;
+
+            setTimeout(() => {
+                circle.style.strokeDashoffset = offset;
+            }, 50);
+
+            // النصوص داخل وتحت الدائرة
+            document.getElementById('daysCountText').textContent = status.displayNum;
+            document.getElementById('daysLabelText').textContent = status.label;
+            document.getElementById('percentText').textContent = `${status.percent}% متبقي`;
+
+            const summaryEl = document.getElementById('expirySummaryText');
+            if (status.code === 'expired') {
+                summaryEl.innerHTML = `انتهت صلاحية الحزمة بتاريخ <span class="text-rose-400 font-bold font-mono">${customer.expiryDate}</span>، يرجى التجديد لاستمرار الخدمة.`;
+            } else {
+                summaryEl.innerHTML = `صالح لغاية تاريخ <span class="text-amber-400 font-bold font-mono">${customer.expiryDate}</span>`;
+            }
+
+            // تفاصيل الاشتراك
+            document.getElementById('simTypeTag').textContent = detectSimType(customer.packageInfo);
+            document.getElementById('resName').textContent = customer.name || 'مشترك براند ستور';
+            document.getElementById('resSimPhone').textContent = customer.simPhone || '-';
+            document.getElementById('resPackage').textContent = customer.packageInfo || '-';
+            document.getElementById('resExpiry').textContent = customer.expiryDate || '-';
+            document.getElementById('resPrice').textContent = customer.priceNote || 'حسب الباقة المختارة';
+
+            // تجهيز رابط واتساب لتجديد الاشتراك
+            const waNumber = (safeGet('brandStore_whatsapp') || DEFAULT_WHATSAPP).replace(/[^0-9]/g, '');
+            const waMsg = `مرحباً براند ستور، أرغب في تجديد اشتراك الشريحة الخاصة بي:\n` +
+                          `👤 الاسم: ${customer.name}\n` +
+                          `📱 رقم الشريحة: ${customer.simPhone}\n` +
+                          `📦 الحزمة: ${customer.packageInfo}\n` +
+                          `📅 تاريخ الانتهاء: ${customer.expiryDate}`;
+            document.getElementById('renewWhatsappBtn').href = `https://wa.me/${waNumber}?text=${encodeURIComponent(waMsg)}`;
+        }
+
+        // البحث عند الضغط على الزر
+        async function handleSearch(e) {
+            if (e) e.preventDefault();
+            const rawInput = document.getElementById('phoneInput').value.trim();
+            const queryPhone = normalizeSimPhone(rawInput);
+            if (!queryPhone) return;
+
+            const btn = document.getElementById('searchBtn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span>⏳ جاري البحث...</span>';
+
+            await loadCustomersData();
+            bt            btn.innerHTML = originalText;
+
+            const found = customersDB.find(c =>
+                normalizeSimPhone(c.simPhone) === queryPhone ||
+                (c.contactPhone && normalizeSimPhone(c.contactPhone) === queryPhone)
+            );
+
+            if (found) {
+                renderCustomerResult(found);
+            } else {
+                document.getElementById('resultContainer').classList.add('hidden');
+                document.getElementById('notFoundBox').classList.remove('hidden');
+            }
+        }
+
+        // نسخ رابط مباشر للزبون مع رقمه
+        function copyDirectCustomerLink() {
+            if (!currentCustomer) return;
+            const url = new URL(window.location.href);
+            url.searchParams.set('phone', currentCustomer.simPhone);
+            navigator.clipboard.writeText(url.toString());
+
+            const btnText = document.getElementById('copyLinkBtnText');
+            btnText.textContent = '✅ تم نسخ الرابط المباشر بنجاح!';
+            setTimeout(() => {
+                btnText.textContent = 'نسخ رابط الاستعلام المباشر لهذا الرقم';
+            }, 2500);
+        }
+
+        // التشغيل التلقائي في حال إرسال رابط يحتوي على ?phone=05xxxxxxxx
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadCustomersData();
+            const params = new URLSearchParams(window.location.search);
+            const phoneParam = params.get('phone') || params.get('num');
+            if (phoneParam) {
+                document.getElementById('phoneInput').value = phoneParam;
+                handleSearch(null);
+            }
+        });
+    </script>
+</body>
+</html>
