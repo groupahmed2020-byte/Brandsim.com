@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منظومة الرسائل وإدارة المشتركين - XONE1 | BRAND STORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #090d16; color: #f8fafc; }
+        .glass-card { background: rgba(30, 41, 59, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(51, 65, 85, 0.8); }
+        input, select, textarea { background-color: #0f172a !important; border-color: #334155 !important; color: #fff !important; }
+        input:focus, select:focus, textarea:focus { border-color: #38bdf8 !important; outline: none; box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2); }
+        #lockScreen { display: flex; }
+        #lockScreen.unlocked { display: none !important; }
+        #mainApp { display: none; }
+        #mainApp.unlocked { display: block !important; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+        .shake-anim { animation: shake 0.3s ease-in-out; }
+    </style>
+</head>
+<body class="min-h-screen relative">
+
+    <!-- شاشة القفل بكلمة سر -->
+    <div id="lockScreen" class="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-xl items-center justify-center p-4">
+        <div id="lockCard" class="glass-card rounded-3xl max-w-md w-full p-8 text-center shadow-2xl border border-sky-500/30">
+            <div class="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-tr from-sky-500 to-amber-500 flex items-center justify-center text-slate-950 text-4xl font-extrabold shadow-lg">🔒</div>
+            <h2 class="text-2xl font-extrabold text-white mb-1">بوابة الإدارة والرسائل السرية</h2>
+            <p class="text-xs text-slate-400 mb-6">براند ستور &bull; بوابة TweetSMS (XONE1)</p>
+            <div id="lockAutoNotice" class="hidden mb-4 p-3 rounded-xl bg-sky-950/80 border border-sky-500 text-sky-200 text-xs font-bold"></div>
+            <form onsubmit="unlockPage(event)" class="space-y-4">
+                <input type="password" id="loginPasswordInput" placeholder="أدخل كلمة المرور للدخول..." class="w-full rounded-xl p-3.5 text-center text-lg font-bold tracking-widest border" autofocus required>
+                <p id="loginError" class="hidden text-rose-400 text-xs font-bold">❌ كلمة المرور غير صحيحة! حاول مرة أخرى.</p>
+                <button type="submit" class="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-slate-950 font-extrabold py-3.5 rounded-xl shadow-lg transition">فتح لوحة التحكم</button>
+                <a href="index.html" class="block text-xs text-slate-500 hover:text-slate-300 pt-2">العودة إلى المتجر الرئيسي</a>
+            </form>
+        </div>
+    </div>
+
+    <!-- لوحة التحكم الرئيسية -->
+    <div id="mainApp" class="max-w-7xl mx-auto p-4 md:p-6 space-y-6">
+        <div class="glass-card rounded-2xl p-5 flex flex-col lg:flex-row justify-between items-center gap-4 shadow-xl">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 flex items-center justify-center text-slate-950 font-black text-2xl shadow-md">X1</div>
+                <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <h1 class="text-xl md:text-2xl font-extrabold text-white">منظومة رسائل وداتا المشتركين</h1>
+                        <span class="bg-amber-500/20 text-amber-300 text-xs px-2.5 py-0.5 rounded-lg font-bold border border-amber-500/40">BRAND STORE</span>
+                    </div>
+                    <p class="text-slate-400 text-xs md:text-sm mt-0.5">حفظ دائم على GitHub + رد تلقائي بالخلفية عبر TweetSMS</p>
+                </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <div id="githubSyncBadge" onclick="switchTab('settings')" class="cursor-pointer flex items-center gap-2 bg-slate-900 px-3 py-2 rounded-xl border border-slate-700 text-xs font-bold text-amber-400">
+                    <span>☁️ GitHub: اضبط التوكن للحفظ الدائم</span>
+                </div>
+                <button onclick="syncFromGitHub(true)" class="bg-sky-950 hover:bg-sky-900 text-sky-300 text-xs font-bold px-3 py-2 rounded-xl border border-sky-700 transition">🔄 تحديث الداتا</button>
+                <a href="index.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold px-3 py-2 rounded-xl border border-slate-600 transition">🏠 المتجر</a>
+                <button onclick="lockPage()" class="bg-rose-950/70 hover:bg-rose-900 text-rose-300 text-xs font-bold px-3 py-2 rounded-xl border border-rose-700/60 transition">🔒 قفل</button>
+            </div>
+        </div>
+
+        <div id="autoSendBanner" class="hidden glass-card rounded-2xl p-4 border-sky-500 bg-sky-950/50 text-sky-200 text-sm text-center font-bold"></div>
+
+        <!-- الإحصائيات -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="glass-card rounded-2xl p-4 border-r-4 border-r-sky-500">
+                <span class="text-xs text-slate-400">إجمالي الزبائن المسجلين</span>
+                <div class="text-2xl font-extrabold text-white mt-1" id="statTotal">0</div>
+            </div>
+            <div class="glass-card rounded-2xl p-4 border-r-4 border-r-emerald-500">
+                <span class="text-xs text-slate-400">اشتراكات سارية ونشطة</span>
+                <div class="text-2xl font-extrabold text-emerald-400 mt-1" id="statActive">0</div>
+            </div>
+            <div class="glass-card rounded-2xl p-4 border-r-4 border-r-amber-500">
+                <span class="text-xs text-slate-400">تنتهي قريباً (خلال 3 أيام)</span>
+                <div class="text-2xl font-extrabold text-amber-400 mt-1" id="statSoon">0</div>
+            </div>
+            <div class="glass-card rounded-2xl p-4 border-r-4 border-r-rose-500">
+                <span class="text-xs text-slate-400">اشتراكات منتهية</span>
+                <div class="text-2xl font-extrabold text-rose-400 mt-1" id="statExpired">0</div>
+            </div>
+        </div>
+        <!-- التبويبات -->
+        <div class="flex flex-wrap gap-2 border-b border-slate-800 pb-3">
+            <button onclick="switchTab('customers')" id="tabBtn-customers" class="px-5 py-2.5 rounded-xl text-sm font-extrabold bg-sky-500 text-slate-950 transition shadow-md">👥 داتا الزبائن (GitHub)</button>
+            <button onclick="switchTab('autoreply')" id="tabBtn-autoreply" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">🤖 الرد بالخلفية (تفاصيل 05********)</button>
+            <button onclick="switchTab('manualsms')" id="tabBtn-manualsms" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">✉️ إرسال رسالة مباشرة</button>
+            <button onclick="switchTab('settings')" id="tabBtn-settings" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">⚙️ إعدادات GitHub و TweetSMS</button>
+        </div>
+
+        <!-- التبويب 1: داتا الزبائن -->
+        <div id="tab-customers" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-4 glass-card rounded-2xl p-5 space-y-4 h-fit">
+                <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                    <h2 id="formTitle" class="text-lg font-extrabold text-amber-400">➕ إضافة مشترك جديد للداتا</h2>
+                    <button type="button" onclick="resetCustomerForm()" class="text-xs text-slate-400 hover:text-white">تفريغ</button>
+                </div>
+                <form id="customerForm" onsubmit="saveCustomer(event)" class="space-y-3.5">
+                    <input type="hidden" id="custId">
+                    <div>
+                        <label class="block text-xs text-slate-300 mb-1 font-bold">اسم الزبون المشترك *</label>
+                        <input type="text" id="custName" placeholder="مثال: محمد أحمد" class="w-full rounded-xl p-2.5 border text-sm" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-sky-300 mb-1 font-bold">رقم الشريحة للاستعلام (05********) *</label>
+                        <input type="text" id="custSimPhone" placeholder="مثال: 0523121212" class="w-full rounded-xl p-2.5 border text-sm font-mono" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-slate-300 mb-1 font-bold">الشركة ونوع الحزمة *</label>
+                        <select id="quickPackageSelect" onchange="if(this.value) document.getElementById('custPackage').value = this.value" class="w-full rounded-xl p-2 border text-xs mb-1.5">
+                            <option value="">-- اختر سريعاً أو اكتب بالأسفل --</option>
+                            <option value="بارتنر (Partner) - شريحة بلاستيك">بارتنر (Partner) - بلاستيك</option>
+                            <option value="بارتنر (Partner) - 300 جيجا eSIM">بارتنر (Partner) - 300 جيجا eSIM</option>
+                            <option value="بارتنر (Partner) - 500 جيجا eSIM">بارتنر (Partner) - 500 جيجا eSIM</option>
+                            <option value="سيلكوم (Cellcom) - شريحة بلاستيك">سيلكوم (Cellcom) - بلاستيك</option>
+                            <option value="سيلكوم (Cellcom) - 300 جيجا eSIM">سيلكوم (Cellcom) - 300 جيجا eSIM</option>
+                            <option value="سيلكوم (Cellcom) - 400 جيجا eSIM">سيلكوم (Cellcom) - 400 جيجا eSIM</option>
+                            <option value="ويكوم (Wecom) - 500 جيجا">ويكوم (Wecom) - 500 جيجا</option>
+                            <option value="هوت موبايل (HOT Mobile) - 300 جيجا">هوت موبايل (HOT Mobile) - 300 جيجا</option>
+                            <option value="بيليفون (Pelephone) - 300 جيجا">بيليفون (Pelephone) - 300 جيجا</option>
+                            <option value="019 موبايل (019 Mobile) - 100 جيجا">019 موبايل - 100 جيجا</option>
+                            <option value="ألوها (Aloha) - 150 جيجا">ألوها (Aloha) - 150 جيجا</option>
+                            <option value="رامي ليفي (Rami Levy)">رامي ليفي (Rami Levy)</option>
+                        </select>
+                        <input type="text" id="custPackage" placeholder="اكتب اسم الحزمة..." class="w-full rounded-xl p-2.5 border text-sm" required>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <label class="text-xs text-slate-300 font-bold">تاريخ انتهاء الحزمة والاشتراك *</label>
+                            <div class="flex gap-1">
+                                <button type="button" onclick="addMonthsToForm(1)" class="bg-slate-800 hover:bg-slate-700 text-sky-300 text-[11px] px-2 py-0.5 rounded border border-slate-600">+ شهر</button>
+                                <button type="button" onclick="addMonthsToForm(3)" class="bg-slate-800 hover:bg-slate-700 text-emerald-300 text-[11px] px-2 py-0.5 rounded border border-slate-600">+ 3 شهور</button>
+                            </div>
+                        </div>
+                        <input type="date" id="custExpiry" class="w-full rounded-xl p-2.5 border text-sm" required>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <div>
+                            <label class="block text-xs text-slate-300 mb-1">سعر التجديد / ملاحظة</label>
+                            <input type="text" id="custPrice" placeholder="مثال: 60 شيكل" class="w-full rounded-xl p-2.5 border text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-300 mb-1">جوال تواصل إضافي</label>
+                            <input type="text" id="custContact" placeholder="اختياري: 059xxxxxxx" class="w-full rounded-xl p-2.5 border text-sm font-mono">
+                        </div>
+                    </div>
+                    <div class="pt-2 space-y-2">
+                        <button type="submit" id="saveCustBtn" class="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-extrabold py-3 rounded-xl shadow-lg transition">💾 حفظ في الموقع وفي GitHub</button>
+                        <button type="button" onclick="saveAndSendCustomerSMS()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-2.5 rounded-xl text-xs transition">💾 حفظ + إرسال التفاصيل الآن عبر TweetSMS</button>
+                    </div>
+                </form>
+            </div>
+            <div class="lg:col-span-8 glass-card rounded-2xl p-5 space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3 border-b border-slate-700 pb-4">
+                    <input type="text" id="searchInput" oninput="renderCustomers()" placeholder="🔍 ابحث باسم الزبون، أو رقم الشريحة (05********)، أو اسم الحزمة..." class="flex-grow rounded-xl p-3 border text-sm">
+                    <div class="flex flex-wrap gap-1.5">
+                        <button onclick="pushToGitHub(true)" class="bg-emerald-700 hover:bg-emerald-600 text-white text-xs font-bold px-3 py-2 rounded-xl">☁️ رفع الداتا لـ GitHub</button>
+                        <button onclick="exportCustomersJSON()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-600">⬇️ تصدير</button>
+                        <label class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3 py-2 rounded-xl border border-slate-600 cursor-pointer">
+                            ⬆️ استيراد <input type="file" accept=".json" onchange="importCustomersJSON(event)" class="hidden">
+                        </label>
+                    </div>
+                </div>
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <div class="flex flex-wrap gap-1.5">
+                        <button onclick="setCustomerFilter('all')" id="cFilter-all" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-500 text-slate-950">الكل</button>
+                        <button onclick="setCustomerFilter('active')" id="cFilter-active" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-slate-300">ساري ونشط</button>
+                        <button onclick="setCustomerFilter('soon')" id="cFilter-soon" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-amber-300">ينتهي قريباً</button>
+                        <button onclick="setCustomerFilter('expired')" id="cFilter-expired" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-slate-800 text-rose-300">منتهي</button>
+                    </div>
+                    <button onclick="sendBulkExpiringSMS()" class="text-xs bg-rose-900/60 hover:bg-rose-800 text-rose-200 px-3 py-1.5 rounded-xl border border-rose-700 font-bold transition">📢 تذكير المنتهية اشتراكاتهم</button>
+                </div>
+                <div id="customersList" class="space-y-3 max-h-[600px] overflow-y-auto pr-1"></div>
+            </div>
+        </div>
+
+        <!-- التبويب 2: الرد التلقائي بالخلفية -->
+        <div id="tab-autoreply" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-6 space-y-6">
+                <div class="glass-card rounded-2xl p-6 space-y-4 border border-sky-500/40">
+                    <h2 class="text-lg font-extrabold text-sky-400 border-b border-slate-700 pb-3">⚡ اختبار أمر (تفاصيل 05********)</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">رقم المرسل (اختياري)</label>
+                            <input type="text" id="simSenderPhone" placeholder="0590000000" class="w-full rounded-xl p-2.5 border text-sm font-mono">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">نص رسالة الزبون</label>
+                            <input type="text" id="simIncomingText" placeholder="تفاصيل 0523121212" class="w-full rounded-xl p-2.5 border text-sm">
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="processIncomingCommand(document.getElementById('simSenderPhone').value, document.getElementById('simIncomingText').value, false)" class="flex-1 bg-slate-800 hover:bg-slate-700 text-sky-300 font-bold py-2.5 rounded-xl text-xs border border-sky-500/40">🔍 معاينة الرد</button>
+                        <button onclick="processIncomingCommand(document.getElementById('simSenderPhone').value, document.getElementById('simIncomingText').value, true)" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold py-2.5 rounded-xl text-xs shadow-lg">🚀 تنفيذ وإرسال عبر TweetSMS</button>
+                    </div>
+                    <div id="simResultBox" class="hidden rounded-xl p-3.5 text-xs whitespace-pre-line border"></div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-6 space-y-4">
+                    <h2 class="text-lg font-extrabold text-white border-b border-slate-700 pb-3">📝 قالب رسالة الرد التلقائي</h2>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">الكلمة المفتاحية</label>
+                            <input type="text" id="autoKeyword" value="تفاصيل" onchange="saveAutoSettings()" class="w-full rounded-xl p-2.5 border text-sm font-bold">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">إرسال الرد إلى:</label>
+                            <select id="autoReplyTarget" onchange="saveAutoSettings()" class="w-full rounded-xl p-2.5 border text-xs">
+                                <option value="queried">الرقم المستعلم عنه (05********)</option>
+                                <option value="sender">الرقم الذي أرسل الرسالة ({from})</option>
+                                <option value="both">كلا الرقمين معاً</option>
+                            </select>
+                        </div>
+                    </div>
+                    <textarea id="autoTemplateFound" rows="4" onchange="saveAutoSettings()" class="w-full rounded-xl p-2.5 border text-xs leading-relaxed"></textarea>
+                    <label class="text-xs text-slate-300 flex items-center gap-2 cursor-pointer pt-1">
+                        <input type="checkbox" id="replyIfNotFound" onchange="saveAutoSettings()" class="rounded">
+                        <span>إرسال رد تلقائي إذا كان الرقم غير مسجل في الداتا</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="lg:col-span-6 space-y-6">
+                <div class="glass-card rounded-2xl p-6 space-y-4 border border-emerald-500/40">
+                    <h2 class="text-lg font-extrabold text-emerald-400 border-b border-slate-700 pb-3">🔗 التشغيل بالخلفية 24/7 والموقع مغلق</h2>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        لكي يعمل الرد التلقائي والموقع والمتصفح مغلقان تماماً، يقرأ السكربت السحابي ملف <code class="text-amber-300">customers.json</code> من موقعك على GitHub ويرد عبر TweetSMS مباشرة.
+                    </p>
+                    <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-700 space-y-2.5">
+                        <span class="text-xs font-extrabold text-emerald-400 block">رابط Webhook لتطبيق SMS Forwarder (يعمل والموقع مفتوح):</span>
+                        <textarea id="cloudWebhookUrl" rows="2" readonly class="w-full rounded-xl p-2 border text-xs font-mono select-all"></textarea>
+                        <button onclick="copyText('cloudWebhookUrl', 'تم نسخ الرابط!')" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-extrabold py-2 rounded-xl text-xs">📋 نسخ رابط Webhook</button>
+                    </div>
+                </div>
+                <div class="glass-card rounded-2xl p-6 space-y-3">
+                    <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                        <h3 class="text-sm font-extrabold text-white">📜 سجل الرسائل والردود التلقائية</h3>
+                        <button onclick="clearAutoLogs()" class="text-xs text-rose-400 hover:underline">مسح السجل</button>
+                    </div>
+                    <div id="autoLogsList" class="space-y-2 max-h-60 overflow-y-auto text-xs"></div>
+                </div>
+            </div>
+        </div>
+        <!-- التبويب 3: إرسال رسالة مباشرة -->
+        <div id="tab-manualsms" class="hidden max-w-2xl mx-auto">
+            <div class="glass-card rounded-2xl p-6 shadow-lg space-y-4">
+                <h2 class="text-lg font-extrabold text-white border-b border-slate-700 pb-3">✉️ إرسال تفاصيل الحزمة عبر TweetSMS</h2>
+                <select id="manualSelectCustomer" onchange="fillManualFromCustomer(this.value)" class="w-full rounded-xl p-2.5 border text-sm">
+                    <option value="">-- اختر مشتركاً لتعبئة بياناته تلقائياً --</option>
+                </select>
+                <input type="text" id="phone" placeholder="رقم المشترك: 0590000000" oninput="updateDirectPageLink()" class="w-full rounded-xl p-3 border text-sm font-mono">
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="text" id="clientName" placeholder="اسم المشترك" oninput="updatePreview()" class="w-full rounded-xl p-3 border text-sm">
+                    <input type="text" id="packageInfo" placeholder="تفاصيل الحزمة" oninput="updatePreview()" class="w-full rounded-xl p-3 border text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="date" id="expiryDate" onchange="updatePreview()" class="w-full rounded-xl p-3 border text-sm">
+                    <input type="text" id="priceNote" placeholder="قيمة التجديد (60 شيكل)" oninput="updatePreview()" class="w-full rounded-xl p-3 border text-sm">
+                </div>
+                <textarea id="messageText" rows="4" oninput="updateDirectPageLink()" class="w-full rounded-xl p-3 border text-sm"></textarea>
+                <button onclick="sendSMS()" id="sendBtn" class="w-full bg-sky-500 hover:bg-sky-600 text-slate-950 font-extrabold py-3.5 rounded-xl transition shadow-lg">🚀 إرسال الرسالة الآن عبر TweetSMS</button>
+                <div id="statusBox" class="hidden rounded-xl p-3 text-sm text-center font-semibold"></div>
+            </div>
+        </div>
+
+        <!-- التبويب 4: إعدادات GitHub و TweetSMS والحماية -->
+        <div id="tab-settings" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="glass-card rounded-2xl p-6 shadow-lg space-y-4 border border-amber-500/40">
+                <h2 class="text-lg font-extrabold text-amber-400 border-b border-slate-700 pb-3">☁️ إعدادات الحفظ الدائم في GitHub</h2>
+                <p class="text-xs text-slate-300">أدخل اسم مستودع GitHub ومفتاح (Token) مرة واحدة:</p>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">اسم المستخدم والمستودع</label>
+                    <input type="text" id="ghRepo" value="groupahmed2020-byte/BrandSim.com" oninput="saveGitHubSettings()" class="w-full rounded-xl p-2.5 border text-sm font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">مفتاح GitHub Token (ghp_...)</label>
+                    <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" oninput="saveGitHubSettings()" class="w-full rounded-xl p-2.5 border text-sm font-mono">
+                </div>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="pushToGitHub(true)" class="bg-amber-500 text-slate-950 font-extrabold py-2 rounded-xl text-xs">⬆️ حفظ في GitHub</button>
+                    <button onclick="syncFromGitHub(true)" class="bg-sky-600 text-white font-extrabold py-2 rounded-xl text-xs">⬇️ سحب من GitHub</button>
+                </div>
+                <div id="ghStatusMsg" class="text-xs text-center font-bold text-emerald-400"></div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="glass-card rounded-2xl p-6 shadow-lg space-y-3">
+                    <h2 class="text-lg font-extrabold text-sky-400 border-b border-slate-700 pb-2">⚙️ إعدادات TweetSMS API</h2>
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="text" id="apiUser" value="XONE1" oninput="saveApiSettings()" class="w-full rounded-xl p-2.5 border text-sm" placeholder="User">
+                        <input type="text" id="apiSender" value="XONE1" oninput="saveApiSettings()" class="w-full rounded-xl p-2.5 border text-sm" placeholder="Sender">
+                    </div>
+                    <input type="text" id="apiKey" value="98daac36e1667a2c84fa2611b36ef2fc" oninput="saveApiSettings()" class="w-full rounded-xl p-2.5 border text-sm font-mono">
+                    <select id="corsMode" onchange="saveApiSettings()" class="w-full rounded-xl p-2.5 border text-sm">
+                        <option value="nocors">إرسال مباشر سريع (No-CORS Mode)</option>
+                        <option value="proxy">عبر وسيط قراءة الرد (AllOrigins Proxy)</option>
+                    </select>
+                    <input type="hidden" id="directPageUrl"><input type="hidden" id="directAutoReplyUrl">
+                </div>
+                <div class="glass-card rounded-2xl p-6 shadow-lg space-y-3">
+                    <h2 class="text-lg font-extrabold text-amber-400 border-b border-slate-700 pb-2">🔐 تغيير كلمة مرور الصفحة</h2>
+                    <div class="flex gap-2">
+                        <input type="text" id="newAdminPin" placeholder="كلمة المرور الجديدة..." class="flex-1 rounded-xl p-2.5 border text-sm font-mono">
+                        <button onclick="changeAdminPassword()" class="bg-amber-500 text-slate-950 font-extrabold px-4 rounded-xl text-xs">حفظ</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function safeGet(k, def = null) {
+            try { const v = localStorage.getItem(k); if (v !== null) return v; } catch (e) {}
+            try { const m = document.cookie.match(new RegExp('(?:^|; )' + k + '=([^;]*)')); if (m) return decodeURIComponent(m[1]); } catch (e) {}
+            return def;
+        }
+        function safeSet(k, v) {
+            try { localStorage.setItem(k, v); } catch (e) {}
+            try { if (String(v).length < 3500) document.cookie = `${k}=${encodeURIComponent(v)}; max-age=31536000; path=/; SameSite=Lax`; } catch (e) {}
+        }
+        function getAdminPin() { return safeGet('xone1_admin_pin', '1234'); }
+
+        function unlockPage(e) {
+            if (e) e.preventDefault();
+            if (document.getElementById('loginPasswordInput').value.trim() === getAdminPin()) {
+                document.getElementById('lockScreen').classList.add('unlocked');
+                document.getElementById('mainApp').classList.add('unlocked');
+                document.getElementById('loginError').classList.add('hidden');
+            } else {
+                const err = document.getElementById('loginError'), card = document.getElementById('lockCard');
+                err.classList.remove('hidden'); card.classList.remove('shake-anim'); void card.offsetWidth; card.classList.add('shake-anim');
+            }
+        }
+        function lockPage() { document.getElementById('loginPasswordInput').value = ''; document.getElementById('mainApp').classList.remove('unlocked'); document.getElementById('lockScreen').classList.remove('unlocked'); }
+        function changeAdminPassword() { const p = document.getElementById('newAdminPin').value.trim(); if (!p) return alert('أدخل كلمة مرور صالحة'); safeSet('xone1_admin_pin', p); document.getElementById('newAdminPin').value = ''; alert('✅ تم الحفظ!'); }
+
+        function switchTab(t) {
+            ['customers', 'autoreply', 'manualsms', 'settings'].forEach(x => {
+                document.getElementById('tab-' + x).classList.add('hidden');
+                document.getElementById('tabBtn-' + x).className = 'px-5 py-2.5 rounded-xl text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition';
+            });
+            document.getElementById('tab-' + t).classList.remove('hidden');
+            document.getElementById('tabBtn-' + t).className = 'px-5 py-2.5 rounded-xl text-sm font-extrabold bg-sky-500 text-slate-950 transition shadow-md';
+        }
+
+        function normalizeDigits(s) {
+            if (!s) return '';
+            const ar = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩']; let out = String(s);
+            for (let i = 0; i < 10; i++) out = out.replace(new RegExp(ar[i], 'g'), i); return out;
+        }
+        function normalizeSimPhone(raw) {
+            let c = normalizeDigits(raw).replace(/[^0-9]/g, '');
+            if (c.startsWith('00972') || c.startsWith('00970')) c = '0' + c.slice(5);
+            else if ((c.startsWith('972') || c.startsWith('970')) && c.length >= 11) c = '0' + c.slice(3);
+            else if (c.length === 9 && c.startsWith('5')) c = '0' + c; return c;
+        }
+
+        let customers = [], activeCustomerFilter = 'all';
+
+        function loadGitHubSettings() {
+            document.getElementById('ghRepo').value = safeGet('xone1_gh_repo', 'groupahmed2020-byte/BrandSim.com');
+            document.getElementById('ghToken').value = safeGet('xone1_gh_token', '');
+            updateGitHubBadge();
+        }
+        function saveGitHubSettings() {
+            safeSet('xone1_gh_repo', document.getElementById('ghRepo').value.trim());
+            safeSet('xone1_gh_token', document.getElementById('ghToken').value.trim());
+            updateGitHubBadge();
+        }
+        function updateGitHubBadge() {
+            const repo = safeGet('xone1_gh_repo', ''), token = safeGet('xone1_gh_token', ''), b = document.getElementById('githubSyncBadge');
+            if (repo && token) {
+                b.className = 'cursor-pointer flex items-center gap-2 bg-emerald-950/70 px-3 py-2 rounded-xl border border-emerald-600 text-xs font-bold text-emerald-300';
+                b.innerHTML = `<span>☁️ GitHub متصل</span>`;
+            }
+        }
+
+        async function syncFromGitHub(showAlert = false) {
+            const repo = safeGet('xone1_gh_repo', ''), token = safeGet('xone1_gh_token', '');
+            try {
+                if (repo && token) {
+                    const res = await fetch(`https://api.github.com/repos/${repo}/contents/customers.json`, {
+                        headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }, cache: 'no-store'
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        const decoded = decodeURIComponent(escape(atob(data.content.replace(/\s/g, ''))));
+                        const parsed = JSON.parse(decoded);
+                        if (Array.isArray(parsed)) {
+                            customers = parsed; safeSet('xone1_customers_db', JSON.stringify(customers));
+                            renderCustomers(); populateManualCustomerDropdown();
+                            if (showAlert) alert('✅ تم سحب أحدث داتا من GitHub بنجاح!'); return;
+                        }
+                    }
+                }
+                const pubRes = await fetch('customers.json?t=' + Date.now(), { cache: 'no-store' });
+                if (pubRes.ok) {
+                    const pubData = await pubRes.json();
+                    if (Array.isArray(pubData)) { customers = pubData; safeSet('xone1_customers_db', JSON.stringify(customers)); renderCustomers(); populateManualCustomerDropdown(); }
+                }
+            } catch (e) { if (showAlert) alert('⚠️ تعذر الاتصال بـ GitHub.'); }
+        }
+
+        async function pushToGitHub(showAlert = false) {
+            const repo = safeGet('xone1_gh_repo', ''), token = safeGet('xone1_gh_token', '');
+            if (!repo || !token) { if (showAlert) { switchTab('settings'); alert('أدخل اسم المستودع ومفتاح Token أولاً!'); } return false; }
+            const statusEl = document.getElementById('ghStatusMsg'); if (statusEl) statusEl.innerText = '⏳ جاري الرفع لـ GitHub...';
+            try {
+                let sha = null;
+                const getRes = await fetch(`https://api.github.com/repos/${repo}/contents/customers.json`, {
+                    headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json' }, cache: 'no-store'
+                });
+                if (getRes.ok) sha = (await getRes.json()).sha;
+
+                const contentBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(customers, null, 2))));
+                const bodyObj = { message: 'Update customers.json', content: contentBase64 };
+                if (sha) bodyObj.sha = sha;
+
+                const putRes = await fetch(`https://api.github.com/repos/${repo}/contents/customers.json`, {
+                    method: 'PUT', headers: { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify(bodyObj)
+                });
+                if (putRes.ok) {
+                    if (statusEl) statusEl.innerText = '✅ تم الحفظ في GitHub بنجاح!';
+                    if (showAlert) alert('✅ تم الحفظ في GitHub بنجاح!'); return true;
+                }
+            } catch (e) {}
+            if (statusEl) statusEl.innerText = '❌ فشل الحفظ في GitHub.';
+            if (showAlert) alert('❌ فشل الحفظ في GitHub.'); return false;
+        }
+        function loadCustomers() {
+            try {
+                const saved = JSON.parse(safeGet('xone1_customers_db'));
+                if (Array.isArray(saved) && saved.length) customers = saved;
+                else {
+                    const nextM = new Date(); nextM.setDate(nextM.getDate() + 25);
+                    customers = [{ id: 1, name: "أسامة سالم", simPhone: "0523121212", contactPhone: "0599783984", packageInfo: "بارتنر (Partner) - 500 جيجا eSIM", expiryDate: nextM.toISOString().split('T')[0], priceNote: "60 شيكل" }];
+                }
+            } catch (e) { customers = []; }
+            renderCustomers(); populateManualCustomerDropdown(); syncFromGitHub(false);
+        }
+
+        function saveCustomersToStorage() {
+            safeSet('xone1_customers_db', JSON.stringify(customers));
+            renderCustomers(); populateManualCustomerDropdown(); pushToGitHub(false);
+        }
+
+        function getSubscriptionStatus(expStr) {
+            if (!expStr) return { code: 'unknown', label: 'غير محدد', days: 0, badgeClass: 'bg-slate-800 text-slate-300' };
+            const t = new Date(); t.setHours(0,0,0,0); const ex = new Date(expStr); ex.setHours(0,0,0,0);
+            const d = Math.ceil((ex - t) / 86400000);
+            if (d < 0) return { code: 'expired', label: `منتهي منذ ${Math.abs(d)} يوم`, days: d, badgeClass: 'bg-rose-500/20 text-rose-300 border-rose-500/40' };
+            if (d <= 3) return { code: 'soon', label: d === 0 ? 'ينتهي اليوم!' : `ينتهي خلال ${d} أيام`, days: d, badgeClass: 'bg-amber-500/20 text-amber-300 border-amber-500/40' };
+            return { code: 'active', label: `نشط (متبقي ${d} يوم)`, days: d, badgeClass: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40' };
+        }
+
+        function addMonthsToForm(m) {
+            const el = document.getElementById('custExpiry'); let d = el.value ? new Date(el.value) : new Date();
+            if (isNaN(d.getTime())) d = new Date(); d.setMonth(d.getMonth() + m); el.value = d.toISOString().split('T')[0];
+        }
+
+        function saveCustomer(e) {
+            if (e) e.preventDefault();
+            const id = document.getElementById('custId').value, name = document.getElementById('custName').value.trim();
+            const simPhone = normalizeSimPhone(document.getElementById('custSimPhone').value.trim()), packageInfo = document.getElementById('custPackage').value.trim();
+            const expiryDate = document.getElementById('custExpiry').value, priceNote = document.getElementById('custPrice').value.trim(), contactPhone = normalizeSimPhone(document.getElementById('custContact').value.trim());
+            if (!name || !simPhone || !packageInfo || !expiryDate) return null;
+            let rec = null;
+            if (id) {
+                const i = customers.findIndex(c => String(c.id) === String(id));
+                if (i > -1) { customers[i] = { ...customers[i], name, simPhone, packageInfo, expiryDate, priceNote, contactPhone }; rec = customers[i]; }
+            } else {
+                const ex = customers.findIndex(c => normalizeSimPhone(c.simPhone) === simPhone);
+                if (ex > -1) { customers[ex] = { ...customers[ex], name, simPhone, packageInfo, expiryDate, priceNote, contactPhone }; rec = customers[ex]; }
+                else { rec = { id: Date.now(), name, simPhone, packageInfo, expiryDate, priceNote, contactPhone }; customers.unshift(rec); }
+            }
+            saveCustomersToStorage(); resetCustomerForm(); return rec;
+        }
+
+        async function saveAndSendCustomerSMS() { const rec = saveCustomer(null); if (rec) await sendCustomerDetailsDirect(rec.id); }
+        function resetCustomerForm() {
+            ['custId','custName','custSimPhone','custPackage','quickPackageSelect','custPrice','custContact'].forEach(id => document.getElementById(id).value = '');
+            const d = new Date(); d.setMonth(d.getMonth() + 1); document.getElementById('custExpiry').value = d.toISOString().split('T')[0];
+            document.getElementById('formTitle').innerText = '➕ إضافة مشترك جديد للداتا';
+        }
+        function editCustomer(id) {
+            const c = customers.find(x => String(x.id) === String(id)); if (!c) return;
+            document.getElementById('custId').value = c.id; document.getElementById('custName').value = c.name; document.getElementById('custSimPhone').value = c.simPhone;
+            document.getElementById('custPackage').value = c.packageInfo; document.getElementById('custExpiry').value = c.expiryDate;
+            document.getElementById('custPrice').value = c.priceNote || ''; document.getElementById('custContact').value = c.contactPhone || '';
+            document.getElementById('formTitle').innerText = '✏️ تعديل بيانات المشترك'; window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        function renewCustomerQuick(id, m) {
+            const c = customers.find(x => String(x.id) === String(id)); if (!c) return;
+            let b = c.expiryDate ? new Date(c.expiryDate) : new Date(); if (b < new Date()) b = new Date();
+            b.setMonth(b.getMonth() + m); c.expiryDate = b.toISOString().split('T')[0]; saveCustomersToStorage();
+        }
+        function deleteCustomer(id) { if (confirm('حذف المشترك؟')) { customers = customers.filter(x => String(x.id) !== String(id)); saveCustomersToStorage(); } }
+        function setCustomerFilter(f) { activeCustomerFilter = f; renderCustomers(); }
+
+        function renderCustomers() {
+            const list = document.getElementById('customersList'), q = normalizeDigits(document.getElementById('searchInput').value.trim().toLowerCase());
+            let act = 0, soon = 0, exp = 0;
+            customers.forEach(c => { const s = getSubscriptionStatus(c.expiryDate).code; if (s === 'active') act++; else if (s === 'soon') soon++; else if (s === 'expired') exp++; });
+            document.getElementById('statTotal').innerText = customers.length; document.getElementById('statActive').innerText = act; document.getElementById('statSoon').innerText = soon; document.getElementById('statExpired').innerText = exp;
+            const filtered = customers.filter(c => (activeCustomerFilter === 'all' || getSubscriptionStatus(c.expiryDate).code === activeCustomerFilter) && (!q || (c.name && c.name.toLowerCase().includes(q)) || (c.simPhone && c.simPhone.includes(q)) || (c.packageInfo && c.packageInfo.toLowerCase().includes(q))));
+            list.innerHTML = !filtered.length ? `<div class="text-center py-8 text-slate-500 text-sm">لا يوجد مشتركين.</div>` : filtered.map(c => {
+                const st = getSubscriptionStatus(c.expiryDate);
+                return `<div class="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <div><div class="flex items-center gap-2 flex-wrap"><span class="font-extrabold text-white">${c.name}</span><span class="font-mono text-xs bg-sky-950 text-sky-300 px-2.5 py-0.5 rounded-lg border border-sky-700 font-bold">${c.simPhone}</span><span class="text-xs px-2.5 py-0.5 rounded-full border font-bold ${st.badgeClass}">${st.label}</span></div>
+                    <div class="text-xs text-slate-300 flex flex-wrap gap-3 pt-1"><span>📦 ${c.packageInfo}</span><span>📅 ${c.expiryDate}</span>${c.priceNote ? `<span>💵 ${c.priceNote}</span>` : ''}</div></div>
+                    <div class="flex gap-1.5"><button onclick="sendCustomerDetailsDirect('${c.id}')" class="bg-sky-500 text-slate-950 font-extrabold text-xs px-3 py-1.5 rounded-xl">📩 SMS</button><button onclick="renewCustomerQuick('${c.id}', 1)" class="bg-emerald-950 text-emerald-300 border border-emerald-700 text-xs px-2.5 py-1.5 rounded-xl font-bold">+1ش</button><button onclick="editCustomer('${c.id}')" class="bg-slate-800 text-slate-200 text-xs px-2.5 py-1.5 rounded-xl">✏️</button><button onclick="deleteCustomer('${c.id}')" class="bg-rose-950 text-rose-300 text-xs px-2.5 py-1.5 rounded-xl">🗑️</button></div></div>`;
+            }).join('');
+        }
+
+        function exportCustomersJSON() { const a = document.createElement('a'); a.href = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(customers, null, 2)); a.download = "customers.json"; a.click(); }
+        function importCustomersJSON(e) { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = (ev) => { try { customers = JSON.parse(ev.target.result); saveCustomersToStorage(); alert('✅ تم الاستيراد!'); } catch (err) {} }; r.readAsText(f); }
+        const defaultTemplate = `مرحباً {name}،\nتفاصيل اشتراك الرقم: {phone}\nالحزمة: {pkg}\nتاريخ الانتهاء: {exp} ({status})\nقيمة التجديد: {price}\nشكراً لتعاملكم معنا - XONE1`;
+        function formatCustomerReplyMessage(c) { const st = getSubscriptionStatus(c.expiryDate); return safeGet('xone1_auto_tpl', defaultTemplate).replace(/\{name\}/g, c.name || 'المشترك').replace(/\{phone\}/g, c.simPhone || '').replace(/\{pkg\}/g, c.packageInfo || '').replace(/\{exp\}/g, c.expiryDate || '').replace(/\{status\}/g, st.label).replace(/\{price\}/g, c.priceNote || 'حسب الباقة'); }
+        async function sendCustomerDetailsDirect(id) { const c = customers.find(x => String(x.id) === String(id)); if (c && confirm(`إرسال التفاصيل إلى ${c.contactPhone || c.simPhone}؟`)) await dispatchTweetSMS(c.contactPhone || c.simPhone, formatCustomerReplyMessage(c)); }
+        async function sendBulkExpiringSMS() { const l = customers.filter(c => ['soon','expired'].includes(getSubscriptionStatus(c.expiryDate).code)); if (l.length && confirm(`إرسال تذكير لـ ${l.length} مشترك؟`)) for (const c of l) await dispatchTweetSMS(c.contactPhone || c.simPhone, formatCustomerReplyMessage(c)); }
+        function decodeUnicodeString(s) { if (!s) return ''; let o = String(s); try { o = o.replace(/\\u([0-9a-fA-F]{4})/g, (m, g) => String.fromCharCode(parseInt(g, 16))); } catch (e) {} try { o = decodeURIComponent(o.replace(/\+/g, ' ')); } catch (e) {} return o; }
+        function loadAutoSettings() { document.getElementById('autoKeyword').value = safeGet('xone1_auto_kw', 'تفاصيل'); document.getElementById('autoReplyTarget').value = safeGet('xone1_auto_target', 'queried'); document.getElementById('autoTemplateFound').value = safeGet('xone1_auto_tpl', defaultTemplate); document.getElementById('replyIfNotFound').checked = safeGet('xone1_auto_notfound', '1') === '1'; }
+        function saveAutoSettings() { safeSet('xone1_auto_kw', document.getElementById('autoKeyword').value.trim() || 'تفاصيل'); safeSet('xone1_auto_target', document.getElementById('autoReplyTarget').value); safeSet('xone1_auto_tpl', document.getElementById('autoTemplateFound').value.trim() || defaultTemplate); safeSet('xone1_auto_notfound', document.getElementById('replyIfNotFound').checked ? '1' : '0'); }
+
+        async function processIncomingCommand(senderRaw, textRaw, shouldSend = true) {
+            const textNorm = normalizeDigits(decodeUnicodeString(textRaw || '')).trim(), kw = normalizeDigits(safeGet('xone1_auto_kw', 'تفاصيل')).trim();
+            const sender = (senderRaw && !senderRaw.includes('{')) ? normalizeSimPhone(senderRaw) : '', box = document.getElementById('simResultBox');
+            if (!textNorm.includes(kw)) return false;
+            const m = textNorm.replace(/[\s\-]/g, '').match(/(?:0097[02]|97[02]|0)?5\d{8}/), qPhone = m ? normalizeSimPhone(m[0]) : sender;
+            if (!qPhone) return false;
+            const found = customers.find(c => normalizeSimPhone(c.simPhone) === qPhone || (c.contactPhone && normalizeSimPhone(c.contactPhone) === qPhone));
+            if (!found && safeGet('xone1_auto_notfound', '1') !== '1' && shouldSend) return false;
+            const replyMsg = found ? formatCustomerReplyMessage(found) : `عذراً، الرقم (${qPhone}) غير مسجل في قاعدة بيانات المشتركين لدينا.\nبراند ستور - XONE1`;
+            const recs = [qPhone];
+            if (box) { box.className = 'rounded-xl p-3.5 text-xs bg-emerald-950/70 border border-emerald-500 text-emerald-200'; box.innerText = `✅ الرقم: ${qPhone}\n${replyMsg}`; box.classList.remove('hidden'); }
+            if (shouldSend) { for (const r of recs) await dispatchTweetSMS(r, replyMsg); addAutoLog(sender || qPhone, qPhone, found ? found.name : 'غير مسجل', true); }
+            return true;
+        }
+
+        function addAutoLog(f, q, n, s) { let l = []; try { l = JSON.parse(safeGet('xone1_auto_logs', '[]')); } catch (e) {} l.unshift({ time: new Date().toLocaleTimeString('ar-EG'), fromPhone: f, queriedPhone: q, customerName: n, sent: s }); safeSet('xone1_auto_logs', JSON.stringify(l.slice(0, 40))); renderAutoLogs(); }
+        function renderAutoLogs() { const b = document.getElementById('autoLogsList'); let l = []; try { l = JSON.parse(safeGet('xone1_auto_logs', '[]')); } catch (e) {} b.innerHTML = !l.length ? `<div class="text-slate-500 text-center py-4">لا توجد عمليات مسجلة.</div>` : l.map(x => `<div class="bg-slate-900 p-2.5 rounded-xl border border-slate-800 flex justify-between items-center"><div><span class="text-sky-400 font-mono font-bold">${x.queriedPhone}</span> <span class="text-slate-300">&bull; ${x.customerName}</span></div><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-300">تم الرد</span></div>`).join(''); }
+        function clearAutoLogs() { safeSet('xone1_auto_logs', '[]'); renderAutoLogs(); }
+        function getCloudChannel() { let c = safeGet('xone1_cloud_channel'); if (!c) { c = 'xone1_bs_' + Math.random().toString(36).substring(2, 8); safeSet('xone1_cloud_channel', c); } return c; }
+        async function pollCloudMessages() { try { const r = await fetch(`https://ntfy.sh/${getCloudChannel()}/json?poll=1&since=2h`, { cache: 'no-store' }); if (r.ok) { for (const line of (await r.text()).trim().split('\n')) { if (line.trim()) { const d = JSON.parse(line); let ids = JSON.parse(safeGet('xone1_processed_ids', '[]')); if (d.id && d.event === 'message' && !ids.includes(d.id)) { ids.push(d.id); safeSet('xone1_processed_ids', JSON.stringify(ids.slice(-100))); await processIncomingCommand(d.title || '', d.message || '', true); } } } } } catch (e) {} }
+        function loadApiSettings() { document.getElementById('apiUser').value = safeGet('xone1_api_user', 'XONE1'); document.getElementById('apiSender').value = safeGet('xone1_api_sender', 'XONE1'); document.getElementById('apiKey').value = safeGet('xone1_api_key', '98daac36e1667a2c84fa2611b36ef2fc'); document.getElementById('corsMode').value = safeGet('xone1_cors_mode', 'nocors'); }
+        function saveApiSettings() { safeSet('xone1_api_user', document.getElementById('apiUser').value.trim()); safeSet('xone1_api_sender', document.getElementById('apiSender').value.trim()); safeSet('xone1_api_key', document.getElementById('apiKey').value.trim()); safeSet('xone1_cors_mode', document.getElementById('corsMode').value); }
+        async function dispatchTweetSMS(phone, msg) { const u = document.getElementById('apiUser').value.trim(), k = document.getElementById('apiKey').value.trim(), s = document.getElementById('apiSender').value.trim(); const url = `https://www.tweetsms.ps/api.php?comm=sendsms&user=${encodeURIComponent(u)}&pass=${encodeURIComponent(k)}&api_key=${encodeURIComponent(k)}&to=${encodeURIComponent(phone)}&message=${encodeURIComponent(msg)}&sender=${encodeURIComponent(s)}`; try { if (document.getElementById('corsMode').value === 'nocors') await fetch(url, { mode: 'no-cors' }); else await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}`); return true; } catch (e) { return false; } }
+        function populateManualCustomerDropdown() { document.getElementById('manualSelectCustomer').innerHTML = `<option value="">-- اختر مشتركاً --</option>` + customers.map(c => `<option value="${c.id}">${c.name} (${c.simPhone})</option>`).join(''); }
+        function fillManualFromCustomer(id) { const c = customers.find(x => String(x.id) === String(id)); if (!c) return; document.getElementById('phone').value = c.contactPhone || c.simPhone; document.getElementById('clientName').value = c.name; document.getElementById('packageInfo').value = c.packageInfo; document.getElementById('expiryDate').value = c.expiryDate; document.getElementById('priceNote').value = c.priceNote || ''; updatePreview(); }
+        function updatePreview() { document.getElementById('messageText').value = `مرحباً ${document.getElementById('clientName').value || 'المشترك'}،\nتفاصيل الحزمة: ${document.getElementById('packageInfo').value || 'الإنترنت'}\nتاريخ انتهاء الاشتراك: ${document.getElementById('expiryDate').value || 'قريباً'}\nشكراً لتعاملكم معنا - XONE1`; }
+        function updateWebhookLinks() { const el = document.getElementById('cloudWebhookUrl'); if (el) el.value = `https://ntfy.sh/${getCloudChannel()}/publish?message={msg}`; }
+        async function sendSMS() { const p = document.getElementById('phone').value.trim(), m = document.getElementById('messageText').value.trim(); if (!p || !m) return; const ok = await dispatchTweetSMS(p, m); const box = document.getElementById('statusBox'); if (box) { box.className = `rounded-xl p-3 text-sm text-center font-semibold ${ok ? 'bg-emerald-900/60 text-emerald-200' : 'bg-rose-900/60 text-rose-200'}`; box.innerText = ok ? '✅ تم الإرسال بنجاح عبر TweetSMS!' : '❌ حدث خطأ أثناء الإرسال.'; box.classList.remove('hidden'); } }
+        function copyText(id, msg) { const el = document.getElementById(id); if (el) { el.select(); navigator.clipboard.writeText(el.value); alert(msg); } }
+
+        loadApiSettings(); loadGitHubSettings(); loadCustomers(); resetCustomerForm(); loadAutoSettings(); renderAutoLogs(); updateWebhookLinks(); setInterval(pollCloudMessages, 6000); pollCloudMessages();
+    </script>
+</body>
+</html>
