@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقع مشتركين ليان - لوحة الإدارة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- مكتبة قراءة ملفات Excel المسحوبة من موقع ليان -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .card { background-color: #1e293b; border: 1px solid #334155; }
+        input, select { background-color: #0f172a !important; border-color: #475569 !important; color: #fff !important; }
+        input:focus { border-color: #38bdf8 !important; outline: none; }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto space-y-6">
+        <!-- الترويسة العلوية -->
+        <div class="card rounded-2xl p-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-lg">
+            <div>
+                <div class="flex items-center gap-3">
+                    <h1 class="text-2xl font-extrabold text-sky-400">مشتركين ليان</h1>
+                    <span class="bg-indigo-900/60 text-indigo-300 text-xs px-2.5 py-1 rounded-lg font-mono border border-indigo-700">layan.html</span>
+                </div>
+                <p class="text-slate-400 text-sm mt-1">إدارة أرقام وتواريخ اشتراكات ليان وتوليد صفحة المتابعة الخاصة بكل زبون</p>
+            </div>
+
+            <!-- أزرار السحب التلقائي والتنقل -->
+            <div class="flex flex-wrap items-center gap-2.5">
+                <!-- زر سحب ملف Excel من موقع ليان -->
+                <label class="cursor-pointer flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-slate-950 text-xs font-bold px-4 py-2.5 rounded-xl transition shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                    </svg>
+                    <span>سحب ملف Excel ليان</span>
+                    <input type="file" id="excelFileInput" accept=".xlsx,.xls,.csv" class="hidden" onchange="importLayanExcel(event)">
+                </label>
+
+                <!-- أيقونة سحب تلقائي من الحافظة -->
+                <button onclick="pullFromClipboard()" class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl border border-indigo-400 transition shadow-md">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    <span>سحب تلقائي (من النسخ)</span>
+                </button>
+
+                <a href="client.html" target="_blank" class="bg-sky-900/60 hover:bg-sky-800 text-sky-200 text-xs px-3.5 py-2.5 rounded-xl border border-sky-700 transition">
+                    معاينة صفحة الزبون (client.html)
+                </a>
+
+                <a href="sms.html" class="bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs px-3.5 py-2.5 rounded-xl border border-slate-600 transition">
+                    بوابة الرسائل (sms.html)
+                </a>
+            </div>
+        </div>
+
+        <!-- تنبيه الحالة -->
+        <div id="alertBox" class="hidden rounded-2xl p-4 text-sm text-center font-bold"></div>
+
+        <!-- نموذج إضافة / تعديل مشترك -->
+        <div class="card rounded-2xl p-6 shadow-lg">
+            <h2 class="text-base font-bold text-white border-b border-slate-700 pb-3 mb-4">إضافة أو تحديث بيانات مشترك</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 items-end">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">رقم الاشتراك (مثال: 0512937848)</label>
+                    <input type="text" id="subNumber" placeholder="051xxxxxxx" class="w-full rounded-xl p-2.5 border text-sm font-mono">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">تاريخ البداية</label>
+                    <input type="date" id="startDate" onchange="autoSetEndDate()" class="w-full rounded-xl p-2.5 border text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">تاريخ النهاية</label>
+                    <input type="date" id="endDate" class="w-full rounded-xl p-2.5 border text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">مدة سريعة</label>
+                    <button type="button" onclick="setMonthDuration()" class="w-full bg-slate-800 hover:bg-slate-700 text-sky-300 border border-slate-600 rounded-xl py-2.5 text-xs font-semibold transition">
+                        + 30 يوم من اليوم
+                    </button>
+                </div>
+                <div>
+                    <button onclick="saveSubscriber()" class="w-full bg-sky-500 hover:bg-sky-600 text-slate-950 font-bold py-2.5 rounded-xl text-sm transition shadow-lg">
+                        حفظ المشترك
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- إحصائيات سريعة وبحث -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="card rounded-2xl p-4 flex justify-between items-center">
+                <span class="text-xs text-slate-400">إجمالي المشتركين</span>
+                <span id="statTotal" class="text-xl font-extrabold text-white">0</span>
+            </div>
+            <div class="card rounded-2xl p-4 flex justify-between items-center border-emerald-500/40">
+                <span class="text-xs text-emerald-400">اشتراكات فعالة</span>
+                <span id="statActive" class="text-xl font-extrabold text-emerald-400">0</span>
+            </div>
+            <div class="card rounded-2xl p-4 flex justify-between items-center border-amber-500/40">
+                <span class="text-xs text-amber-400">تنتهي خلال 3 أيام</span>
+                <span id="statSoon" class="text-xl font-extrabold text-amber-400">0</span>
+            </div>
+            <div class="card rounded-2xl p-4 flex justify-between items-center border-rose-500/40">
+                <span class="text-xs text-rose-400">اشتراكات منتهية</span>
+                <span id="statExpired" class="text-xl font-extrabold text-rose-400">0</span>
+            </div>
+        </div>
+
+        <!-- جدول المشتركين -->
+        <div class="card rounded-2xl p-6 shadow-lg space-y-4">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b border-slate-700 pb-4">
+                <h2 class="text-lg font-bold text-white">جدول مشتركين ليان</h2>
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <input type="text" id="searchInput" oninput="renderTable()" placeholder="بحث برقم الاشتراك..." class="w-full sm:w-64 rounded-xl p-2 border text-xs font-mono">
+                    <button onclick="exportJsonFile()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-3 py-2 rounded-xl border border-slate-600 whitespace-nowrap">
+                        تصدير JSON
+                    </button>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-right text-sm">
+                    <thead>
+                        <tr class="text-slate-400 border-b border-slate-700 text-xs">
+                            <th class="py-3 px-2">رقم الاشتراك</th>
+                            <th class="py-3 px-2">تاريخ البداية</th>
+                            <th class="py-3 px-2">تاريخ النهاية</th>
+                            <th class="py-3 px-2">الوقت المتبقي</th>
+                            <th class="py-3 px-2 text-center">إجراءات الزبون</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subscribersTableBody" class="divide-y divide-slate-800"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات افتراضية مأخوذة من جدول ليان لديك لتجربة النظام فوراً
+        const defaultData = [
+            { number: '0512937848', start: '2026-10-01', end: '2026-10-31' },
+            { number: '0512158478', start: '2026-10-05', end: '2026-11-04' },
+            { number: '0512825360', start: '2026-09-22', end: '2026-10-22' },
+            { number: '0512783684', start: '2026-09-15', end: '2026-10-15' }
+        ];
+
+        let subscribers = JSON.parse(localStorage.getItem('layan_subs_db') || 'null') || defaultData;
+
+        function saveToStorage() {
+            localStorage.setItem('layan_subs_db', JSON.stringify(subscribers));
+            renderTable();
+        }
+
+        function showAlert(msg, isError = false) {
+            const box = document.getElementById('alertBox');
+            box.className = `rounded-2xl p-4 text-sm text-center font-bold ${isError ? 'bg-rose-900/60 text-rose-200 border border-rose-700' : 'bg-emerald-900/60 text-emerald-200 border border-emerald-700'}`;
+            box.innerText = msg;
+            box.classList.remove('hidden');
+            setTimeout(() => box.classList.add('hidden'), 4000);
+        }
+
+        // حساب الأيام المتبقية
+        function calculateRemaining(endStr) {
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
+            const end = new Date(endStr);
+            end.setHours(23, 59, 59, 999);
+            const diffTime = end - now;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+
+        function setMonthDuration() {
+            const today = new Date();
+            const nextMonth = new Date();
+            nextMonth.setDate(today.getDate() + 30);
+            document.getElementById('startDate').value = today.toISOString().split('T')[0];
+            document.getElementById('endDate').value = nextMonth.toISOString().split('T')[0];
+        }
+
+        function autoSetEndDate() {
+            const startVal = document.getElementById('startDate').value;
+            if (startVal && !document.getElementById('endDate').value) {
+                const d = new Date(startVal);
+                d.setDate(d.getDate() + 30);
+                document.getElementById('endDate').value = d.toISOString().split('T')[0];
+            }
+        }
+
+        function saveSubscriber() {
+            const number = document.getElementById('subNumber').value.trim();
+            const start = document.getElementById('startDate').value;
+            const end = document.getElementById('endDate').value;
+
+            if (!number || !start || !end) {
+                showAlert('يرجى إدخال رقم الاشتراك وتاريخ البداية والنهاية', true);
+                return;
+            }
+
+            const existingIndex = subscribers.findIndex(s => s.number === number);
+            if (existingIndex > -1) {
+                subscribers[existingIndex] = { number, start, end };
+                showAlert(`تم تحديث بيانات الاشتراك ${number} بنجاح`);
+            } else {
+                subscribers.unshift({ number, start, end });
+                showAlert(`تمت إضافة المشترك ${number} بنجاح`);
+            }
+
+            document.getElementById('subNumber').value = '';
+            saveToStorage();
+        }
+
+        function editSubscriber(num) {
+            const sub = subscribers.find(s => s.number === num);
+            if (!sub) return;
+            document.getElementById('subNumber').value = sub.number;
+            document.getElementById('startDate').value = sub.start;
+            document.getElementById('endDate').value = sub.end;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function deleteSubscriber(num) {
+            if (!confirm(`هل أنت متأكد من حذف الرقم ${num}؟`)) return;
+            subscribers = subscribers.filter(s => s.number !== num);
+            saveToStorage();
+        }
+
+        // توليد رابط صفحة الزبون المباشر
+        function getCustomerPageUrl(sub) {
+            const loc = window.location;
+            const basePath = loc.origin + loc.pathname.replace(/\/[^\/]*$/, '/') + 'client.html';
+            return `${basePath}?num=${encodeURIComponent(sub.number)}&start=${encodeURIComponent(sub.start)}&end=${encodeURIComponent(sub.end)}`;
+        }
+
+        function copyCustomerLink(num) {
+            const sub = subscribers.find(s => s.number === num);
+            if (!sub) return;
+            const url = getCustomerPageUrl(sub);
+            navigator.clipboard.writeText(url);
+            showAlert(`تم نسخ رابط صفحة الزبون الخاصة بالرقم ${num}!`);
+        }
+
+        // تحويل لصفحة sms.html مع رابط الزبون وتفاصيل الاشتراك
+        function sendToSmsPortal(num) {
+            const sub = subscribers.find(s => s.number === num);
+            if (!sub) return;
+            const clientLink = getCustomerPageUrl(sub);
+            const remDays = calculateRemaining(sub.end);
+            const msg = `مشتركنا الكريم،\nرقم اشتراكك: ${sub.number}\nتاريخ البداية: ${sub.start}\nتاريخ النهاية: ${sub.end}\nالمتبقي: ${remDays > 0 ? remDays + ' يوم' : 'منتهي'}\nلمتابعة اشتراكك مباشرة:\n${clientLink}`;
+            const smsUrl = `sms.html?to=${encodeURIComponent(sub.number)}&msg=${encodeURIComponent(msg)}`;
+            window.open(smsUrl, '_blank');
+        }
+
+        // سحب الأرقام والتواريخ من ملف Excel ليان
+        function importLayanExcel(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const rows = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+
+                    let addedCount = 0;
+                    const todayStr = new Date().toISOString().split('T')[0];
+                    const nextMonth = new Date();
+                    nextMonth.setDate(nextMonth.getDate() + 30);
+                    const nextMonthStr = nextMonth.toISOString().split('T')[0];
+
+                    rows.forEach(row => {
+                        const rowText = row.join(' ');
+                        const phoneMatch = rowText.match(/\b05[0-9]{8}\b/);
+                        const dateMatches = rowText.match(/\b202[0-9]-[0-1][0-9]-[0-3][0-9]\b/g);
+
+                        if (phoneMatch) {
+                            const number = phoneMatch[0];
+                            const start = (dateMatches && dateMatches[0]) ? dateMatches[0] : todayStr;
+                            const end = (dateMatches && dateMatches[1]) ? dateMatches[1] : nextMonthStr;
+
+                            const idx = subscribers.findIndex(s => s.number === number);
+                            if (idx > -1) {
+                                subscribers[idx] = { number, start, end };
+                            } else {
+                                subscribers.push({ number, start, end });
+                            }
+                            addedCount++;
+                        }
+                    });
+
+                    saveToStorage();
+                    showAlert(`تم سحب وتحديث ${addedCount} مشترك من ملف Excel ليان بنجاح!`);
+                } catch (err) {
+                    showAlert('حدث خطأ أثناء قراءة ملف Excel، تأكد من الملف.', true);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        // سحب تلقائي من الحافظة عند نسخ جدول ليان
+        async function pullFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText();
+                const phones = [...new Set(text.match(/\b05[0-9]{8}\b/g) || [])];
+                if (phones.length === 0) {
+                    showAlert('لم يتم العثور على أرقام (051/059) في الحافظة! انسخ صفحة ليان أولاً.', true);
+                    return;
+                }
+
+                const todayStr = new Date().toISOString().split('T')[0];
+                const nextMonth = new Date();
+                nextMonth.setDate(nextMonth.getDate() + 30);
+                const nextMonthStr = nextMonth.toISOString().split('T')[0];
+
+                let newCount = 0;
+                phones.forEach(number => {
+                    if (!subscribers.some(s => s.number === number)) {
+                        subscribers.unshift({ number, start: todayStr, end: nextMonthStr });
+                        newCount++;
+                    }
+                });
+
+                saveToStorage();
+                showAlert(`تم سحب ${phones.length} رقم من الحافظة (تمت إضافة ${newCount} رقم جديد)!`);
+            } catch (err) {
+                showAlert('يرجى السماح للمتصفح بقراءة الحافظة.', true);
+            }
+        }
+
+        // تصدير قاعدة البيانات لملف JSON
+        function exportJsonFile() {
+            const blob = new Blob([JSON.stringify(subscribers, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'layan_data.json';
+            a.click();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('subscribersTableBody');
+            const query = document.getElementById('searchInput').value.trim();
+
+            let active = 0, soon = 0, expired = 0;
+
+            subscribers.forEach(sub => {
+                const rem = calculateRemaining(sub.end);
+                if (rem <= 0) expired++;
+                else if (rem <= 3) { active++; soon++; }
+                else active++;
+            });
+
+            document.getElementById('statTotal').innerText = subscribers.length;
+            document.getElementById('statActive').innerText = active;
+            document.getElementById('statSoon').innerText = soon;
+            document.getElementById('statExpired').innerText = expired;
+
+            const filtered = subscribers.filter(s => s.number.includes(query));
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-slate-500">لا توجد أرقام مطابقة للبحث</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(sub => {
+                const remDays = calculateRemaining(sub.end);
+                let badgeClass = 'bg-emerald-950 text-emerald-300 border-emerald-700';
+                let badgeText = `باقي ${remDays} يوم`;
+
+                if (remDays <= 0) {
+                    badgeClass = 'bg-rose-950 text-rose-300 border-rose-700';
+                    badgeText = 'منتهي';
+                } else if (remDays <= 3) {
+                    badgeClass = 'bg-amber-950 text-amber-300 border-amber-700';
+                    badgeText = `باقي ${remDays} أيام (قارب على الانتهاء)`;
+                }
+
+                const directUrl = getCustomerPageUrl(sub);
+
+                return `
+                    <tr class="hover:bg-slate-800/60 transition">
+                        <td class="py-3.5 px-2 font-mono font-bold text-sky-300 text-base">${sub.number}</td>
+                        <td class="py-3.5 px-2 font-mono text-slate-300">${sub.start}</td>
+                        <td class="py-3.5 px-2 font-mono text-slate-300">${sub.end}</td>
+                        <td class="py-3.5 px-2">
+                            <span class="text-xs px-2.5 py-1 rounded-lg border font-semibold ${badgeClass}">${badgeText}</span>
+                        </td>
+                        <td class="py-3.5 px-2">
+                            <div class="flex flex-wrap items-center justify-center gap-1.5">
+                                <a href="${directUrl}" target="_blank" class="bg-sky-600 hover:bg-sky-500 text-slate-950 font-bold text-xs px-2.5 py-1.5 rounded-lg transition">
+                                    صفحة الزبون
+                                </a>
+                                <button onclick="copyCustomerLink('${sub.number}')" class="bg-slate-700 hover:bg-slate-600 text-white text-xs px-2.5 py-1.5 rounded-lg transition">
+                                    نسخ الرابط
+                                </button>
+                                <button onclick="sendToSmsPortal('${sub.number}')" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs px-2.5 py-1.5 rounded-lg transition">
+                                    SMS
+                                </button>
+                                <button onclick="editSubscriber('${sub.number}')" class="bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs px-2 py-1.5 rounded-lg border border-slate-600">
+                                    تعديل
+                                </button>
+                                <button onclick="deleteSubscriber('${sub.number}')" class="bg-slate-800 hover:bg-rose-950 text-rose-400 text-xs px-2 py-1.5 rounded-lg border border-slate-600">
+                                    حذف
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // تهيئة التاريخ الافتراضي وعرض الجدول
+        setMonthDuration();
+        renderTable();
+    </script>
+</body>
+</html>
