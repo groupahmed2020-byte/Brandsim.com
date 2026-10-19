@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رادار أبراج الاتصالات الحقيقية</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --pelephone: #3b82f6;
+            --partner: #f97316;
+            --cellcom: #a855f7;
+            --roaming: #10b981;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header & Controls */
+        .top-panel {
+            background-color: var(--card-bg);
+            padding: 12px 16px;
+            border-bottom: 1px solid #334155;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .app-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .controls-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        button, select, input {
+            background: #0f172a;
+            color: var(--text-main);
+            border: 1px solid #475569;
+            padding: 7px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            border-color: var(--accent);
+        }
+
+        .btn-primary {
+            background: #0284c7;
+            border-color: #0ea5e9;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: #0369a1;
+        }
+
+        /* Carrier Selection Chips */
+        .carriers-bar {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 6px;
+            scrollbar-width: thin;
+        }
+
+        .carrier-chip {
+            white-space: nowrap;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            background: #0f172a;
+            border: 1px solid #334155;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .carrier-chip.active {
+            background: var(--accent);
+            color: #0f172a;
+            border-color: var(--accent);
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        /* Status & Network Info Banner */
+        .network-banner {
+            background: rgba(15, 23, 42, 0.85);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-top: 6px;
+            font-size: 0.82rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-right: 4px solid var(--accent);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        /* Main Layout: Map + Sidebar */
+        .main-container {
+            display: flex;
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #map {
+            flex: 1;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .sidebar {
+            width: 340px;
+            background: var(--card-bg);
+            border-right: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            z-index: 500;
+        }
+
+        .sidebar-header {
+            padding: 12px;
+            font-weight: 700;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+
+        .tower-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .tower-card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 10px;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .tower-card:hover {
+            border-color: var(--accent);
+        }
+
+        .tower-card-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .tower-meta {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .badge {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.72rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: 38%;
+                border-right: none;
+                border-top: 1px solid #334155;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-panel">
+        <div class="header-row">
+            <div class="app-title">
+                <span>📡 رادار الأبراج والشبكات الحقيقية</span>
+            </div>
+            <div class="controls-row">
+                <button class="btn-primary" onclick="locateUser()">📍 تحديد موقعي (GPS)</button>
+                <select id="radiusSelect" onchange="scanTowers()">
+                    <option value="2000">نطاق البحث: 2 كم</option>
+                    <option value="5000" selected>نطاق البحث: 5 كم</option>
+                    <option value="10000">نطاق البحث: 10 كم</option>
+                    <option value="20000">نطاق البحث: 20 كم</option>
+                </select>
+                <button onclick="toggleMapLayer()" id="layerBtn">🛰️ قمر صناعي</button>
+            </div>
+        </div>
+
+        <!-- قائمة الشركات الـ 11 -->
+        <div class="carriers-bar" id="carriersBar"></div>
+
+        <!-- شريط معلومات الشبكة المختارة -->
+        <div class="network-banner" id="networkBanner">
+            <span id="bannerText">اضغط على "تحديد موقعي" أو انقر على أي نقطة في الخريطة لفحص الأبراج المحيطة.</span>
+            <span id="towerCountBadge" style="color: var(--accent); font-weight: bold;">0 برج متاح</span>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div id="map"></div>
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <span>الأبراج المكتشفة (الأقرب أولاً)</span>
+                <small style="color: var(--text-muted);">انقر على الخريطة لتغيير المركز</small>
+            </div>
+            <div class="tower-list" id="towerList">
+                <div style="text-align: center; color: var(--text-muted); padding: 20px; font-size: 0.85rem;">
+                    جاري البحث عن الأبراج في النطاق المحدد...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // تعريف الشركات الـ 11 وربطها بالبنية التحتية للأبراج الحقيقية
+        const CARRIERS = [
+            { id: 'all', name: 'الكل (جميع الأبراج)', group: 'ALL', color: '#38bdf8', desc: 'عرض كافة أبراج الاتصالات والهوائيات الحقيقية المرصودة في المنطقة.' },
+            { id: 'pelephone', name: 'بيليفون (Pelephone)', group: 'PELEPHONE', color: '#3b82f6', desc: 'شبكة رئيسية (MNC 03): تعرض أبراج بيليفون والأبراج المشتركة الداعمة لها.' },
+            { id: 'ramilevy', name: 'رامي ليفي (Rami Levy)', group: 'PELEPHONE', color: '#2563eb', desc: 'مشغل افتراضي (MVNO): يعمل بالكامل على أبراج شبكة بيليفون (Pelephone).' },
+            { id: 'partner', name: 'بارتنر (Partner)', group: 'PHI', color: '#f97316', desc: 'شبكة رئيسية (MNC 01): تعمل ضمن تحالف أبراج PHI المشتركة مع هوت موبايل.' },
+            { id: 'hot', name: 'هوت موبايل (HOT)', group: 'PHI', color: '#ea580c', desc: 'شبكة رئيسية (MNC 07): تشترك في نفس الأبراج الفيزيائية مع شبكة بارتنر (PHI).' },
+            { id: '019', name: '019 موبايل', group: 'PHI', color: '#fb923c', desc: 'مشغل افتراضي (MVNO): يعتمد بشكل أساسي على أبراج شبكة بارتنر / هوت موبايل.' },
+            { id: 'cellcom', name: 'سيلكوم (Cellcom)', group: 'CELLCOM', color: '#a855f7', desc: 'شبكة رئيسية (MNC 02): تعرض أبراج مجموعة سيلكوم.' },
+            { id: 'golan', name: 'جولان تليكوم (Golan)', group: 'CELLCOM', color: '#9333ea', desc: 'تعمل على نفس شبكة الأبراج التشاركية الخاصة بشركة سيلكوم (MNC 08).' },
+            { id: 'wecom', name: 'ويكوم (Wecom)', group: 'CELLCOM', color: '#7e22ce', desc: 'تشترك في البنية التحتية والأبراج مع شبكة سيلكوم وجولان (MNC 18).' },
+            { id: 'aloha', name: 'ألوها (ALOHA)', group: 'ROAMING', color: '#10b981', desc: 'شريحة eSIM / تجوال: لا تملك أبراجاً خاصة، بل تربط تلقائياً على أقوى برج محلي متاح (بارتنر / بيليفون / سيلكوم).' },
+            { id: 'symphony', name: 'سيمفوني (Symphony)', group: 'ROAMING', color: '#059669', desc: 'شريحة تجوال: تعمل عبر الاتصال بأبراج الشبكات الرئيسية المضيفة المتوفرة في موقعك.' },
+            { id: 'kalam', name: 'كلام (Kalam)', group: 'ROAMING', color: '#047857', desc: 'شريحة تجوال: تستخدم الأبراج المحلية المتاحة حسب اتفاقية التغطية في منطقتك.' }
+        ];
+
+        let activeCarrier = CARRIERS[0];
+        let userLat = 31.5469; // نقطة افتراضية (يمكن تغييرها بالنقر أو الـ GPS)
+        let userLon = 34.4951;
+        let allFetchedTowers = [];
+        let isSatellite = false;
+
+        // إعداد الخريطة
+        const map = L.map('map').setView([userLat, userLon], 13);
+
+        const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        const satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            maxZoom: 19,
+            attribution: '© Esri Satellite'
+        });
+
+        let userMarker = L.marker([userLat, userLon], { draggable: true }).addTo(map)
+            .bindPopup('<b>موقع الفحص الحالي</b><br>اسحب الدبوس أو انقر على الخريطة لتغيير الموقع').openPopup();
+
+        let radiusCircle = L.circle([userLat, userLon], {
+            radius: 5000,
+            color: '#38bdf8',
+            fillColor: '#38bdf8',
+            fillOpacity: 0.08,
+            weight: 1
+        }).addTo(map);
+
+        let towersLayerGroup = L.layerGroup().addTo(map);
+
+        // عند النقر على الخريطة أو سحب الدبوس
+        map.on('click', function(e) {
+            updatePosition(e.latlng.lat, e.latlng.lng);
+        });
+
+        userMarker.on('dragend', function(e) {
+            const pos = e.target.getPosition();
+            updatePosition(pos.lat, pos.lng);
+        });
+
+        function updatePosition(lat, lon) {
+            userLat = lat;
+            userLon = lon;
+            userMarker.setLatLng([lat, lon]);
+            radiusCircle.setLatLng([lat, lon]);
+            scanTowers();
+        }
+
+        // تبديل القمر الصناعي
+        function toggleMapLayer() {
+            const btn = document.getElementById('layerBtn');
+            if (!isSatellite) {
+                map.removeLayer(osmLayer);
+                map.addLayer(satLayer);
+                btn.innerText = '🗺️ خريطة عادية';
+                isSatellite = true;
+            } else {
+                map.removeLayer(satLayer);
+                map.addLayer(osmLayer);
+                btn.innerText = '🛰️ قمر صناعي';
+                isSatellite = false;
+            }
+        }
+
+        // إنشاء أزرار الشركات
+        function renderCarriersBar() {
+            const bar = document.getElementById('carriersBar');
+            bar.innerHTML = '';
+            CARRIERS.forEach(c => {
+                const chip = document.createElement('div');
+                chip.className = `carrier-chip ${c.id === activeCarrier.id ? 'active' : ''}`;
+                chip.innerHTML = `<span class="dot" style="background:${c.color}"></span> ${c.name}`;
+                chip.onclick = () => {
+                    activeCarrier = c;
+                    renderCarriersBar();
+                    filterAndDisplayTowers();
+                };
+                bar.appendChild(chip);
+            });
+        }
+
+        // تحديد موقع المستخدم عبر GPS
+        function locateUser() {
+            if (!navigator.geolocation) {
+                alert('المتصفح لا يدعم تحديد الموقع الجغرافي');
+                return;
+            }
+            document.getElementById('bannerText').innerText = 'جاري جلب إحداثيات GPS الخاصة بك...';
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    map.setView([pos.coords.latitude, pos.coords.longitude], 14);
+                    updatePosition(pos.coords.latitude, pos.coords.longitude);
+                },
+                (err) => {
+                    alert('تعذر الوصول للـ GPS تلقائياً. يمكنك النقر مباشرة على موقعك في الخريطة لفحص الأبراج.');
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        }
+
+        // جلب الأبراج الحقيقية من قاعدة بيانات OpenStreetMap Overpass API
+        async function scanTowers() {
+            const radius = parseInt(document.getElementById('radiusSelect').value);
+            radiusCircle.setRadius(radius);
+
+            document.getElementById('towerList').innerHTML = `
+                <div style="text-align: center; color: var(--accent); padding: 20px;">
+                    ⏳ جاري مسح المنطقة وجلب مواقع الأبراج الحقيقية...
+                </div>`;
+
+            // استعلام Overpass لجلب كافة أبراج الاتصالات والهوائيات المسجلة جغرافياً
+            const query = `
+                [out:json][timeout:25];
+                (
+                  node["man_made"~"mast|tower|communications_tower"](around:${radius},${userLat},${userLon});
+                  node["tower:type"="communication"](around:${radius},${userLat},${userLon});
+                  node["telecom"~"antenna|mast|base_station"](around:${radius},${userLat},${userLon});
+                  way["man_made"~"mast|tower|communications_tower"](around:${radius},${userLat},${userLon});
+                  way["tower:type"="communication"](around:${radius},${userLat},${userLon});
+                );
+                out center tags;
+            `;
+
+            try {
+                const response = await fetch('https://overpass-api.de/api/interpreter', {
+                    method: 'POST',
+                    body: query
+                });
+                const data = await response.json();
+
+                allFetchedTowers = data.elements.map(el => {
+                    const lat = el.lat || (el.center && el.center.lat);
+                    const lon = el.lon || (el.center && el.center.lon);
+                    const tags = el.tags || {};
+                    const operatorRaw = (tags.operator || tags.name || tags.brand || '').toLowerCase();
+
+                    // تصنيف البرج حسب المشغل المسجل أو اعتباره موقع بث مشترك (Multi-Operator Site)
+                    let detectedGroup = 'SHARED';
+                    let operatorLabel = tags.operator || 'برج اتصالات (موقع بث مشترك / عام)';
+
+                    if (operatorRaw.includes('pelephone') || operatorRaw.includes('פלאפון') || operatorRaw.includes('بيليفون')) {
+                        detectedGroup = 'PELEPHONE';
+                        operatorLabel = 'شبكة بيليفون (Pelephone / رامي ليفي)';
+                    } else if (operatorRaw.includes('partner') || operatorRaw.includes('orange') || operatorRaw.includes('hot') || operatorRaw.includes('phi') || operatorRaw.includes('פרטנר') || operatorRaw.includes('הוט')) {
+                        detectedGroup = 'PHI';
+                        operatorLabel = 'شبكة PHI (بارتنر / هوت موبايل / 019)';
+                    } else if (operatorRaw.includes('cellcom') || operatorRaw.includes('golan') || operatorRaw.includes('wecom') || operatorRaw.includes('סלקום')) {
+                        detectedGroup = 'CELLCOM';
+                        operatorLabel = 'شبكة سيلكوم (سيلكوم / جولان / ويكوم)';
+                    }
+
+                    const dist = calculateDistance(userLat, userLon, lat, lon);
+                    const bearing = calculateBearing(userLat, userLon, lat, lon);
+
+                    return {
+                        id: el.id,
+                        lat,
+                        lon,
+                        operatorLabel,
+                        detectedGroup,
+                        height: tags.height || 'غير محدد',
+                        type: tags['tower:type'] || tags['man_made'] || 'هوائي خلوي',
+                        distanceMeters: Math.round(dist),
+                        direction: bearing
+                    };
+                });
+
+                // ترتيب الأبراج من الأقرب إلى الأبعد
+                allFetchedTowers.sort((a, b) => a.distanceMeters - b.distanceMeters);
+                filterAndDisplayTowers();
+
+            } catch (error) {
+                document.getElementById('towerList').innerHTML = `
+                    <div style="text-align: center; color: #f87171; padding: 20px;">
+                        ⚠️ حدث ضغط على خادم الخرائط، يرجى المحاولة مرة أخرى بعد ثوانٍ.
+                    </div>`;
+            }
+        }
+
+        // فلترة الأبراج وعرضها على الخريطة والقائمة الجانبية
+        function filterAndDisplayTowers() {
+            towersLayerGroup.clearLayers();
+            const listContainer = document.getElementById('towerList');
+            listContainer.innerHTML = '';
+
+            // تحديث الشريط المعلوماتي للشركة المختارة
+            document.getElementById('bannerText').innerText = `${activeCarrier.name}: ${activeCarrier.desc}`;
+            document.getElementById('networkBanner').style.borderRightColor = activeCarrier.color;
+
+            // الأبراج المشتركة (SHARED) تظهر لجميع الشبكات لأن معظم الأبراج الرئيسية تحمل هوائيات لأكثر من مشغل
+            const filtered = allFetchedTowers.filter(t => {
+                if (activeCarrier.group === 'ALL' || activeCarrier.group === 'ROAMING') return true;
+                return t.detectedGroup === activeCarrier.group || t.detectedGroup === 'SHARED';
+            });
+
+            document.getElementById('towerCountBadge').innerText = `${filtered.length} برج متاح`;
+
+            if (filtered.length === 0) {
+                listContainer.innerHTML = `
+                    <div style="text-align: center; color: var(--text-muted); padding: 20px;">
+                        لا توجد أبراج مرصودة في هذا النطاق. جرب زيادة نطاق البحث إلى 10 أو 20 كم أو تحريك الدبوس.
+                    </div>`;
+                return;
+            }
+
+            filtered.forEach((tower, index) => {
+                // رسم البرج على الخريطة
+                const markerColor = activeCarrier.id === 'all' ? getColorByGroup(tower.detectedGroup) : activeCarrier.color;
+
+                const circleMarker = L.circleMarker([tower.lat, tower.lon], {
+                    radius: 9,
+                    fillColor: markerColor,
+                    color: '#ffffff',
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.9
+                }).addTo(towersLayerGroup);
+
+                // حساب المسافة لعرضها
+                const distText = tower.distanceMeters >= 1000
+                    ? (tower.distanceMeters / 1000).toFixed(2) + ' كم'
+                    : tower.distanceMeters + ' متر';
+
+                const popupHtml = `
+                    <div style="direction:rtl; text-align:right; font-family:Tahoma; min-width:190px;">
+                        <strong style="color:#0284c7;">📡 برج #${index + 1} (${distText})</strong><br>
+                        <b>الشبكة:</b> ${tower.operatorLabel}<br>
+                        <b>الاتجاه من موقعك:</b> ${tower.direction}<br>
+                        <b>الإحداثيات:</b> ${tower.lat.toFixed(5)}, ${tower.lon.toFixed(5)}<br>
+                        <a href="https://www.google.com/maps?q=${tower.lat},${tower.lon}" target="_blank" style="color:#0284c7; font-weight:bold;">فتح في خرائط جوجل ↗</a>
+                    </div>
+                `;
+                circleMarker.bindPopup(popupHtml);
+
+                // إضافة بطاقة البرج في القائمة الجانبية
+                const card = document.createElement('div');
+                card.className = 'tower-card';
+                card.innerHTML = `
+                    <div class="tower-card-title">
+                        <span>📡 برج #${index + 1}</span>
+                        <span class="badge" style="background:${markerColor}">${distText}</span>
+                    </div>
+                    <div class="tower-meta">
+                        <div><b>التبعية:</b> ${tower.operatorLabel}</div>
+                        <div><b>زاوية التوجيه:</b> ${tower.direction}</div>
+                        <div><b>الارتفاع المسجل:</b> ${tower.height}</div>
+                    </div>
+                `;
+                card.onclick = () => {
+                    map.setView([tower.lat, tower.lon], 16);
+                    circleMarker.openPopup();
+                };
+                listContainer.appendChild(card);
+            });
+        }
+
+        function getColorByGroup(group) {
+            if (group === 'PELEPHONE') return '#3b82f6';
+            if (group === 'PHI') return '#f97316';
+            if (group === 'CELLCOM') return '#a855f7';
+            return '#38bdf8';
+        }
+
+        // حساب المسافة بالمتر (Haversine Formula)
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371e3;
+            const p1 = lat1 * Math.PI / 180;
+            const p2 = lat2 * Math.PI / 180;
+            const dp = (lat2 - lat1) * Math.PI / 180;
+            const dl = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dp/2) * Math.sin(dp/2) +
+                      Math.cos(p1) * Math.cos(p2) *
+                      Math.sin(dl/2) * Math.sin(dl/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        // حساب الاتجاه الجغرافي (البوصلة) لتوجيه الهوائي أو الهاتف
+        function calculateBearing(lat1, lon1, lat2, lon2) {
+            const y = Math.sin((lon2 - lon1) * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180);
+            const x = Math.cos(lat1 * Math.PI / 180) * Math.sin(lat2 * Math.PI / 180) -
+                      Math.sin(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.cos((lon2 - lon1) * Math.PI / 180);
+            let brng = Math.atan2(y, x) * 180 / Math.PI;
+            brng = (brng + 360) % 360;
+            const dirs = ['شمال ⬆️', 'شمال شرق ↗️', 'شرق ➡️', 'جنوب شرق ↘️', 'جنوب ⬇️', 'جنوب غرب ↙️', 'غرب ⬅️', 'شمال غرب ↖️'];
+            return `${dirs[Math.round(brng / 45) % 8]} (${Math.round(brng)}°)`;
+        }
+
+        // تشغيل أولي
+        renderCarriersBar();
+        scanTowers();
+    </script>
+</body>
+</html>
+                  
