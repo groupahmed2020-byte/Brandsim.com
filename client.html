@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حالة الاشتراك - مشتركين ليان</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .card { background-color: #1e293b; border: 1px solid #334155; }
+        input { background-color: #0f172a !important; border-color: #475569 !important; color: #fff !important; }
+        input:focus { border-color: #38bdf8 !important; outline: none; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-md space-y-5">
+        <!-- شعار وعنوان الصفحة -->
+        <div class="text-center space-y-1">
+            <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-500/30 text-sky-400 mb-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <h1 class="text-2xl font-extrabold text-white">متابعة حالة الاشتراك</h1>
+            <p class="text-xs text-slate-400">تفاصيل صلاحية الحزمة والوقت المتبقي لاشتراكك</p>
+        </div>
+
+        <!-- صندوق البحث برقم الاشتراك (يختفي إذا دخل الزبون عبر رابط مباشر خاص به) -->
+        <div id="lookupBox" class="card rounded-2xl p-5 shadow-lg space-y-3">
+            <label class="block text-xs text-slate-300 font-semibold">أدخل رقم الاشتراك الخاص بك للاستعلام:</label>
+            <div class="flex gap-2">
+                <input type="text" id="searchNumber" placeholder="مثال: 0512937848" class="w-full rounded-xl p-3 border text-sm font-mono text-center">
+                <button onclick="lookupSubscription()" class="bg-sky-500 hover:bg-sky-600 text-slate-950 font-bold px-5 rounded-xl text-sm transition">
+                    عرض
+                </button>
+            </div>
+            <p id="lookupError" class="hidden text-xs text-rose-400 text-center font-semibold pt-1">لم يتم العثور على هذا الرقم، تأكد من كتابة الرقم بشكل صحيح.</p>
+        </div>
+
+        <!-- بطاقة بيانات اشتراك الزبون (تعرض فقط: الرقم، المتبقي، البداية، النهاية) -->
+        <div id="subscriptionCard" class="hidden card rounded-3xl p-6 shadow-2xl space-y-6 relative overflow-hidden">
+            <!-- شارة الحالة العلوية -->
+            <div class="flex justify-between items-center border-b border-slate-700/80 pb-4">
+                <div>
+                    <span class="text-xs text-slate-400 block">رقم الاشتراك</span>
+                    <span id="displayNumber" class="text-2xl font-extrabold font-mono text-sky-400 tracking-wider">---</span>
+                </div>
+                <span id="statusBadge" class="text-xs font-bold px-3 py-1.5 rounded-xl border">---</span>
+            </div>
+
+            <!-- عداد الوقت المتبقي -->
+            <div class="bg-slate-900/90 rounded-2xl p-5 text-center border border-slate-800 space-y-3">
+                <span class="text-xs text-slate-400 font-semibold block">الوقت المتبقي لانتهاء الاشتراك</span>
+                
+                <div class="flex justify-center items-baseline gap-2">
+                    <span id="remainingDays" class="text-5xl font-extrabold text-white">0</span>
+                    <span id="remainingUnit" class="text-lg font-bold text-sky-400">يوم</span>
+                </div>
+
+                <p id="remainingHoursText" class="text-xs text-slate-400"></p>
+
+                <!-- شريط التقدم البصري -->
+                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden mt-2">
+                    <div id="progressBar" class="bg-sky-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- تاريخ البداية وتاريخ النهاية فقط -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800 text-center">
+                    <span class="text-xs text-slate-400 block mb-1">تاريخ البداية</span>
+                    <span id="displayStart" class="text-base font-bold font-mono text-emerald-400">----/--/--</span>
+                </div>
+                <div class="bg-slate-900/60 p-4 rounded-2xl border border-slate-800 text-center">
+                    <span class="text-xs text-slate-400 block mb-1">تاريخ النهاية</span>
+                    <span id="displayEnd" class="text-base font-bold font-mono text-rose-400">----/--/--</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // عرض البطاقة وحساب الوقت المتبقي بدقة
+        function showCustomerData(number, startStr, endStr) {
+            document.getElementById('lookupError').classList.add('hidden');
+            document.getElementById('subscriptionCard').classList.remove('hidden');
+
+            document.getElementById('displayNumber').innerText = number;
+            document.getElementById('displayStart').innerText = startStr;
+            document.getElementById('displayEnd').innerText = endStr;
+
+            const now = new Date();
+            const start = new Date(startStr + 'T00:00:00');
+            const end = new Date(endStr + 'T23:59:59');
+
+            const totalDuration = end - start;
+            const remainingTime = end - now;
+
+            const daysEl = document.getElementById('remainingDays');
+            const unitEl = document.getElementById('remainingUnit');
+            const hoursEl = document.getElementById('remainingHoursText');
+            const badge = document.getElementById('statusBadge');
+            const bar = document.getElementById('progressBar');
+
+            if (remainingTime <= 0) {
+                daysEl.innerText = '0';
+                daysEl.className = 'text-5xl font-extrabold text-rose-500';
+                unitEl.innerText = 'يوم';
+                hoursEl.innerText = 'انتهت صلاحية الاشتراك، يرجى التجديد';
+                badge.innerText = 'منتهي';
+                badge.className = 'text-xs font-bold px-3 py-1.5 rounded-xl border bg-rose-950 text-rose-300 border-rose-700';
+                bar.style.width = '100%';
+                bar.className = 'bg-rose-500 h-full rounded-full';
+            } else {
+                const days = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((remainingTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+                daysEl.innerText = days;
+                unitEl.innerText = days === 1 ? 'يوم' : 'أيام';
+                hoursEl.innerText = `و ${hours} ساعة متبقية`;
+
+                const percentLeft = totalDuration > 0 ? Math.max(5, Math.min(100, Math.round((remainingTime / totalDuration) * 100))) : 50;
+                bar.style.width = `${percentLeft}%`;
+
+                if (days <= 3) {
+                    daysEl.className = 'text-5xl font-extrabold text-amber-400';
+                    badge.innerText = 'أوشك على الانتهاء';
+                    badge.className = 'text-xs font-bold px-3 py-1.5 rounded-xl border bg-amber-950 text-amber-300 border-amber-700';
+                    bar.className = 'bg-amber-400 h-full rounded-full';
+                } else {
+                    daysEl.className = 'text-5xl font-extrabold text-white';
+                    badge.innerText = 'اشتراك فعال';
+                    badge.className = 'text-xs font-bold px-3 py-1.5 rounded-xl border bg-emerald-950 text-emerald-300 border-emerald-700';
+                    bar.className = 'bg-emerald-400 h-full rounded-full';
+                }
+            }
+        }
+
+        // البحث عن الرقم في حال دخل الزبون بدون رابط مخصص
+        async function lookupSubscription() {
+            const num = document.getElementById('searchNumber').value.trim();
+            if (!num) return;
+
+            // 1. البحث في التخزين المحلي أولاً
+            let db = JSON.parse(localStorage.getItem('layan_subs_db') || '[]');
+            let found = db.find(s => s.number === num);
+
+            // 2. إذا لم يوجد، البحث في ملف layan_data.json إن تم رفعه على GitHub
+            if (!found) {
+                try {
+                    const res = await fetch('layan_data.json?t=' + Date.now());
+                    if (res.ok) {
+                        const jsonDb = await res.json();
+                        found = jsonDb.find(s => s.number === num);
+                    }
+                } catch (e) {}
+            }
+
+            if (found) {
+                showCustomerData(found.number, found.start, found.end);
+            } else {
+                document.getElementById('subscriptionCard').classList.add('hidden');
+                document.getElementById('lookupError').classList.remove('hidden');
+            }
+        }
+
+        // فحص الرابط المباشر عند فتح الصفحة (مثلاً client.html?num=0512937848&start=2026-10-01&end=2026-10-31)
+        function checkUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            const num = params.get('num');
+            const start = params.get('start');
+            const end = params.get('end');
+
+            if (num && start && end) {
+                // إخفاء صندوق البحث ليرى الزبون بياناته فقط
+                document.getElementById('lookupBox').classList.add('hidden');
+                showCustomerData(num, start, end);
+            } else if (num) {
+                document.getElementById('searchNumber').value = num;
+                lookupSubscription();
+            }
+        }
+
+        checkUrlParams();
+    </script>
+</body>
+</html>
