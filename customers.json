@@ -1,5 +1,775 @@
 [
   {
+    "id": 1792444819235,
+    "name": "0515882564",
+    "simPhone": "0515882564",
+    "startDate": "2026-10-19",
+    "expiryDate": "2026-11-18",
+    "packageInfo": "We - حزمة 500 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0515882564"
+  },
+  {
+    "id": 1792444819233,
+    "name": "0554679072",
+    "simPhone": "0554679072",
+    "startDate": "2026-10-19",
+    "expiryDate": "2027-01-18",
+    "packageInfo": "RamiLevi - حزمة 200 جيجا 2027 (شهري)",
+    "priceNote": "00",
+    "contactPhone": "0554679072"
+  },
+  {
+    "id": 1792444819232,
+    "name": "0543513005",
+    "simPhone": "0543513005",
+    "startDate": "2026-10-19",
+    "expiryDate": "2026-11-18",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0543513005"
+  },
+  {
+    "id": 1792444819231,
+    "name": "0554675535",
+    "simPhone": "0554675535",
+    "startDate": "2026-10-19",
+    "expiryDate": "2027-01-18",
+    "packageInfo": "RamiLevi - حزمة 200 جيجا 2027 (شهري)",
+    "priceNote": "00",
+    "contactPhone": "0554675535"
+  },
+  {
+    "id": 1792444819229,
+    "name": "0545013561",
+    "simPhone": "0545013561",
+    "startDate": "2026-10-18",
+    "expiryDate": "2026-11-17",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0545013561"
+  },
+  {
+    "id": 1792444819228,
+    "name": "0545013489",
+    "simPhone": "0545013489",
+    "startDate": "2026-10-18",
+    "expiryDate": "2026-11-17",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0545013489"
+  },
+  {
+    "id": 1792444819226,
+    "name": "0554673965",
+    "simPhone": "0554673965",
+    "startDate": "2026-10-18",
+    "expiryDate": "2026-11-16",
+    "packageInfo": "RamiLevi - حزمة 200 جيجا 2027 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0554673965"
+  },
+  {
+    "id": 1792444819225,
+    "name": "0545012464",
+    "simPhone": "0545012464",
+    "startDate": "2026-10-19",
+    "expiryDate": "2026-11-18",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0545012464"
+  },
+  {
+    "id": 1792444819224,
+    "name": "0554679377",
+    "simPhone": "0554679377",
+    "startDate": "2026-10-16",
+    "expiryDate": "2026-11-15",
+    "packageInfo": "RamiLevi - حزمة 200 جيجا 2027 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0554679377"
+  },
+  {
+    "id": 1792444819222,
+    "name": "0545012278",
+    "simPhone": "0545012278",
+    "startDate": "2026-10-16",
+    "expiryDate": "2026-11-15",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0545012278"
+  },
+  {
+    "id": 1792444819221,
+    "name": "0545012197",
+    "simPhone": "0545012197",
+    "startDate": "2026-10-15",
+    "expiryDate": "2026-11-14",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0545012197"
+  },
+  {
+    "id": 1792444819219,
+    "name": "0545012189",
+    "simPhone": "0545012189",
+    "startDate": "2026-10-15",
+    "expiryDate": "2026-11-14",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0545012189"
+  },
+  {
+    "id": 1792444819218,
+    "name": "0545012495",
+    "simPhone": "0545012495",
+    "startDate": "2026-10-15",
+    "expiryDate": "2026-11-14",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0545012495"
+  },
+  {
+    "id": 1792444819217,
+    "name": "0512514872",
+    "simPhone": "0512514872",
+    "startDate": "2026-10-14",
+    "expiryDate": "2027-01-12",
+    "packageInfo": "We - حزمة 500 جيجا 2026 (عادي)",
+    "priceNote": "00",
+    "contactPhone": "0512514872"
+  },
+  {
+    "id": 1792444819215,
+    "name": "0512488479",
+    "simPhone": "0512488479",
+    "startDate": "2026-10-12",
+    "expiryDate": "2027-01-10",
+    "packageInfo": "We - حزمة 500 جيجا 2026 (عادي)",
+    "priceNote": "00",
+    "contactPhone": "0512488479"
+  },
+  {
+    "id": 1792444819214,
+    "name": "0544480435",
+    "simPhone": "0544480435",
+    "startDate": "2026-10-12",
+    "expiryDate": "2026-11-11",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0544480435"
+  },
+  {
+    "id": 1792444819213,
+    "name": "0543307590",
+    "simPhone": "0543307590",
+    "startDate": "2026-10-11",
+    "expiryDate": "2026-11-10",
+    "packageInfo": "Partner - بارتنر 500 جيجا 2025 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0543307590"
+  },
+  {
+    "id": 1792444819211,
+    "name": "0543224188",
+    "simPhone": "0543224188",
+    "startDate": "2026-10-11",
+    "expiryDate": "2026-11-10",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0543224188"
+  },
+  {
+    "id": 1792444819209,
+    "name": "0512378431",
+    "simPhone": "0512378431",
+    "startDate": "2026-10-11",
+    "expiryDate": "2027-01-09",
+    "packageInfo": "We - حزمة 500 جيجا 2026 (عادي)",
+    "priceNote": "00",
+    "contactPhone": "0512378431"
+  },
+  {
+    "id": 1792444819208,
+    "name": "0542961509",
+    "simPhone": "0542961509",
+    "startDate": "2026-10-11",
+    "expiryDate": "2026-11-10",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0542961509"
+  },
+  {
+    "id": 1792444819206,
+    "name": "0554661263",
+    "simPhone": "0554661263",
+    "startDate": "2026-10-11",
+    "expiryDate": "2026-11-10",
+    "packageInfo": "RamiLevi - حزمة 200 جيجا 2027 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0554661263"
+  },
+  {
+    "id": 1792444819204,
+    "name": "0554660714",
+    "simPhone": "0554660714",
+    "startDate": "2026-10-11",
+    "expiryDate": "2026-11-10",
+    "packageInfo": "RamiLevi - حزمة 200 جيجا 2027 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0554660714"
+  },
+  {
+    "id": 1792444819203,
+    "name": "0554661006",
+    "simPhone": "0554661006",
+    "startDate": "2026-10-10",
+    "expiryDate": "2026-11-09",
+    "packageInfo": "RamiLevi - حزمة 200 جيجا 2027 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0554661006"
+  },
+  {
+    "id": 1792444819201,
+    "name": "0554673652",
+    "simPhone": "0554673652",
+    "startDate": "2026-10-09",
+    "expiryDate": "2026-11-08",
+    "packageInfo": "RamiLevi - حزمة 200 جيجا 2027 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0554673652"
+  },
+  {
+    "id": 1792444819200,
+    "name": "0542005622",
+    "simPhone": "0542005622",
+    "startDate": "2026-10-07",
+    "expiryDate": "2026-11-06",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0542005622"
+  },
+  {
+    "id": 1792444819199,
+    "name": "0512591055",
+    "simPhone": "0512591055",
+    "startDate": "2026-10-07",
+    "expiryDate": "2027-01-05",
+    "packageInfo": "We - حزمة 500 جيجا 2026 (عادي)",
+    "priceNote": "00",
+    "contactPhone": "0512591055"
+  },
+  {
+    "id": 1792444819197,
+    "name": "0554661234",
+    "simPhone": "0554661234",
+    "startDate": "2026-10-07",
+    "expiryDate": "2026-11-06",
+    "packageInfo": "RamiLevi - حزمة 200 جيجا 2027 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0554661234"
+  },
+  {
+    "id": 1792444819196,
+    "name": "0512377400",
+    "simPhone": "0512377400",
+    "startDate": "2026-10-06",
+    "expiryDate": "2026-11-05",
+    "packageInfo": "We - حزمة 500 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0512377400"
+  },
+  {
+    "id": 1792444819194,
+    "name": "0537246056",
+    "simPhone": "0537246056",
+    "startDate": "2026-10-06",
+    "expiryDate": "2027-01-04",
+    "packageInfo": "Hotmobile - حزمة 200 جيجا 2026 (عادي)",
+    "priceNote": "00",
+    "contactPhone": "0537246056"
+  },
+  {
+    "id": 1792444819192,
+    "name": "0545008238",
+    "simPhone": "0545008238",
+    "startDate": "2026-10-06",
+    "expiryDate": "2026-11-05",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0545008238"
+  },
+  {
+    "id": 1792444819191,
+    "name": "0545008248",
+    "simPhone": "0545008248",
+    "startDate": "2026-10-06",
+    "expiryDate": "2026-11-05",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0545008248"
+  },
+  {
+    "id": 1792444819189,
+    "name": "0545004710",
+    "simPhone": "0545004710",
+    "startDate": "2026-10-05",
+    "expiryDate": "2026-11-04",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0545004710"
+  },
+  {
+    "id": 1792444819188,
+    "name": "0545004701",
+    "simPhone": "0545004701",
+    "startDate": "2026-10-05",
+    "expiryDate": "2026-11-04",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0545004701"
+  },
+  {
+    "id": 1792444819187,
+    "name": "0545003511",
+    "simPhone": "0545003511",
+    "startDate": "2026-10-03",
+    "expiryDate": "2026-11-02",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0545003511"
+  },
+  {
+    "id": 1792444819185,
+    "name": "0545003558",
+    "simPhone": "0545003558",
+    "startDate": "2026-10-03",
+    "expiryDate": "2026-11-02",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0545003558"
+  },
+  {
+    "id": 1792444819184,
+    "name": "0534472397",
+    "simPhone": "0534472397",
+    "startDate": "2026-10-03",
+    "expiryDate": "2026-11-02",
+    "packageInfo": "Hotmobile - حزمة 200 جيجا ESIM 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0534472397"
+  },
+  {
+    "id": 1792444819182,
+    "name": "0545003284",
+    "simPhone": "0545003284",
+    "startDate": "2026-10-02",
+    "expiryDate": "2026-11-01",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0545003284"
+  },
+  {
+    "id": 1792444819180,
+    "name": "0545003265",
+    "simPhone": "0545003265",
+    "startDate": "2026-10-02",
+    "expiryDate": "2026-11-01",
+    "packageInfo": "Partner - بارتنر 500 جيجا 2025 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0545003265"
+  },
+  {
+    "id": 1792444819178,
+    "name": "0554660312",
+    "simPhone": "0554660312",
+    "startDate": "2026-09-30",
+    "expiryDate": "2026-10-30",
+    "packageInfo": "RamiLevi - حزمة 200 جيجا 2027 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0554660312"
+  },
+  {
+    "id": 1792444819176,
+    "name": "0554661258",
+    "simPhone": "0554661258",
+    "startDate": "2026-09-30",
+    "expiryDate": "2026-10-30",
+    "packageInfo": "RamiLevi - حزمة 200 جيجا 2027 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0554661258"
+  },
+  {
+    "id": 1792444819175,
+    "name": "0545003176",
+    "simPhone": "0545003176",
+    "startDate": "2026-09-29",
+    "expiryDate": "2026-10-29",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0545003176"
+  },
+  {
+    "id": 1792444819174,
+    "name": "0554661148",
+    "simPhone": "0554661148",
+    "startDate": "2026-09-29",
+    "expiryDate": "2026-10-29",
+    "packageInfo": "RamiLevi - حزمة 200 جيجا 2027 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0554661148"
+  },
+  {
+    "id": 1792444819172,
+    "name": "0544634759",
+    "simPhone": "0544634759",
+    "startDate": "2026-09-29",
+    "expiryDate": "2026-10-29",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0544634759"
+  },
+  {
+    "id": 1792444819171,
+    "name": "0554660815",
+    "simPhone": "0554660815",
+    "startDate": "2026-09-29",
+    "expiryDate": "2026-10-29",
+    "packageInfo": "RamiLevi - حزمة 200 جيجا 2027 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0554660815"
+  },
+  {
+    "id": 1792444819170,
+    "name": "0544098650",
+    "simPhone": "0544098650",
+    "startDate": "2026-09-26",
+    "expiryDate": "2026-10-26",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0544098650"
+  },
+  {
+    "id": 1792444819169,
+    "name": "0544098626",
+    "simPhone": "0544098626",
+    "startDate": "2026-09-26",
+    "expiryDate": "2026-10-26",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0544098626"
+  },
+  {
+    "id": 1792444819167,
+    "name": "0554650191",
+    "simPhone": "0554650191",
+    "startDate": "2026-09-24",
+    "expiryDate": "2026-10-24",
+    "packageInfo": "RamiLevi - حزمة 200 جيجا 2027 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0554650191"
+  },
+  {
+    "id": 1792444819166,
+    "name": "0544098250",
+    "simPhone": "0544098250",
+    "startDate": "2026-09-24",
+    "expiryDate": "2026-10-24",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0544098250"
+  },
+  {
+    "id": 1792444819165,
+    "name": "0542921341",
+    "simPhone": "0542921341",
+    "startDate": "2026-09-22",
+    "expiryDate": "2026-10-22",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0542921341"
+  },
+  {
+    "id": 1792444819164,
+    "name": "0542585134",
+    "simPhone": "0542585134",
+    "startDate": "2026-09-22",
+    "expiryDate": "2026-10-22",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0542585134"
+  },
+  {
+    "id": 1792444819162,
+    "name": "0543549251",
+    "simPhone": "0543549251",
+    "startDate": "2026-09-21",
+    "expiryDate": "2026-10-21",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0543549251"
+  },
+  {
+    "id": 1792444819161,
+    "name": "0543538225",
+    "simPhone": "0543538225",
+    "startDate": "2026-09-20",
+    "expiryDate": "2026-10-20",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0543538225"
+  },
+  {
+    "id": 1792444819160,
+    "name": "0543516583",
+    "simPhone": "0543516583",
+    "startDate": "2026-09-20",
+    "expiryDate": "2026-10-20",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0543516583"
+  },
+  {
+    "id": 1792444819159,
+    "name": "0512981396",
+    "simPhone": "0512981396",
+    "startDate": "2026-09-11",
+    "expiryDate": "2026-12-10",
+    "packageInfo": "We - حزمة 500 جيجا 2026 (عادي)",
+    "priceNote": "00",
+    "contactPhone": "0512981396"
+  },
+  {
+    "id": 1792444819158,
+    "name": "0544096276",
+    "simPhone": "0544096276",
+    "startDate": "2026-09-10",
+    "expiryDate": "2026-12-09",
+    "packageInfo": "Partner - بارتنر 500 جيجا 2025 (عادي)",
+    "priceNote": "00",
+    "contactPhone": "0544096276"
+  },
+  {
+    "id": 1792444819157,
+    "name": "0512983918",
+    "simPhone": "0512983918",
+    "startDate": "2026-09-08",
+    "expiryDate": "2026-12-07",
+    "packageInfo": "We - حزمة 500 جيجا 2026 (عادي)",
+    "priceNote": "00",
+    "contactPhone": "0512983918"
+  },
+  {
+    "id": 1792444819155,
+    "name": "0543130872",
+    "simPhone": "0543130872",
+    "startDate": "2026-09-04",
+    "expiryDate": "2026-12-03",
+    "packageInfo": "Partner - بارتنر 500 جيجا 2025 (عادي)",
+    "priceNote": "00",
+    "contactPhone": "0543130872"
+  },
+  {
+    "id": 1792444819154,
+    "name": "0542141146",
+    "simPhone": "0542141146",
+    "startDate": "2026-10-02",
+    "expiryDate": "2026-11-01",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0542141146"
+  },
+  {
+    "id": 1792444819153,
+    "name": "0543508378",
+    "simPhone": "0543508378",
+    "startDate": "2026-09-25",
+    "expiryDate": "2026-10-25",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0543508378"
+  },
+  {
+    "id": 1792444819152,
+    "name": "0542196982",
+    "simPhone": "0542196982",
+    "startDate": "2026-10-05",
+    "expiryDate": "2026-11-04",
+    "packageInfo": "Partner - بارتنر 500 جيجا 2025 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0542196982"
+  },
+  {
+    "id": 1792444819151,
+    "name": "0559326238",
+    "simPhone": "0559326238",
+    "startDate": "2026-10-06",
+    "expiryDate": "2026-11-05",
+    "packageInfo": "Mobile019 - حزمة 250  جيجا الجيل 5 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0559326238"
+  },
+  {
+    "id": 1792444819150,
+    "name": "0543404847",
+    "simPhone": "0543404847",
+    "startDate": "2026-10-17",
+    "expiryDate": "2026-11-16",
+    "packageInfo": "Partner - بارتنر 500 جيجا 2025 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0543404847"
+  },
+  {
+    "id": 1792444819148,
+    "name": "0543404835",
+    "simPhone": "0543404835",
+    "startDate": "2026-10-19",
+    "expiryDate": "2026-11-18",
+    "packageInfo": "Partner - بارتنر 500 جيجا 2025 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0543404835"
+  },
+  {
+    "id": 1792444819147,
+    "name": "0515092790",
+    "simPhone": "0515092790",
+    "startDate": "2026-10-15",
+    "expiryDate": "2026-11-15",
+    "packageInfo": "We - حزمة 500 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0515092790"
+  },
+  {
+    "id": 1792444819146,
+    "name": "0542794057",
+    "simPhone": "0542794057",
+    "startDate": "2026-09-23",
+    "expiryDate": "2026-10-23",
+    "packageInfo": "Partner - بارتنر 500 جيجا 2025 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0542794057"
+  },
+  {
+    "id": 1792444819145,
+    "name": "0542786473",
+    "simPhone": "0542786473",
+    "startDate": "2026-09-21",
+    "expiryDate": "2026-10-21",
+    "packageInfo": "Partner - بارتنر 500 جيجا 2025 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0542786473"
+  },
+  {
+    "id": 1792444819144,
+    "name": "0542051907",
+    "simPhone": "0542051907",
+    "startDate": "2026-10-15",
+    "expiryDate": "2026-11-14",
+    "packageInfo": "Partner - بارتنر 500 جيجا 2025 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0542051907"
+  },
+  {
+    "id": 1792444819143,
+    "name": "0556605682",
+    "simPhone": "0556605682",
+    "startDate": "2026-10-14",
+    "expiryDate": "2026-11-04",
+    "packageInfo": "RamiLevi - حزمة 200 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0556605682"
+  },
+  {
+    "id": 1792444819141,
+    "name": "0512794493",
+    "simPhone": "0512794493",
+    "startDate": "2026-10-19",
+    "expiryDate": "2026-11-18",
+    "packageInfo": "We - حزمة 500 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0512794493"
+  },
+  {
+    "id": 1792444819139,
+    "name": "0512596201",
+    "simPhone": "0512596201",
+    "startDate": "2026-10-05",
+    "expiryDate": "2026-11-04",
+    "packageInfo": "We - حزمة 500 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0512596201"
+  },
+  {
+    "id": 1792444819138,
+    "name": "0512625913",
+    "simPhone": "0512625913",
+    "startDate": "2026-09-17",
+    "expiryDate": "2026-10-19",
+    "packageInfo": "We - حزمة 500 جيجا 2024 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0512625913"
+  },
+  {
+    "id": 1792444819137,
+    "name": "0512614680",
+    "simPhone": "0512614680",
+    "startDate": "2026-09-19",
+    "expiryDate": "2026-10-19",
+    "packageInfo": "We - حزمة 500 جيجا 2024 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0512614680"
+  },
+  {
+    "id": 1792444819136,
+    "name": "0512922603",
+    "simPhone": "0512922603",
+    "startDate": "2026-10-18",
+    "expiryDate": "2026-11-17",
+    "packageInfo": "We - حزمة 500 جيجا 2024 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0512922603"
+  },
+  {
+    "id": 1792444819133,
+    "name": "0512783684",
+    "simPhone": "0512783684",
+    "startDate": "2026-10-06",
+    "expiryDate": "2027-01-04",
+    "packageInfo": "We - حزمة 500 جيجا 2026 (شهري)",
+    "priceNote": "00",
+    "contactPhone": "0512783684"
+  },
+  {
+    "id": 1792444819132,
+    "name": "0512825360",
+    "simPhone": "0512825360",
+    "startDate": "2026-10-17",
+    "expiryDate": "2026-11-16",
+    "packageInfo": "We - حزمة 500 جيجا 2024 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0512825360"
+  },
+  {
+    "id": 1792444819131,
+    "name": "0512158478",
+    "simPhone": "0512158478",
+    "startDate": "2026-10-16",
+    "expiryDate": "2026-11-15",
+    "packageInfo": "We - حزمة 500 جيجا 2026 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0512158478"
+  },
+  {
+    "id": 1792444819130,
+    "name": "0512937848",
+    "simPhone": "0512937848",
+    "startDate": "2026-09-25",
+    "expiryDate": "2026-10-25",
+    "packageInfo": "We - حزمة 500 جيجا 2024 (حزمه عاديه)",
+    "priceNote": "00",
+    "contactPhone": "0512937848"
+  },
+  {
     "id": 1792440600701,
     "name": "0553327525",
     "simPhone": "0553327525",
@@ -23,11 +793,11 @@
     "id": 1792433809500,
     "name": "0543732974",
     "simPhone": "0543732974",
-    "packageInfo": "بارتنر (Partner) - شريحة بلاستيك",
+    "packageInfo": "Partner - حزمة 300 جيجا 2026 (حزمه عاديه)",
     "startDate": "2026-10-19",
     "expiryDate": "2026-11-18",
     "priceNote": "00",
-    "contactPhone": "0593116159"
+    "contactPhone": "0543732974"
   },
   {
     "id": 1792429119182,
