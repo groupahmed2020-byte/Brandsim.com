@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الروابط السريعة | BRAND SIM STORE</title>
+    <!-- خط تجوال من جوجل -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- أيقونات FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --card-hover: #334155;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --purple: #8b5cf6;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 20px 15px 50px;
+            background-image: radial-gradient(circle at top right, rgba(59, 130, 246, 0.12), transparent 40%),
+                              radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.08), transparent 40%);
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 25px 20px;
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        header h1 {
+            font-size: 1.9rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            direction: ltr;
+            display: inline-block;
+        }
+
+        /* Search Bar */
+        .search-box {
+            position: relative;
+            max-width: 500px;
+            margin: 18px auto 0;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 13px 45px 13px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-dark);
+            color: var(--text-main);
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .search-box i {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        /* Category Section */
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin: 30px 0 15px;
+            padding-right: 10px;
+            border-right: 4px solid var(--primary);
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.25s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            background: var(--card-hover);
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+        }
+
+        .card-top {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .icon-blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+        .icon-green { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+        .icon-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+        .icon-purple { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
+
+        .card-info {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .card-info h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .file-name {
+            font-family: monospace;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            direction: ltr;
+            text-align: right;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            border: none;
+            transition: 0.2s;
+        }
+
+        .btn-open {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-open:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-copy {
+            flex: 0 0 auto;
+            background: rgba(255, 255, 255, 0.07);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 10px 14px;
+        }
+
+        .btn-copy:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Toast Notification */
+        #toast {
+            position: fixed;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--accent);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-weight: 700;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            transition: 0.3s ease;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @media (max-width: 480px) {
+            header h1 { font-size: 1.5rem; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <div class="logo-badge">
+            <i class="fa-solid fa-sim-card"></i>
+            <span>BRAND SIM STORE</span>
+        </div>
+        <h1>بوابة الوصول السريع لجميع الصفحات</h1>
+        <p>https://brand-sim.com/</p>
+
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="ابحث عن اسم الصفحة أو الملف..." onkeyup="filterCards()">
+        </div>
+    </header>
+
+    <!-- القسم الأول: الواجهات وصفحات العملاء -->
+    <div class="section-title">
+        <i class="fa-solid fa-users" style="color: #60a5fa;"></i>
+        <span>واجهات المتجر وصفحات الزبائن</span>
+    </div>
+    <div class="grid">
+        <!-- index.html -->
+        <div class="card" data-title="الصفحة الرئيسية المتجر index.html">
+            <div class="card-top">
+                <div class="icon-box icon-blue"><i class="fa-solid fa-house"></i></div>
+                <div class="card-info">
+                    <h3>الصفحة الرئيسية للمتجر</h3>
+                    <span class="file-name">brand-sim.com/index.html</span>
+                </div>
+            </div>
+            <div class="card-actions">
+                <a href="https://brand-sim.com/index.html" target="_blank" class="btn btn-open">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> فتح الصفحة
+                </a>
+                <button class="btn btn-copy" onclick="copyLink('https://brand-sim.com/')" title="نسخ الرابط">
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- client.html -->
+        <div class="card" data-title="صفحة العميل الزبائن client.html">
+            <div class="card-top">
+                <div class="icon-box icon-blue"><i class="fa-solid fa-user-check"></i></div>
+                <div class="card-info">
+                    <h3>بوابة العميل (الزبائن)</h3>
+                    <span class="file-name">brand-sim.com/client.html</span>
+                </div>
+            </div>
+            <div class="card-actions">
+                <a href="https://brand-sim.com/client.html" target="_blank" class="btn btn-open">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> فتح الصفحة
+                </a>
+                <button class="btn btn-copy" onclick="copyLink('https://brand-sim.com/client.html')" title="نسخ الرابط">
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- check.html -->
+        <div class="card" data-title="صفحة الفحص والاستعلام check.html">
+            <div class="card-top">
+                <div class="icon-box icon-blue"><i class="fa-solid fa-circle-check"></i></div>
+                <div class="card-info">
+                    <h3>صفحة الفحص والاستعلام</h3>
+                    <span class="file-name">brand-sim.com/check.html</span>
+                </div>
+            </div>
+            <div class="card-actions">
+                <a href="https://brand-sim.com/check.html" target="_blank" class="btn btn-open">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> فتح الصفحة
+                </a>
+                <button class="btn btn-copy" onclick="copyLink('https://brand-sim.com/check.html')" title="نسخ الرابط">
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- signal.html -->
+        <div class="card" data-title="صفحة الإشارة والتغطية signal.html">
+            <div class="card-top">
+                <div class="icon-box icon-blue"><i class="fa-solid fa-tower-cell"></i></div>
+                <div class="card-info">
+                    <h3>صفحة الإشارة والشبكة</h3>
+                    <span class="file-name">brand-sim.com/signal.html</span>
+                </div>
+            </div>
+            <div class="card-actions">
+                <a href="https://brand-sim.com/signal.html" target="_blank" class="btn btn-open">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> فتح الصفحة
+                </a>
+                <button class="btn btn-copy" onclick="copyLink('https://brand-sim.com/signal.html')" title="نسخ الرابط">
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- refresh.html -->
+        <div class="card" data-title="تنشيط وتحديث الشريحة refresh.html">
+            <div class="card-top">
+                <div class="icon-box icon-blue"><i class="fa-solid fa-arrows-rotate"></i></div>
+                <div class="card-info">
+                    <h3>تنشيط / تحديث (Refresh)</h3>
+                    <span class="file-name">brand-sim.com/refresh.html</span>
+                </div>
+            </div>
+            <div class="card-actions">
+                <a href="https://brand-sim.com/refresh.html" target="_blank" class="btn btn-open">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> فتح الصفحة
+                </a>
+                <button class="btn btn-copy" onclick="copyLink('https://brand-sim.com/refresh.html')" title="نسخ الرابط">
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Location.html -->
+        <div class="card" data-title="الموقع والعنوان الخريطة Location.html">
+            <div class="card-top">
+                <div class="icon-box icon-blue"><i class="fa-solid fa-location-dot"></i></div>
+                <div class="card-info">
+                    <h3>الموقع الجغرافي (Location)</h3>
+                    <span class="file-name">brand-sim.com/Location.html</span>
+                </div>
+            </div>
+            <div class="card-actions">
+                <a href="https://brand-sim.com/Location.html" target="_blank" class="btn btn-open">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> فتح الصفحة
+                </a>
+                <button class="btn btn-copy" onclick="copyLink('https://brand-sim.com/Location.html')" title="نسخ الرابط">
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- sms.html -->
+        <div class="card" data-title="الرسائل القصيرة sms.html">
+            <div class="card-top">
+                <div class="icon-box icon-blue"><i class="fa-solid fa-comment-sms"></i></div>
+                <div class="card-info">
+                    <h3>خدمة الرسائل (SMS)</h3>
+                    <span class="file-name">brand-sim.com/sms.html</span>
+                </div>
+            </div>
+            <div class="card-actions">
+                <a href="https://brand-sim.com/sms.html" target="_blank" class="btn btn-open">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> فتح الصفحة
+                </a>
+                <button class="btn btn-copy" onclick="copyLink('https://brand-sim.com/sms.html')" title="نسخ الرابط">
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- layan.html -->
+        <div class="card" data-title="صفحة ليان layan.html">
+            <div class="card-top">
+                <div class="icon-box icon-purple"><i class="fa-solid fa-star"></i></div>
+                <div class="card-info">
+                    <h3>صفحة ليان (Layan)</h3>
+                    <span class="file-name">brand-sim.com/layan.html</span>
+                </div>
+            </div>
+            <div class="card-actions">
+                <a href="https://brand-sim.com/layan.html" target="_blank" class="btn btn-open">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> فتح الصفحة
+                </a>
+                <button class="btn btn-copy" onclick="copyLink('https://brand-sim.com/layan.html')" title="نسخ الرابط">
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- القسم الثاني: لوحات التحكم والإدارة -->
+    <div class="section-title">
+        <i class="fa-solid fa-sliders" style="color: #fbbf24;"></i>
+        <span>لوحات التحكم والإدارة</span>
+    </div>
+    <div class="grid">
+        <!-- Control_99.html -->
+        <div class="card" data-title="لوحة التحكم الرئيسية Control_99.html">
+            <div class="card-top">
+                <div class="icon-box icon-amber"><i class="fa-solid fa-gears"></i></div>
+                <div class="card-info">
+                    <h3>لوحة التحكم (Control 99)</h3>
+                    <span class="file-name">brand-sim.com/Control_99.html</span>
+                </div>
+            </div>
+            <div class="card-actions">
+                <a href="https://brand-sim.com/Control_99.html" target="_blank" class="btn btn-open">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> فتح اللوحة
+                </a>
+                <button class="btn btn-copy" onclick="copyLink('https://brand-sim.com/Control_99.html')" title="نسخ الرابط">
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- signal-admin.html -->
+        <div class="card" data-title="إدارة الإشارة والشبكة signal-admin.html">
+            <div class="card-top">
+                <div class="icon-box icon-amber"><i class="fa-solid fa-satellite-dish"></i></div>
+                <div class="card-info">
+                    <h3>إدارة الإشارة (Signal Admin)</h3>
+                    <span class="file-name">brand-sim.com/signal-admin.html</span>
+                </div>
+            </div>
+            <div class="card-actions">
+                <a href="https://brand-sim.com/signal-admin.html" target="_blank" class="btn btn-open">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> فتح اللوحة
+                </a>
+                <button class="btn btn-copy" onclick="copyLink('https://brand-sim.com/signal-admin.html')" title="نسخ الرابط">
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- القسم الثالث: المحاسبة والبيانات -->
+    <div class="section-title">
+        <i class="fa-solid fa-calculator" style="color: #34d399;"></i>
+        <span>المحاسبة وملفات البيانات</span>
+    </div>
+    <div class="grid">
+        <!-- BrandSim_Accounting.html -->
+        <div class="card" data-title="محاسبة براند سيم BrandSim_Accounting.html">
+            <div class="card-top">
+                <div class="icon-box icon-green"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                <div class="card-info">
+                    <h3>محاسبة براند سيم</h3>
+                    <span class="file-name">brand-sim.com/BrandSim_Accounting.html</span>
+                </div>
+            </div>
+            <div class="card-actions">
+                <a href="https://brand-sim.com/BrandSim_Accounting.html" target="_blank" class="btn btn-open">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> فتح النظام
+                </a>
+                <button class="btn btn-copy" onclick="copyLink('https://brand-sim.com/BrandSim_Accounting.html')" title="نسخ الرابط">
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Accounting.html -->
+        <div class="card" data-title="صفحة المحاسبة العامة Accounting.html">
+            <div class="card-top">
+                <div class="icon-box icon-green"><i class="fa-solid fa-coins"></i></div>
+                <div class="card-info">
+                    <h3>نظام المحاسبة (Accounting)</h3>
+                    <span class="file-name">brand-sim.com/Accounting.html</span>
+                </div>
+            </div>
+            <div class="card-actions">
+                <a href="https://brand-sim.com/Accounting.html" target="_blank" class="btn btn-open">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> فتح النظام
+                </a>
+                <button class="btn btn-copy" onclick="copyLink('https://brand-sim.com/Accounting.html')" title="نسخ الرابط">
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- customers.json -->
+        <div class="card" data-title="ملف بيانات الزبائن customers.json">
+            <div class="card-top">
+                <div class="icon-box icon-green"><i class="fa-solid fa-database"></i></div>
+                <div class="card-info">
+                    <h3>قاعدة بيانات الزبائن (JSON)</h3>
+                    <span class="file-name">brand-sim.com/customers.json</span>
+                </div>
+            </div>
+            <div class="card-actions">
+                <a href="https://brand-sim.com/customers.json" target="_blank" class="btn btn-open">
+                    <i class="fa-solid fa-code"></i> عرض البيانات
+                </a>
+                <button class="btn btn-copy" onclick="copyLink('https://brand-sim.com/customers.json')" title="نسخ الرابط">
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- إشعار النسخ -->
+<div id="toast">
+    <i class="fa-solid fa-circle-check"></i>
+    <span>تم نسخ الرابط بنجاح!</span>
+</div>
+
+<script>
+    function copyLink(url) {
+        navigator.clipboard.writeText(url).then(() => {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2200);
+        });
+    }
+
+    function filterCards() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            const text = card.getAttribute('data-title').toLowerCase();
+            card.style.display = text.includes(query) ? 'flex' : 'none';
+        });
+    }
+</script>
+
+</body>
+</html>
