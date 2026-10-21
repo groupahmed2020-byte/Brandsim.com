@@ -6911,13 +6911,15 @@
     "name": "0502633129",
     "simPhone": "0502633129",
     "startDate": "2026-11-19",
-    "expiryDate": "2026-11-19",
+    "expiryDate": "2027-11-16",
     "packageInfo": "بلفون.1",
     "priceNote": "00",
     "contactPhone": "0502633129",
     "sourceProvider": "سكاي",
     "agentName": "",
-    "agentPhone": ""
+    "agentPhone": "",
+    "companyInfo": "",
+    "pkgName": "بلفون.1"
   },
   {
     "id": 1792581812207,
