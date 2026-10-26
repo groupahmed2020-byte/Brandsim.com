@@ -1,5 +1,35 @@
 [
   {
+    "id": 1793000240145,
+    "name": "0554687598",
+    "simPhone": "0554687598",
+    "startDate": "2026-10-25",
+    "expiryDate": "2027-01-23",
+    "packageInfo": "Rami Levy - رامي ليفي 200 جيجا شامل שירות5G \" מבצע 3 أشهر \"",
+    "companyInfo": "Rami Levy",
+    "pkgName": "رامي ليفي 200 جيجا شامل שירות5G \" מבצע 3 أشهر \"",
+    "priceNote": "00",
+    "contactPhone": "0554687598",
+    "sourceProvider": "كويك لاين",
+    "agentName": "بشير الاشقر",
+    "agentPhone": "0594810025"
+  },
+  {
+    "id": 1793000240131,
+    "name": "0554687134",
+    "simPhone": "0554687134",
+    "startDate": "2026-10-26",
+    "expiryDate": "2027-01-24",
+    "packageInfo": "Rami Levy - رامي ليفي 200 جيجا شامل שירות5G \" מבצע 3 أشهر \"",
+    "companyInfo": "Rami Levy",
+    "pkgName": "رامي ليفي 200 جيجا شامل שירות5G \" מבצע 3 أشهر \"",
+    "priceNote": "00",
+    "contactPhone": "0554687134",
+    "sourceProvider": "كويك لاين",
+    "agentName": "بشير الاشقر",
+    "agentPhone": "0594810025"
+  },
+  {
     "id": 1792998711119,
     "name": "0539214523",
     "simPhone": "0539214523",
@@ -54,8 +84,8 @@
     "priceNote": "00",
     "contactPhone": "0554687431",
     "sourceProvider": "كويك لاين",
-    "agentName": "",
-    "agentPhone": ""
+    "agentName": "بشير الاشقر",
+    "agentPhone": "0594810025"
   },
   {
     "id": 1792942229685,
@@ -3218,8 +3248,8 @@
     "priceNote": "00",
     "contactPhone": "0554680439",
     "sourceProvider": "كويك لاين",
-    "agentName": "",
-    "agentPhone": ""
+    "agentName": "بشير الاشقر",
+    "agentPhone": "0594810025"
   },
   {
     "id": 1792910181384,
