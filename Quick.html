@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحديث الخطوط | BRAND-SIM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background: #090d16;
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            background-image: 
+                radial-gradient(circle at 50% 10%, rgba(2, 132, 199, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 50% 90%, rgba(56, 189, 248, 0.08) 0%, transparent 40%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 410px;
+        }
+
+        .card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 22px;
+            padding: 35px 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #0284c7, #38bdf8, #0284c7);
+        }
+
+        .icon-circle {
+            width: 68px;
+            height: 68px;
+            background: rgba(2, 132, 199, 0.12);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: #38bdf8;
+            font-size: 26px;
+        }
+
+        h2 {
+            font-size: 23px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        p.sub-title {
+            font-size: 13.5px;
+            color: #94a3b8;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+            text-align: right;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+
+        .input-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-box i {
+            position: absolute;
+            right: 15px;
+            color: #94a3b8;
+            font-size: 16px;
+        }
+
+        input[type="tel"] {
+            width: 100%;
+            padding: 14px 45px 14px 15px;
+            background: #0b0f19;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            outline: none;
+            direction: ltr;
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        input[type="tel"]:focus {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+        }
+
+        button.btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(2, 132, 199, 0.35);
+            transition: 0.2s;
+        }
+
+        button.btn-submit:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+        button.btn-submit:disabled {
+            background: #1e293b;
+            color: #64748b;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert-box {
+            display: none;
+            margin-top: 18px;
+            padding: 13px 15px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            line-height: 1.5;
+            text-align: right;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid #10b981;
+            color: #34d399;
+        }
+
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid #ef4444;
+            color: #f87171;
+        }
+
+        .footer-note {
+            margin-top: 22px;
+            padding: 12px;
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px dashed #334155;
+            border-radius: 10px;
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.6;
+            text-align: right;
+        }
+
+        .footer-note b {
+            color: #38bdf8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="card">
+            <div class="icon-circle">
+                <i class="fa-solid fa-tower-broadcast"></i>
+            </div>
+            <h2>BRAND-SIM</h2>
+            <p class="sub-title">تحديث وتنشيط باقات الأرقام المباشر</p>
+
+            <form id="refreshForm">
+                <div class="form-group">
+                    <label for="phone">رقم الهاتف (10 أرقام تبدأ بـ 05)</label>
+                    <div class="input-box">
+                        <i class="fa-solid fa-phone"></i>
+                        <input 
+                            type="tel" 
+                            id="phone" 
+                            placeholder="05XXXXXXXX" 
+                            maxlength="10" 
+                            autocomplete="off" 
+                            required
+                        >
+                    </div>
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-submit">تحديث الرقم الآن</button>
+            </form>
+
+            <div id="alertMsg" class="alert-box"></div>
+
+            <div class="footer-note">
+                <i class="fa-solid fa-circle-info"></i> <b>ملاحظة:</b> بعد التحديث، فعّل <b>وضع الطيران</b> لمدة 30 ثانية ثم أوقفه لإعادة الربط وتثبيت الباقة.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('refreshForm');
+        const phoneInput = document.getElementById('phone');
+        const submitBtn = document.getElementById('submitBtn');
+        const alertMsg = document.getElementById('alertMsg');
+
+        // ضع رابط الـ Cloudflare Worker الخاص بك هنا
+        const API_URL = 'https://YOUR_WORKER_NAME.YOUR_SUBDOMAIN.workers.dev';
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const phone = phoneInput.value.trim();
+
+            if (!/^05\d{8}$/.test(phone)) {
+                showAlert('يرجى إدخال رقم صحيح مكون من 10 أرقام ويبدأ بـ 05', 'danger');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'جاري إرسال التحديث...';
+            alertMsg.style.display = 'none';
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phoneNumber: phone })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    showAlert('تم إرسال أمر التحديث بنجاح! فعّل وضع الطيران لمدة نصف دقيقة.', 'success');
+                    phoneInput.value = '';
+                } else {
+                    showAlert(data.message || 'تعذر إتمام التحديث، يرجى مراجعة الرقم والمحاولة ثانية.', 'danger');
+                }
+            } catch (err) {
+                showAlert('تعذر الاتصال بالسيرفر. تحقق من الإنترنت وحاول لاحقاً.', 'danger');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'تحديث الرقم الآن';
+            }
+        });
+
+        function showAlert(text, type) {
+            alertMsg.textContent = text;
+            alertMsg.className = `alert-box alert-${type}`;
+            alertMsg.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
