@@ -1,460 +1,65 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <title>BRAND SIM | بوابة التحديث والتنشيط الذكية</title>
-    <!-- خطوط جوجل العصرية -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-    <!-- مكتبة الأيقونات المحدثة -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    
-    <style>
-        :root {
-            --primary-glow: #00d2ff;
-            --accent-cyan: #00f2fe;
-            --accent-blue: #0072ff;
-            --dark-bg: #060d1a;
-            --card-glass: rgba(10, 24, 48, 0.72);
-            --border-glass: rgba(0, 210, 255, 0.28);
-            --border-active: rgba(0, 242, 254, 0.85);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --card-radius: 28px;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            font-family: 'Tajawal', sans-serif;
-            color: var(--text-main);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 24px 16px;
-            background-color: var(--dark-bg);
-            /* خامة خلفية مركبة تحاكي أبراج الاتصالات والإشعاع الضوئي */
-            background-image: 
-                radial-gradient(circle at 50% 15%, rgba(0, 114, 255, 0.35) 0%, transparent 60%),
-                radial-gradient(circle at 80% 80%, rgba(0, 242, 254, 0.18) 0%, transparent 50%),
-                linear-gradient(180deg, rgba(6, 13, 26, 0.78) 0%, rgba(5, 11, 20, 0.94) 100%),
-                url('https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        body[lang="he"] {
-            font-family: 'Rubik', sans-serif;
-        }
-
-        /* حاوية الصفحة الزجاجية المطورة */
-        .card-container {
-            width: 100%;
-            max-width: 460px;
-            background: var(--card-glass);
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
-            border-radius: var(--card-radius);
-            border: 1px solid var(--border-glass);
-            box-shadow: 
-                0 30px 60px rgba(0, 0, 0, 0.65),
-                0 0 40px rgba(0, 210, 255, 0.12),
-                inset 0 1px 0 rgba(255, 255, 255, 0.15);
-            padding: 38px 28px 30px;
-            text-align: center;
-            position: relative;
-            z-index: 10;
-        }
-
-        /* شارة الاعتماد العلوية */
-        .top-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(0, 210, 255, 0.12);
-            border: 1px solid rgba(0, 242, 254, 0.45);
-            border-radius: 30px;
-            padding: 6px 18px;
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--accent-cyan);
-            margin-bottom: 24px;
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.2);
-        }
-
-        .top-badge i {
-            font-size: 14px;
-            animation: pulse-glow 2s infinite ease-in-out;
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { opacity: 0.6; transform: scale(0.95); }
-            50% { opacity: 1; transform: scale(1.1); }
-        }
-
-        /* الشعار والأيقونة */
-        .logo-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 16px;
-            direction: ltr;
-        }
-
-        .logo-icon {
-            width: 52px;
-            height: 52px;
-            background: linear-gradient(135deg, #00f2fe 0%, #0072ff 100%);
-            color: #fff;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 8px 24px rgba(0, 114, 255, 0.45);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .logo-text {
-            font-size: 28px;
-            font-weight: 900;
-            letter-spacing: 1px;
-            color: #ffffff;
-            font-family: 'Rubik', sans-serif;
-        }
-
-        .logo-text span {
-            color: var(--accent-cyan);
-            text-shadow: 0 0 15px rgba(0, 242, 254, 0.6);
-        }
-
-        .welcome-title {
-            font-size: 22px;
-            font-weight: 800;
-            margin-bottom: 8px;
-            color: #ffffff;
-            line-height: 1.4;
-        }
-
-        .subtitle {
-            font-size: 14px;
-            color: var(--text-muted);
-            margin-bottom: 28px;
-            line-height: 1.6;
-            font-weight: 500;
-        }
-
-        /* حقول الإدخال */
-        .form-group {
-            text-align: right;
-            margin-bottom: 22px;
-        }
-
-        body[lang="he"] .form-group {
-            text-align: right;
-        }
-
-        .form-group label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 700;
-            font-size: 14px;
-            margin-bottom: 10px;
-            color: #e2e8f0;
-        }
-
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .input-icon {
-            position: absolute;
-            left: 16px;
-            color: var(--accent-cyan);
-            font-size: 18px;
-            pointer-events: none;
-            transition: all 0.3s;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 16px 20px 16px 48px;
-            font-size: 22px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            border: 1.5px solid var(--border-glass);
-            border-radius: 16px;
-            text-align: center;
-            direction: ltr;
-            color: #ffffff;
-            background: rgba(15, 23, 42, 0.6);
-            backdrop-filter: blur(8px);
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .form-control::placeholder {
-            color: #475569;
-            letter-spacing: 1.5px;
-            font-weight: 500;
-        }
-
-        .form-control:focus {
-            background: rgba(15, 23, 42, 0.85);
-            border-color: var(--border-active);
-            box-shadow: 0 0 25px rgba(0, 242, 254, 0.25);
-        }
-
-        /* زر الإرسال مع تأثيرات النيون */
-        .btn-submit {
-            width: 100%;
-            padding: 16px;
-            font-size: 17px;
-            font-weight: 800;
-            font-family: inherit;
-            color: #ffffff;
-            background: linear-gradient(135deg, #0072ff 0%, #00c6ff 100%);
-            border: none;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            box-shadow: 0 10px 25px rgba(0, 114, 255, 0.4);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn-submit::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(60deg, transparent, rgba(255, 255, 255, 0.25), transparent);
-            transform: rotate(30deg);
-            transition: 0.8s;
-        }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(0, 198, 255, 0.55);
-        }
-
-        .btn-submit:hover::after {
-            left: 100%;
-        }
-
-        .btn-submit:active {
-            transform: translateY(0);
-        }
-
-        .btn-submit:disabled {
-            background: #334155;
-            color: #64748b;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .spinner {
-            display: none;
-        }
-
-        .btn-submit.loading .spinner {
-            display: inline-block;
-        }
-
-        /* صندوق التنبيهات الزجاجي */
-        .alert-box {
-            margin-top: 22px;
-            padding: 15px 18px;
-            border-radius: 14px;
-            font-size: 14px;
-            font-weight: 700;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            line-height: 1.6;
-            word-break: break-word;
-            backdrop-filter: blur(10px);
-        }
-
-        .alert-box.success {
-            display: flex;
-            background: rgba(16, 185, 129, 0.15);
-            color: #6ee7b7;
-            border: 1px solid rgba(16, 185, 129, 0.4);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
-        }
-
-        .alert-box.warning {
-            display: flex;
-            background: rgba(245, 158, 11, 0.15);
-            color: #fcd34d;
-            border: 1px solid rgba(245, 158, 11, 0.4);
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
-        }
-
-        .alert-box.error {
-            display: flex;
-            background: rgba(239, 68, 68, 0.15);
-            color: #fca5a5;
-            border: 1px solid rgba(239, 68, 68, 0.4);
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.15);
-        }
-
-        /* شريط التذييل */
-        .footer-bar {
-            margin-top: 28px;
-            padding-top: 18px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .lang-btn {
-            color: var(--accent-cyan);
-            font-weight: 700;
-            font-size: 13px;
-            cursor: pointer;
-            padding: 6px 16px;
-            border-radius: 20px;
-            border: 1px solid rgba(0, 242, 254, 0.4);
-            background: rgba(0, 242, 254, 0.05);
-            transition: all 0.3s ease;
-            user-select: none;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .lang-btn:hover {
-            background: var(--accent-cyan);
-            color: var(--dark-bg);
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
-        }
-
-        .copyright {
-            color: var(--text-muted);
-            font-size: 13px;
-            font-weight: 600;
-            direction: ltr;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRAND SIM | تحديث وتنشيط الشرائح</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{--primary:#0f172a;--brand:#2c9cdb;--brand-hover:#1b80b8;--bg-gradient:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);--card-bg:#ffffff;--text-main:#1e293b;--text-muted:#64748b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Tajawal',sans-serif;background:var(--bg-gradient);color:var(--text-main);min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px}
+body[lang="he"]{font-family:'Rubik',sans-serif}
+.card{background:var(--card-bg);width:100%;max-width:450px;border-radius:26px;box-shadow:0 20px 45px rgba(0,0,0,0.35);padding:40px 26px 28px;text-align:center;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;right:0;left:0;height:6px;background:linear-gradient(90deg,#2563eb,#38bdf8,#1d4ed8)}
+.logo-wrapper{display:inline-flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px;direction:ltr}
+.logo-icon{background:var(--brand);color:#fff;width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 6px 14px rgba(44,156,219,0.3)}
+.logo-text{font-size:30px;font-weight:800;color:var(--primary);letter-spacing:0.5px;font-family:'Rubik',sans-serif}
+.logo-text span{color:var(--brand)}
+.welcome-title{font-size:22px;font-weight:800;margin-bottom:6px;color:var(--primary)}
+.subtitle{font-size:14px;color:var(--text-muted);margin-bottom:26px;line-height:1.6;font-weight:500}
+.form-group{text-align:right;margin-bottom:20px}
+.form-group label{display:block;font-weight:700;font-size:14px;margin-bottom:8px;color:var(--primary)}
+.form-control{width:100%;padding:14px 16px;font-size:20px;font-weight:700;letter-spacing:1.5px;border:2px solid #cbd5e1;border-radius:14px;text-align:center;direction:ltr;color:var(--primary);transition:all 0.2s ease;outline:none;background-color:#f8fafc}
+.form-control:focus{background-color:#fff;border-color:var(--brand);box-shadow:0 0 0 4px rgba(44,156,219,0.15)}
+.btn-submit{width:100%;padding:15px;font-size:17px;font-weight:700;font-family:inherit;color:#fff;background:linear-gradient(135deg,#2563eb 0%,#1d4ed8 100%);border:none;border-radius:14px;cursor:pointer;transition:all 0.2s ease;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 6px 16px rgba(37,99,235,0.3)}
+.btn-submit:hover{opacity:0.95;transform:translateY(-1px)}
+.btn-submit:disabled{background:#94a3b8;cursor:not-allowed;transform:none;box-shadow:none}
+.spinner{display:none}
+.btn-submit.loading .spinner{display:inline-block}
+.alert-box{margin-top:20px;padding:14px 16px;border-radius:12px;font-size:14px;font-weight:700;display:none;align-items:center;justify-content:center;gap:10px;line-height:1.6;word-break:break-word}
+.alert-box.success{display:flex;background-color:#dcfce7;color:#166534;border:1px solid #86efac}
+.alert-box.warning{display:flex;background-color:#fffbeb;color:#92400e;border:1px solid #fde68a}
+.alert-box.error{display:flex;background-color:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
+.footer-bar{margin-top:26px;padding-top:16px;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center}
+.lang-btn{color:var(--brand);font-weight:700;font-size:13px;cursor:pointer;padding:5px 14px;border-radius:20px;border:1px solid var(--brand);transition:all 0.2s;user-select:none}
+.lang-btn:hover{background-color:var(--brand);color:#fff}
+.copyright{color:var(--text-muted);font-size:13px;font-weight:600;direction:ltr}
+</style>
 </head>
 <body lang="ar">
-
-<div class="card-container">
-    <!-- شارة البوابة المعتمدة المشابهة للصورة -->
-    <div class="top-badge">
-        <i class="fas fa-bolt"></i>
-        <span id="ui-badge">بوابة التحديث الفوري المعتمدة</span>
-    </div>
-
-    <!-- الشعار -->
-    <div class="logo-wrapper">
-        <div class="logo-icon"><i class="fas fa-microchip"></i></div>
-        <div class="logo-text">BRAND <span>SIM</span></div>
-    </div>
-
-    <h2 class="welcome-title" id="ui-welcome">مرحباً بك في براند سيم</h2>
-    <p class="subtitle" id="ui-subtitle">أدخل رقم الهاتف لإجراء تحديث وتنشيط فوري للشريحة والشبكة</p>
-
-    <!-- نموذج التحديث -->
-    <form id="customer-refresh-number-form" novalidate>
-        <div class="form-group">
-            <label for="customerPhone" id="ui-label">
-                <i class="fas fa-phone-alt" style="color: var(--accent-cyan);"></i>
-                <span>رقم الهاتف</span>
-            </label>
-            <div class="input-wrapper">
-                <input 
-                    type="tel" 
-                    id="customerPhone" 
-                    class="form-control" 
-                    placeholder="05XXXXXXXX" 
-                    maxlength="10" 
-                    inputmode="numeric" 
-                    autocomplete="tel" 
-                    required
-                >
-                <i class="fas fa-signal input-icon"></i>
-            </div>
-        </div>
-
-        <button type="submit" id="customSubmitBtn" class="btn-submit">
-            <span id="ui-btn">تحديث الرقم الآن</span>
-            <i class="fas fa-sync-alt fa-spin spinner"></i>
-        </button>
-    </form>
-
-    <div id="alertBox" class="alert-box" role="alert" aria-live="polite"></div>
-
-    <div class="footer-bar">
-        <button type="button" class="lang-btn" id="langToggleBtn" onclick="toggleLanguage()">
-            <i class="fas fa-globe"></i>
-            <span>עברית</span>
-        </button>
-        <span class="copyright" id="ui-copyright">BRAND SIM © </span>
-    </div>
+<div class="card">
+<div class="logo-wrapper"><div class="logo-icon"><i class="fas fa-sim-card"></i></div><div class="logo-text">BRAND <span>SIM</span></div></div>
+<h2 class="welcome-title" id="ui-welcome">مرحباً بك في براند سيم</h2>
+<p class="subtitle" id="ui-subtitle">أدخل رقم الهاتف لإجراء تحديث وتنشيط فوري للشريحة</p>
+<form id="customer-refresh-number-form" novalidate>
+<div class="form-group">
+<label for="customerPhone" id="ui-label">رقم الهاتف</label>
+<input type="tel" id="customerPhone" class="form-control" placeholder="05XXXXXXXX" maxlength="10" inputmode="numeric" autocomplete="tel" required>
 </div>
-
+<button type="submit" id="customSubmitBtn" class="btn-submit"><span id="ui-btn">تحديث الرقم الآن</span><i class="fas fa-sync-alt fa-spin spinner"></i></button>
+</form>
+<div id="alertBox" class="alert-box"></div>
+<div class="footer-bar"><span class="lang-btn" id="langToggleBtn" onclick="toggleLanguage()">עברית</span><span class="copyright">BRAND SIM © <script>document.write(new Date().getFullYear())</script></span></div>
+</div>
 <script>
 const GAS_PROXY_URL = "https://script.google.com/macros/s/AKfycbzLZSmUcm7nOwmhL61EikTU86nbQFCmZswydKQmXotdWyPc0fyDVOQx6wFE-CtXDgNl/exec";
 const SKY_PORTAL_URL = "https://rn.sky-5g.net";
 
 const i18n = {
-    ar: { 
-        badge: "بوابة التحديث الفوري المعتمدة",
-        welcome: "مرحباً بك في براند سيم", 
-        subtitle: "أدخل رقم الهاتف لإجراء تحديث وتنشيط فوري للشريحة والشبكة", 
-        label: "رقم الهاتف", 
-        placeholder: "05XXXXXXXX", 
-        btn: "تحديث الرقم الآن", 
-        loading: "جاري الفحص والتحديث...", 
-        switchBtn: "עברית", 
-        invalidPhone: "يرجى إدخال رقم هاتف صحيح مكون من 10 أرقام ويبدأ بـ 05", 
-        notAuthorized: "عذراً، هذا الرقم غير مسجل في منظومة براند سيم (BRAND SIM) ولا يمكن تحديثه.", 
-        defaultSuccess: "تم إرسال طلب تحديث وتنشيط الرقم بنجاح!", 
-        defaultError: "تعذر تحديث الرقم حالياً، يرجى التأكد من الرقم أو المحاولة لاحقاً." 
-    },
-    he: { 
-        badge: "פורטל רענון והפעלה מאושר",
-        welcome: "ברוך הבא ל-BRAND SIM", 
-        subtitle: "נא להזין מספר טלפון כדי לבצע רענון והפעלה לכרטיס ה-SIM", 
-        label: "מספר טלפון", 
-        placeholder: "05XXXXXXXX", 
-        btn: "רענון מספר כעת", 
-        loading: "בודק وמרענן...", 
-        switchBtn: "العربية", 
-        invalidPhone: "נא להזין מספר טלפון תקין בן 10 ספרות המתחיל ב-05", 
-        notAuthorized: "מספר זה אינו רשום במערכת BRAND SIM ולא ניתן לרענן אותו.", 
-        defaultSuccess: "המספר רוענן בהצלחה!", 
-        defaultError: "פעולת הרענון נכשלה, בדוק את המספר או נסה שוב." 
-    }
+ar: { welcome: "مرحباً بك في براند سيم", subtitle: "أدخل رقم الهاتف لإجراء تحديث وتنشيط فوري للشريحة", label: "رقم الهاتف", placeholder: "05XXXXXXXX", btn: "تحديث الرقم الآن", loading: "جاري الفحص والتحديث...", switchBtn: "עברית", invalidPhone: "يرجى إدخال رقم هاتف صحيح مكون من 10 أرقام ويبدأ بـ 05", notAuthorized: "عذراً، هذا الرقم غير مسجل في منظومة براند سيم (BRAND SIM) ولا يمكن تحديثه.", defaultSuccess: "✅ تم إرسال طلب تحديث وتنشيط الرقم بنجاح!", defaultError: "⚠️ تعذر تحديث الرقم حالياً، يرجى التأكد من الرقم أو المحاولة لاحقاً." },
+he: { welcome: "ברוך הבא ל-BRAND SIM", subtitle: "נא להזין מספר טלפון כדי לבצע רענון והפעלה לכרטיס ה-SIM", label: "מספר טלפון", placeholder: "05XXXXXXXX", btn: "רענון מספר כעת", loading: "בודק وמרענן...", switchBtn: "العربية", invalidPhone: "נא להזין מספר טלפון תקין בן 10 ספרות המתחיל ב-05", notAuthorized: "מספר זה אינו רשום במערכת BRAND SIM ולא ניתן לרענן אותו.", defaultSuccess: "✅ המספר רוענן בהצלחה!", defaultError: "⚠️ פעולת הרענון נכשלה, בדוק את המספר أو نסה شוב." }
 };
 
 let currentLang = localStorage.getItem("language") || "ar";
@@ -464,13 +69,12 @@ function applyLanguage(lang) {
     localStorage.setItem("language", currentLang);
     const t = i18n[currentLang];
     document.body.setAttribute("lang", currentLang);
-    document.getElementById("ui-badge").textContent = t.badge;
     document.getElementById("ui-welcome").textContent = t.welcome;
     document.getElementById("ui-subtitle").textContent = t.subtitle;
-    document.getElementById("ui-label").querySelector("span").textContent = t.label;
+    document.getElementById("ui-label").textContent = t.label;
     document.getElementById("customerPhone").placeholder = t.placeholder;
     document.getElementById("ui-btn").textContent = t.btn;
-    document.getElementById("langToggleBtn").querySelector("span").textContent = t.switchBtn;
+    document.getElementById("langToggleBtn").textContent = t.switchBtn;
 }
 
 function toggleLanguage() {
@@ -478,13 +82,9 @@ function toggleLanguage() {
     applyLanguage(currentLang === "ar" ? "he" : "ar");
 }
 
-// تطهير الإدخال وتوحيد صيغة الأرقام بأمان
 function normalizePhoneNumber(rawInput) {
     if (!rawInput) return "";
-    let str = String(rawInput)
-        .replace(/[\u200B-\u200D\uFEFF]/g, '') // إزالة المحارف المخفية
-        .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d))
-        .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+    let str = rawInput.toString().replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
     if (str.includes("_")) str = str.split("_")[0];
     str = str.replace(/[^0-9]/g, "");
     if (str.startsWith("00972") || str.startsWith("00970")) str = "0" + str.slice(5);
@@ -505,10 +105,10 @@ phoneInput.addEventListener("input", e => {
     if (e.target.value !== normalized) e.target.value = normalized;
 });
 
-// عرض التنبيهات باستخدام Text Nodes الآمنة للحماية من XSS
+// استخدام textContent بدلاً من innerHTML لمنع ثغرات XSS
 function showMessage(type, text) {
     alertBox.className = "alert-box " + type;
-    alertBox.textContent = ''; 
+    alertBox.innerHTML = '';
     const icon = document.createElement('i');
     icon.className = "fas " + (type === "success" ? "fa-check-circle" : (type === "warning" ? "fa-exclamation-triangle" : "fa-times-circle"));
     const span = document.createElement('span');
@@ -519,10 +119,8 @@ function showMessage(type, text) {
 }
 
 async function hashPhone(phone) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode('BS_PHONE_2026_' + phone);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-    return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('BS_PHONE_2026_' + phone));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
 async function findCustomerInSmsDb(cleanPhone) {
@@ -531,40 +129,26 @@ async function findCustomerInSmsDb(cleanPhone) {
         const res = await fetch("customers.json?t=" + Date.now(), { cache: "no-store" });
         if (res.ok) {
             const remoteData = await res.json();
-            if (Array.isArray(remoteData)) { dbList = remoteData; }
-        }
-    } catch (e) {
-        // تجاهل أخطاء الشبكة والاعتماد على السيرفر كبديل
-    }
-    
-    const qHash = await hashPhone(cleanPhone);
-    return dbList.find(c => c && (c.phoneHash === qHash || normalizePhoneNumber(c.simPhone || "") === cleanPhone)) || null;
-}
-
-// تحويل آمن لمنظومة سكاي وحماية Tabnabbing
-async function refreshViaSky(phone) {
-    try { 
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            await navigator.clipboard.writeText(phone);
+            if (Array.isArray(remoteData) && remoteData.length) { dbList = remoteData; }
         }
     } catch (e) {}
     
-    const win = window.open(SKY_PORTAL_URL, "_blank", "noopener,noreferrer");
-    if (!win) {
-        window.location.assign(SKY_PORTAL_URL);
-    }
-    return { ok: true, msg: "تم التحقق بنجاح! جاري تحويلك لبوابة سكاي (تم نسخ الرقم، قم بلصقه هناك)." };
+    const qHash = await hashPhone(cleanPhone);
+    return dbList.find(c => c.phoneHash === qHash || normalizePhoneNumber(c.simPhone || "") === cleanPhone) || null;
+}
+
+async function refreshViaSky(phone) {
+    try { await navigator.clipboard.writeText(phone); } catch (e) {}
+    const win = window.open(SKY_PORTAL_URL, "_blank");
+    if (!win) window.location.href = SKY_PORTAL_URL;
+    return { ok: true, msg: "✅ تم التحقق! جاري تحويلك لبوابة سكاي (تم نسخ الرقم، قم بلصقه هناك)." };
 }
 
 async function executeRefresh(rawNumber) {
     const t = i18n[currentLang];
     const cleanNumber = normalizePhoneNumber(rawNumber);
     phoneInput.value = cleanNumber;
-
-    if (!/^05\d{8}$/.test(cleanNumber)) { 
-        showMessage("warning", t.invalidPhone); 
-        return; 
-    }
+    if (!/^05\d{8}$/.test(cleanNumber)) { showMessage("warning", t.invalidPhone); return; }
     
     submitBtn.disabled = true; 
     submitBtn.classList.add("loading"); 
@@ -573,10 +157,7 @@ async function executeRefresh(rawNumber) {
     
     try {
         const customer = await findCustomerInSmsDb(cleanNumber);
-        if (!customer) { 
-            showMessage("error", t.notAuthorized); 
-            return; 
-        }
+        if (!customer) { showMessage("error", t.notAuthorized); return; }
         
         const provider = String(customer.sourceProvider || "").trim().toLowerCase();
         let result;
@@ -588,28 +169,14 @@ async function executeRefresh(rawNumber) {
                 method: "POST", 
                 redirect: "follow", 
                 headers: { "Content-Type": "text/plain;charset=utf-8" }, 
-                body: JSON.stringify({ 
-                    phoneNumber: cleanNumber, 
-                    number: cleanNumber, 
-                        MobNumber: cleanNumber, 
-                    provider: provider || "areen", 
-                    lang: currentLang 
-                }) 
+                body: JSON.stringify({ phoneNumber: cleanNumber, number: cleanNumber, MobNumber: cleanNumber, provider: provider || "areen", lang: currentLang }) 
             });
-
-            const textResponse = await res.text();
-            let data = {};
-            try {
-                data = JSON.parse(textResponse || "{}");
-            } catch (err) {
-                data = { message: textResponse };
-            }
-
+            const data = JSON.parse(await res.text() || "{}");
             const msg = data.message || data.Message || data.title || data.error || "";
             const statusCode = data?.StatusCode ?? data?.statusCode ?? data?.Status ?? data?.status;
             const isSuccess = data?.IsSuccess ?? data?.isSuccess ?? (Number(statusCode) === 23 || (statusCode >= 200 && statusCode < 300));
             
-            result = { ok: isSuccess || res.ok, msg: String(msg).replace(/^"|"$/g, "").trim() };
+            result = { ok: isSuccess || res.ok, msg: msg.replace(/^"|"$/g, "").trim() };
         }
         
         if (result.ok) { 
@@ -626,29 +193,18 @@ async function executeRefresh(rawNumber) {
         btnText.textContent = t.btn; 
     }
 }
-form.addEventListener("submit", e => { 
-    e.preventDefault(); 
-    executeRefresh(phoneInput.value); 
-});
+
+form.addEventListener("submit", e => { e.preventDefault(); executeRefresh(phoneInput.value); });
 
 window.addEventListener("DOMContentLoaded", () => {
-    // ضبط حقوق النشر والسنة آلياً
-    const copyrightElem = document.getElementById("ui-copyright");
-    if (copyrightElem) {
-        copyrightElem.textContent = "BRAND SIM © " + new Date().getFullYear();
-    }
-
     const params = new URLSearchParams(window.location.search);
     applyLanguage(params.get("lang") || currentLang);
     const urlNumber = params.get("number") || params.get("phone");
     if (urlNumber) {
         phoneInput.value = normalizePhoneNumber(urlNumber);
-        if (params.get("auto") === "1" || params.get("auto") === "true") {
-            executeRefresh(urlNumber);
-        }
+        if (params.get("auto") === "1" || params.get("auto") === "true") executeRefresh(urlNumber);
     }
 });
 </script>
 </body>
 </html>
-     
