@@ -54,13 +54,12 @@ body[lang="he"]{font-family:'Rubik',sans-serif}
 <div class="footer-bar"><span class="lang-btn" id="langToggleBtn" onclick="toggleLanguage()">עברית</span><span class="copyright">BRAND SIM © <script>document.write(new Date().getFullYear())</script></span></div>
 </div>
 <script>
-// تم توحيد الروابط وحذف الرابط المكشوف و proxy.php
-const GAS_PROXY_URL = "https://script.google.com/macros/s/AKfycby_eLDGbKg_a3Oh54Qo8TRIUI-pm6Hphy1qvN1tIzUd7nOIWp6szqiz-LAl8CPKp9y8/exec";
+const GAS_PROXY_URL = "https://script.google.com/macros/s/AKfycbzLZSmUcm7nOwmhL61EikTU86nbQFCmZswydKQmXotdWyPc0fyDVOQx6wFE-CtXDgNl/exec";
 const SKY_PORTAL_URL = "https://rn.sky-5g.net";
 
 const i18n = {
 ar: { welcome: "مرحباً بك في براند سيم", subtitle: "أدخل رقم الهاتف لإجراء تحديث وتنشيط فوري للشريحة", label: "رقم الهاتف", placeholder: "05XXXXXXXX", btn: "تحديث الرقم الآن", loading: "جاري الفحص والتحديث...", switchBtn: "עברית", invalidPhone: "يرجى إدخال رقم هاتف صحيح مكون من 10 أرقام ويبدأ بـ 05", notAuthorized: "عذراً، هذا الرقم غير مسجل في منظومة براند سيم (BRAND SIM) ولا يمكن تحديثه.", defaultSuccess: "✅ تم إرسال طلب تحديث وتنشيط الرقم بنجاح!", defaultError: "⚠️ تعذر تحديث الرقم حالياً، يرجى التأكد من الرقم أو المحاولة لاحقاً." },
-he: { welcome: "ברוך הבא ל-BRAND SIM", subtitle: "נא להזין מספר טלפון כדי לבצע רענון והפעלה לכרטיס ה-SIM", label: "מספר טלפון", placeholder: "05XXXXXXXX", btn: "רענון מספר כעת", loading: "בודק ומרענן...", switchBtn: "العربية", invalidPhone: "נא להזין מספר טלפון תקין בן 10 ספרות המתחיל ב-05", notAuthorized: "מספר זה אינו רשום במערכת BRAND SIM ולא ניתן לרענן אותו.", defaultSuccess: "✅ המספר רוענן בהצלחה!", defaultError: "⚠️ פעולת הרענון נכשלה, בדוק את המספר أو נסה שוב." }
+he: { welcome: "ברוך הבא ל-BRAND SIM", subtitle: "נא להזין מספר טלפון כדי לבצע רענון והפעלה לכרטיס ה-SIM", label: "מספר טלפון", placeholder: "05XXXXXXXX", btn: "רענון מספר כעת", loading: "בודק وמרענן...", switchBtn: "العربية", invalidPhone: "נא להזין מספר טלפון תקין בן 10 ספרות המתחיל ב-05", notAuthorized: "מספר זה אינו רשום במערכת BRAND SIM ולא ניתן לרענן אותו.", defaultSuccess: "✅ המספר רוענן בהצלחה!", defaultError: "⚠️ פעולת הרענון נכשלה, בדוק את המספר أو نסה شוב." }
 };
 
 let currentLang = localStorage.getItem("language") || "ar";
@@ -106,21 +105,24 @@ phoneInput.addEventListener("input", e => {
     if (e.target.value !== normalized) e.target.value = normalized;
 });
 
-// تم تغيير innerHTML إلى textContent لمنع حقن السكربتات XSS
+// استخدام textContent بدلاً من innerHTML لمنع ثغرات XSS
 function showMessage(type, text) {
     alertBox.className = "alert-box " + type;
-    const icon = type === "success" ? "fa-check-circle" : (type === "warning" ? "fa-exclamation-triangle" : "fa-times-circle");
-    alertBox.innerHTML = '<i class="fas ' + icon + '"></i> <span id="alert-text"></span>';
-    document.getElementById("alert-text").textContent = text;
+    alertBox.innerHTML = '';
+    const icon = document.createElement('i');
+    icon.className = "fas " + (type === "success" ? "fa-check-circle" : (type === "warning" ? "fa-exclamation-triangle" : "fa-times-circle"));
+    const span = document.createElement('span');
+    span.textContent = text;
+    alertBox.appendChild(icon);
+    alertBox.appendChild(span);
     alertBox.style.display = "flex";
 }
-// دالة إنشاء بصمة التشفير لمطابقة الأرقام المشفرة في customers.json
+
 async function hashPhone(phone) {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode('BS_PHONE_2026_' + phone));
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// تم حذف الرابط المكشوف لجيتهاب والاكتفاء بالملف المشفر المحلي
 async function findCustomerInSmsDb(cleanPhone) {
     let dbList = [];
     try {
@@ -142,34 +144,6 @@ async function refreshViaSky(phone) {
     return { ok: true, msg: "✅ تم التحقق! جاري تحويلك لبوابة سكاي (تم نسخ الرقم، قم بلصقه هناك)." };
 }
 
-// جميع الطلبات توجه لوسيط Google Apps Script حصراً
-async function refreshViaAreen(phone) {
-    try {
-        const res = await fetch(GAS_PROXY_URL, { method: "POST", redirect: "follow", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ MobNumber: phone, provider: "areen" }) });
-        const data = JSON.parse(await res.text() || "{}");
-        const statusCode = data?.StatusCode ?? data?.statusCode ?? data?.Status ?? data?.status;
-        const message = data?.Message ?? data?.message ?? data?.ErrorMessage ?? data?.errorMessage;
-        return { ok: Number(statusCode) === 23 || data?.IsSuccess === true, msg: message };
-    } catch (e) { throw new Error("Areen connection failed"); }
-}
-
-async function refreshViaQuickLine(phone) {
-    try {
-        const res = await fetch(GAS_PROXY_URL, { method: "POST", redirect: "follow", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ phoneNumber: phone, provider: "quickline" }) });
-        const data = JSON.parse(await res.text() || "{}");
-        return { ok: data.StatusCode >= 200 && data.StatusCode < 300, msg: (data.Message || "").replace(/^"|"$/g, "").trim() };
-    } catch (e) { throw new Error("QuickLine connection failed"); }
-}
-
-// توجيه Layan عبر الوسيط وإلغاء corsproxy
-async function refreshViaLayan(phone) {
-    try {
-        const res = await fetch(GAS_PROXY_URL, { method: "POST", redirect: "follow", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ number: phone, provider: "layan", lang: currentLang }) });
-        const data = JSON.parse(await res.text() || "{}");
-        const msg = data.message || data.title || data.error || data.Message || "";
-        return { ok: data.StatusCode === 200 || res.ok, msg: msg.replace(/^"|"$/g, "").trim() };
-    } catch (e) { throw new Error("Layan connection failed"); }
-}
 async function executeRefresh(rawNumber) {
     const t = i18n[currentLang];
     const cleanNumber = normalizePhoneNumber(rawNumber);
@@ -188,10 +162,22 @@ async function executeRefresh(rawNumber) {
         const provider = String(customer.sourceProvider || "").trim().toLowerCase();
         let result;
         
-        if (provider.includes("سكاي") || provider.includes("sky")) result = await refreshViaSky(cleanNumber);
-        else if (provider.includes("ارين") || provider.includes("أرين") || provider.includes("areen")) result = await refreshViaAreen(cleanNumber);
-        else if (provider.includes("كويك") || provider.includes("quick")) result = await refreshViaQuickLine(cleanNumber);
-        else result = await refreshViaLayan(cleanNumber);
+        if (provider.includes("سكاي") || provider.includes("sky")) {
+            result = await refreshViaSky(cleanNumber);
+        } else {
+            const res = await fetch(GAS_PROXY_URL, { 
+                method: "POST", 
+                redirect: "follow", 
+                headers: { "Content-Type": "text/plain;charset=utf-8" }, 
+                body: JSON.stringify({ phoneNumber: cleanNumber, number: cleanNumber, MobNumber: cleanNumber, provider: provider || "areen", lang: currentLang }) 
+            });
+            const data = JSON.parse(await res.text() || "{}");
+            const msg = data.message || data.Message || data.title || data.error || "";
+            const statusCode = data?.StatusCode ?? data?.statusCode ?? data?.Status ?? data?.status;
+            const isSuccess = data?.IsSuccess ?? data?.isSuccess ?? (Number(statusCode) === 23 || (statusCode >= 200 && statusCode < 300));
+            
+            result = { ok: isSuccess || res.ok, msg: msg.replace(/^"|"$/g, "").trim() };
+        }
         
         if (result.ok) { 
             showMessage("success", result.msg || t.defaultSuccess); 
