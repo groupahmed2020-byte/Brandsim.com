@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BRAND SIM | تحديث وتنشيط الشرائح</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script defer src="https://www.google.com/recaptcha/api.js?render=6LcMCXYpAAAAABWt8J3o93Z0YRZgbFCd-OfBN5ov"></script>
+<style>
+:root{--primary:#0f172a;--brand:#2c9cdb;--brand-hover:#1b80b8;--bg-gradient:linear-gradient(135deg,#0f172a 0%,#1e3a8a 100%);--card-bg:#ffffff;--text-main:#1e293b;--text-muted:#64748b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Tajawal',sans-serif;background:var(--bg-gradient);color:var(--text-main);min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:20px}
+body[lang="he"]{font-family:'Rubik',sans-serif}
+.grecaptcha-badge{visibility:hidden}
+.card{background:var(--card-bg);width:100%;max-width:450px;border-radius:26px;box-shadow:0 20px 45px rgba(0,0,0,0.35);padding:40px 26px 28px;text-align:center;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;right:0;left:0;height:6px;background:linear-gradient(90deg,#2563eb,#38bdf8,#1d4ed8)}
+.logo-wrapper{display:inline-flex;align-items:center;justify-content:center;gap:10px;margin-bottom:16px;direction:ltr}
+.logo-icon{background:var(--brand);color:#fff;width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 6px 14px rgba(44,156,219,0.3)}
+.logo-text{font-size:30px;font-weight:800;color:var(--primary);letter-spacing:0.5px;font-family:'Rubik',sans-serif}
+.logo-text span{color:var(--brand)}
+.welcome-title{font-size:22px;font-weight:800;margin-bottom:6px;color:var(--primary)}
+.subtitle{font-size:14px;color:var(--text-muted);margin-bottom:26px;line-height:1.6;font-weight:500}
+.form-group{text-align:right;margin-bottom:20px}
+.form-group label{display:block;font-weight:700;font-size:14px;margin-bottom:8px;color:var(--primary)}
+.form-control{width:100%;padding:14px 16px;font-size:20px;font-weight:700;letter-spacing:1.5px;border:2px solid #cbd5e1;border-radius:14px;text-align:center;direction:ltr;color:var(--primary);transition:all 0.2s ease;outline:none;background-color:#f8fafc}
+.form-control:focus{background-color:#fff;border-color:var(--brand);box-shadow:0 0 0 4px rgba(44,156,219,0.15)}
+.btn-submit{width:100%;padding:15px;font-size:17px;font-weight:700;font-family:inherit;color:#fff;background:linear-gradient(135deg,#2563eb 0%,#1d4ed8 100%);border:none;border-radius:14px;cursor:pointer;transition:all 0.2s ease;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 6px 16px rgba(37,99,235,0.3)}
+.btn-submit:hover{opacity:0.95;transform:translateY(-1px)}
+.btn-submit:disabled{background:#94a3b8;cursor:not-allowed;transform:none;box-shadow:none}
+.spinner{display:none}
+.btn-submit.loading .spinner{display:inline-block}
+.alert-box{margin-top:20px;padding:14px 16px;border-radius:12px;font-size:14px;font-weight:700;display:none;align-items:center;justify-content:center;gap:10px;line-height:1.6;word-break:break-word}
+.alert-box.success{display:flex;background-color:#dcfce7;color:#166534;border:1px solid #86efac}
+.alert-box.warning{display:flex;background-color:#fffbeb;color:#92400e;border:1px solid #fde68a}
+.alert-box.error{display:flex;background-color:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
+.footer-bar{margin-top:26px;padding-top:16px;border-top:1px solid #f1f5f9;display:flex;justify-content:space-between;align-items:center}
+.lang-btn{color:var(--brand);font-weight:700;font-size:13px;cursor:pointer;padding:5px 14px;border-radius:20px;border:1px solid var(--brand);transition:all 0.2s;user-select:none}
+.lang-btn:hover{background-color:var(--brand);color:#fff}
+.copyright{color:var(--text-muted);font-size:13px;font-weight:600;direction:ltr}
+</style>
+</head>
+<body lang="ar">
+<div class="card">
+<div class="logo-wrapper"><div class="logo-icon"><i class="fas fa-sim-card"></i></div><div class="logo-text">BRAND <span>SIM</span></div></div>
+<h2 class="welcome-title" id="ui-welcome">مرحباً بك في براند سيم</h2>
+<p class="subtitle" id="ui-subtitle">أدخل رقم الهاتف لإجراء تحديث وتنشيط فوري للشريحة</p>
+<form id="customer-refresh-number-form" novalidate>
+<div class="form-group">
+<label for="customerPhone" id="ui-label">رقم الهاتف</label>
+<input type="tel" id="customerPhone" class="form-control" placeholder="05XXXXXXXX" maxlength="10" inputmode="numeric" autocomplete="tel" required>
+</div>
+<button type="submit" id="customSubmitBtn" class="btn-submit"><span id="ui-btn">تحديث الرقم الآن</span><i class="fas fa-sync-alt fa-spin spinner"></i></button>
+</form>
+<div id="alertBox" class="alert-box"></div>
+<div class="footer-bar"><span class="lang-btn" id="langToggleBtn" onclick="toggleLanguage()">עברית</span><span class="copyright">BRAND SIM © <script>document.write(new Date().getFullYear())</script></span></div>
+</div>
+<script>
+const LAYAN_API_URL = "https://api.layan-t.net/api/Subscribtions/CustomersRefreshNumber";
+const AREEN_GAS_URL = "https://script.google.com/macros/s/AKfycbxidpoKH8PnhxSvKggQpI2K2BiQQLm7PJM2byXFxnJY1f2Iahqj4UdRfYFuECuqqoPK/exec";
+const QUICKLINE_GAS_URL = "https://script.google.com/macros/s/AKfycbzoFY7vXfDNsMBieM33Ohym4o3oif6_hoc1FI0RFzKbEgvfALOVMBWQKNt14VOakcQg/exec";
+const SKY_GAS_URL = "https://script.google.com/macros/s/AKfycbyQ_4Kb1RLkeziOCO03L8iysjDUF7wSFuxnJW19AQpVGFzUXeBNFrCUSixvNfkIbHrU/exec";
+const SKY_RECAPTCHA_KEY = "6LcMCXYpAAAAABWt8J3o93Z0YRZgbFCd-OfBN5ov";
+const LOCAL_PHP_PROXY = "proxy.php";
+const GITHUB_RAW_DB = "https://raw.githubusercontent.com/groupahmed2020-byte/BrandSim.com/main/customers.json";
+const i18n = {
+ar: { welcome: "مرحباً بك في براند سيم", subtitle: "أدخل رقم الهاتف لإجراء تحديث وتنشيط فوري للشريحة", label: "رقم الهاتف", placeholder: "05XXXXXXXX", btn: "تحديث الرقم الآن", loading: "جاري الفحص والتحديث...", switchBtn: "עברית", invalidPhone: "يرجى إدخال رقم هاتف صحيح مكون من 10 أرقام ويبدأ بـ 05", notAuthorized: "عذراً، هذا الرقم غير مسجل في منظومة براند سيم (BRAND SIM) ولا يمكن تحديثه.", defaultSuccess: "✅ تم إرسال طلب تحديث وتنشيط الرقم بنجاح!", defaultError: "⚠️ تعذر تحديث الرقم حالياً، يرجى التأكد من الرقم أو المحاولة لاحقاً." },
+he: { welcome: "ברוך הבא ל-BRAND SIM", subtitle: "נא להזין מספר טלפון כדי לבצע רענון והפעלה לכרטיס ה-SIM", label: "מספר טלפון", placeholder: "05XXXXXXXX", btn: "רענון מספר כעת", loading: "בודק وמרענן...", switchBtn: "العربية", invalidPhone: "נא להזין מספר טלפון תקין בן 10 ספרות המתחיל ב-05", notAuthorized: "מספר זה אינו רשום במערכת BRAND SIM ולא ניתן לרענן אותו.", defaultSuccess: "✅ המספר רוענן בהצלחה!", defaultError: "⚠️ פעולת הרענון נכשלה, בדוק את המספר أو נסה شוב." }
+};
+let currentLang = localStorage.getItem("language") || "ar";
+function applyLanguage(lang) {
+currentLang = lang === "he" ? "he" : "ar";
+localStorage.setItem("language", currentLang);
+const t = i18n[currentLang];
+document.body.setAttribute("lang", currentLang);
+document.getElementById("ui-welcome").textContent = t.welcome;
+document.getElementById("ui-subtitle").textContent = t.subtitle;
+document.getElementById("ui-label").textContent = t.label;
+document.getElementById("customerPhone").placeholder = t.placeholder;
+document.getElementById("ui-btn").textContent = t.btn;
+document.getElementById("langToggleBtn").textContent = t.switchBtn;
+}
+function toggleLanguage() {
+document.getElementById("alertBox").style.display = "none";
+applyLanguage(currentLang === "ar" ? "he" : "ar");
+}
+function normalizePhoneNumber(rawInput) {
+if (!rawInput) return "";
+let str = rawInput.toString().replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+if (str.includes("_")) str = str.split("_")[0];
+str = str.replace(/[^0-9]/g, "");
+if (str.startsWith("00972") || str.startsWith("00970")) str = "0" + str.slice(5);
+else if ((str.startsWith("972") || str.startsWith("970")) && str.length >= 11) str = "0" + str.slice(3);
+else if (str.length === 9 && str.startsWith("5")) str = "0" + str;
+else if (str.length > 10 && str.startsWith("05")) str = str.slice(0, 10);
+return str;
+}
+const form = document.getElementById("customer-refresh-number-form");
+const phoneInput = document.getElementById("customerPhone");
+const submitBtn = document.getElementById("customSubmitBtn");
+const btnText = document.getElementById("ui-btn");
+const alertBox = document.getElementById("alertBox");
+phoneInput.addEventListener("input", e => {
+const normalized = normalizePhoneNumber(e.target.value);
+if (e.target.value !== normalized) e.target.value = normalized;
+});
+function showMessage(type, text) {
+alertBox.className = "alert-box " + type;
+const icon = type === "success" ? "fa-check-circle" : (type === "warning" ? "fa-exclamation-triangle" : "fa-times-circle");
+alertBox.innerHTML = '<i class="fas ' + icon + '"></i> <span>' + text + '</span>';
+alertBox.style.display = "flex";
+}
+async function findCustomerInSmsDb(cleanPhone) {
+let dbList = [];
+try {
+const localData = JSON.parse(localStorage.getItem("xone1_customers_db") || "[]");
+if (Array.isArray(localData)) dbList = dbList.concat(localData);
+} catch (e) {}
+const sources = ["customers.json?t=" + Date.now(), GITHUB_RAW_DB + "?t=" + Date.now()];
+for (const srcUrl of sources) {
+try {
+const res = await fetch(srcUrl, { cache: "no-store" });
+if (res.ok) {
+const remoteData = await res.json();
+if (Array.isArray(remoteData) && remoteData.length) { dbList = dbList.concat(remoteData); break; }
+}
+} catch (e) {}
+}
+return dbList.find(c => normalizePhoneNumber(c.simPhone || "") === cleanPhone || normalizePhoneNumber(c.contactPhone || "") === cleanPhone) || null;
+}
+function getSkyCaptchaToken() {
+return new Promise(resolve => {
+if (typeof grecaptcha === "undefined" || !grecaptcha.ready) return resolve("");
+try { grecaptcha.ready(() => { grecaptcha.execute(SKY_RECAPTCHA_KEY, { action: "public_refresh" }).then(t => resolve(t || "")).catch(() => resolve("")); }); } catch (e) { resolve(""); }
+});
+}
+async function pollSkyStatus(correlationId) {
+const delays = [1000, 2000, 3000, 4000, 5000];
+for (const d of delays) {
+await new Promise(r => setTimeout(r, d));
+try {
+const res = await fetch(SKY_GAS_URL, { method: "POST", redirect: "follow", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ correlation_id: correlationId }) });
+const st = await res.json();
+if (st && st.done) return { ok: !!st.succeeded, msg: st.message || (st.succeeded ? "✅ تم تحديث حزمة التصفح بنجاح!" : "فشل التحديث") };
+} catch (e) {}
+}
+return { ok: true, msg: "✅ تم إرسال طلب التحديث بنجاح، قد يستغرق التفعيل من دقيقة إلى 3 دقائق." };
+}
+async function refreshViaSky(phone) {
+const token = await getSkyCaptchaToken();
+const res = await fetch(SKY_GAS_URL, { method: "POST", redirect: "follow", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ phone_number: phone, captcha: token }) });
+const data = await res.json();
+if (data.success && data.correlation_id) return await pollSkyStatus(data.correlation_id);
+if (data.success === true || data.succeeded === true) return { ok: true, msg: data.message || i18n[currentLang].defaultSuccess };
+return { ok: false, msg: (data.message || data.Message || "").replace(/^"|"$/g, "").trim() };
+}
+async function refreshViaAreen(phone) {
+for (const url of [AREEN_GAS_URL, LOCAL_PHP_PROXY]) {
+try {
+const res = await fetch(url, { method: "POST", redirect: "follow", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ MobNumber: phone, provider: "areen" }) });
+const data = JSON.parse(await res.text());
+const statusCode = data?.StatusCode ?? data?.statusCode ?? data?.Status ?? data?.status;
+const message = data?.Message ?? data?.message ?? data?.ErrorMessage ?? data?.errorMessage;
+const isSuccess = data?.IsSuccess ?? data?.isSuccess ?? (Number(statusCode) === 23);
+return { ok: Number(statusCode) === 23 || isSuccess === true, msg: message };
+} catch (e) {}
+}
+throw new Error("Areen connection failed");
+}
+async function refreshViaQuickLine(phone) {
+for (const url of [QUICKLINE_GAS_URL, LOCAL_PHP_PROXY]) {
+try {
+const res = await fetch(url, { method: "POST", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify({ phoneNumber: phone, provider: "quickline" }) });
+const data = await res.json();
+return { ok: data.StatusCode >= 200 && data.StatusCode < 300, msg: (data.Message || "").replace(/^"|"$/g, "").trim() };
+} catch (e) {}
+}
+throw new Error("QuickLine connection failed");
+}
+async function refreshViaLayan(phone) {
+const payload = JSON.stringify({ number: phone });
+const headers = { "Content-Type": "application/json", "Accept": "application/json, text/plain, */*", "LANG": currentLang };
+let response = null;
+for (const url of [LAYAN_API_URL, "https://corsproxy.io/?" + encodeURIComponent(LAYAN_API_URL)]) {
+try { response = await fetch(url, { method: "POST", headers, body: payload }); break; } catch (e) {}
+}
+if (!response) throw new Error("Layan connection failed");
+let responseText = await response.text();
+try {
+const json = JSON.parse(responseText);
+if (typeof json === "string") responseText = json;
+else if (json && (json.message || json.title || json.error)) responseText = json.message || json.title || json.error;
+} catch (_) { responseText = responseText.replace(/^"|"$/g, "").trim(); }
+return { ok: response.ok, msg: responseText };
+}
+async function executeRefresh(rawNumber) {
+const t = i18n[currentLang];
+const cleanNumber = normalizePhoneNumber(rawNumber);
+phoneInput.value = cleanNumber;
+if (!/^05\d{8}$/.test(cleanNumber)) { showMessage("warning", t.invalidPhone); return; }
+submitBtn.disabled = true; submitBtn.classList.add("loading"); btnText.textContent = t.loading; alertBox.style.display = "none";
+try {
+const customer = await findCustomerInSmsDb(cleanNumber);
+if (!customer) { showMessage("error", t.notAuthorized); return; }
+const provider = String(customer.sourceProvider || "").trim().toLowerCase();
+let result;
+if (provider.includes("سكاي") || provider.includes("sky")) result = await refreshViaSky(cleanNumber);
+else if (provider.includes("ارين") || provider.includes("أرين") || provider.includes("areen")) result = await refreshViaAreen(cleanNumber);
+else if (provider.includes("كويك") || provider.includes("quick")) result = await refreshViaQuickLine(cleanNumber);
+else result = await refreshViaLayan(cleanNumber);
+if (result.ok) { showMessage("success", result.msg || t.defaultSuccess); phoneInput.value = ""; }
+else showMessage("warning", result.msg || t.defaultError);
+} catch (err) { showMessage("error", t.defaultError); }
+finally { submitBtn.disabled = false; submitBtn.classList.remove("loading"); btnText.textContent = t.btn; }
+}
+form.addEventListener("submit", e => { e.preventDefault(); executeRefresh(phoneInput.value); });
+window.addEventListener("DOMContentLoaded", () => {
+const params = new URLSearchParams(window.location.search);
+applyLanguage(params.get("lang") || currentLang);
+const urlNumber = params.get("number") || params.get("phone");
+if (urlNumber) {
+phoneInput.value = normalizePhoneNumber(urlNumber);
+if (params.get("auto") === "1" || params.get("auto") === "true") executeRefresh(urlNumber);
+}
+});
+</script>
+</body>
+</html>
