@@ -4,43 +4,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>براند ستور - BRAND STORE | شرائح بلاستيك وإلكترونية</title>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { font-family: 'Tajawal', sans-serif; background-color: #0f172a; color: #f8fafc; }
-        .card-gradient { background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid #334155; }
-        .card-gradient:hover { border-color: #f59e0b; transform: translateY(-4px); transition: all 0.3s ease; }
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #081226;
+            background-image: 
+                linear-gradient(180deg, rgba(10, 22, 46, 0.72) 0%, rgba(15, 23, 42, 0.65) 50%, rgba(6, 15, 32, 0.88) 100%),
+                url('bg.jpg'),
+                url('https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=1600&q=85');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #f8fafc;
+        }
+        .glass-panel {
+            background: rgba(15, 30, 56, 0.72);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+        }
+        .card-gradient {
+            background: rgba(13, 27, 52, 0.75);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(56, 189, 248, 0.22);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            transition: all 0.3s ease;
+        }
+        .card-gradient:hover {
+            border-color: #00d2ff;
+            transform: translateY(-4px);
+            box-shadow: 0 14px 30px rgba(0, 210, 255, 0.2);
+        }
+        .cyan-btn {
+            background: linear-gradient(90deg, #00d2ff 0%, #00a8e8 100%);
+            color: #ffffff;
+            box-shadow: 0 4px 18px rgba(0, 210, 255, 0.35);
+            transition: all 0.25s ease;
+        }
+        .cyan-btn:hover {
+            opacity: 0.95;
+            box-shadow: 0 6px 24px rgba(0, 210, 255, 0.55);
+            transform: translateY(-1px);
+        }
+        .input-telecom {
+            background: rgba(11, 24, 48, 0.85);
+            border: 1.5px solid rgba(56, 189, 248, 0.35);
+            color: #ffffff;
+            transition: all 0.2s ease;
+        }
+        .input-telecom:focus {
+            border-color: #00d2ff;
+            box-shadow: 0 0 0 3px rgba(0, 210, 255, 0.2);
+            outline: none;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
     <!-- الشريط العلوي -->
-    <header class="bg-slate-900/90 backdrop-blur sticky top-0 z-40 border-b border-slate-800 shadow-lg">
+    <header class="glass-panel sticky top-0 z-40 border-b border-sky-500/20">
         <div class="max-w-6xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center gap-4">
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center text-slate-950 font-extrabold text-2xl shadow-md">B</div>
+                <div class="w-12 h-12 rounded-xl cyan-btn flex items-center justify-center text-white font-extrabold text-2xl">B</div>
                 <div>
-                    <h1 class="text-2xl font-extrabold text-amber-400 tracking-wide">براند ستور | BRAND STORE</h1>
-                    <p class="text-xs text-slate-400">لبيع الشرائح البلاستيكية والإلكترونية (eSIM)</p>
+                    <h1 class="text-2xl font-extrabold text-white tracking-wide">براند ستور | <span class="text-[#00d2ff]">BRAND STORE</span></h1>
+                    <p class="text-xs text-slate-300">لبيع الشرائح البلاستيكية والإلكترونية (eSIM)</p>
                 </div>
             </div>
 
-            <div class="bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2">
+            <div class="bg-emerald-500/15 border border-emerald-400/40 text-emerald-300 px-4 py-2 rounded-full text-sm font-bold flex items-center gap-2">
                 <span>🚚</span><span>الدفع عند الاستلام</span>
             </div>
         </div>
     </header>
 
     <!-- القسم الترحيبي -->
-    <section class="max-w-6xl mx-auto px-4 pt-8 pb-4 text-center">
-        <div class="bg-gradient-to-r from-amber-500/20 via-slate-800 to-emerald-500/20 border border-slate-700 rounded-2xl p-6 shadow-xl">
-            <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-2">أقوى عروض الشرائح البلاستيكية والإلكترونية (eSIM)</h2>
-            <p class="text-slate-300 text-sm md:text-base mb-4">اختر شريحتك المفضلة لمدّة شهر أو 3 شهور بأفضل الأسعار — <span class="text-amber-400 font-bold">الدفع عند الاستلام</span></p>
+    <section class="max-w-6xl mx-auto px-4 pt-8 pb-4 text-center w-full">
+        <div class="glass-panel rounded-3xl p-6 md:p-8">
+            <h2 class="text-2xl md:text-4xl font-extrabold text-white mb-2">
+                أقوى عروض الشرائح <span class="text-[#00d2ff]">البلاستيكية والإلكترونية (eSIM)</span>
+            </h2>
+            <p class="text-slate-300 text-sm md:text-base mb-5">اختر شريحتك المفضلة لمدّة شهر أو 3 شهور بأفضل الأسعار — <span class="text-[#00d2ff] font-bold">الدفع عند الاستلام</span></p>
             
-            <div class="flex flex-wrap justify-center gap-2 mt-4">
-                <button type="button" onclick="filterSim('all')" id="filter-all" class="px-4 py-2 rounded-xl text-sm font-bold bg-amber-500 text-slate-950 transition">الكل</button>
-                <button type="button" onclick="filterSim('بلاستيك')" id="filter-plastic" class="px-4 py-2 rounded-xl text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">شرائح بلاستيك</button>
-                <button type="button" onclick="filterSim('إلكترونية')" id="filter-esim" class="px-4 py-2 rounded-xl text-sm font-bold bg-slate-800 text-slate-300 hover:bg-slate-700 transition">شرائح إلكترونية (eSIM)</button>
+            <div class="flex flex-wrap justify-center gap-2.5 mt-4">
+                <button type="button" onclick="filterSim('all')" id="filter-all" class="px-5 py-2.5 rounded-xl text-sm font-extrabold cyan-btn">الكل</button>
+                <button type="button" onclick="filterSim('بلاستيك')" id="filter-plastic" class="px-5 py-2.5 rounded-xl text-sm font-bold glass-panel text-slate-200 hover:border-sky-400 transition">شرائح بلاستيك</button>
+                <button type="button" onclick="filterSim('إلكترونية')" id="filter-esim" class="px-5 py-2.5 rounded-xl text-sm font-bold glass-panel text-slate-200 hover:border-sky-400 transition">شرائح إلكترونية (eSIM)</button>
             </div>
         </div>
     </section>
@@ -51,60 +104,62 @@
     </main>
 
     <!-- نافذة حجز الطلب (Modal) -->
-    <div id="booking-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl relative">
-            <button type="button" onclick="closeModal()" class="absolute top-4 left-4 text-slate-400 hover:text-white text-2xl font-bold">&times;</button>
+    <div id="booking-modal" class="fixed inset-0 bg-black/75 backdrop-blur-md hidden items-center justify-center z-50 p-4">
+        <div class="glass-panel rounded-3xl max-w-md w-full p-6 relative border border-sky-400/40">
+            <button type="button" onclick="closeModal()" class="absolute top-4 left-4 text-slate-300 hover:text-white text-2xl font-bold">&times;</button>
             
-            <h3 class="text-xl font-extrabold text-amber-400 mb-1">حجز طلب جديد</h3>
-            <p id="modal-product-name" class="text-slate-300 font-bold text-lg mb-4"></p>
+            <h3 class="text-2xl font-extrabold text-white mb-1">حجز <span class="text-[#00d2ff]">طلب جديد</span></h3>
+            <p id="modal-product-name" class="text-sky-300 font-bold text-base mb-4"></p>
 
             <form id="booking-form" onsubmit="submitOrder(event)" class="space-y-4">
                 <div>
-                    <label class="block text-sm text-slate-300 mb-1 font-medium">نوع الشريحة المطلوبة:</label>
-                    <select id="order-sim-type" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-amber-500" required>
+                    <label class="block text-sm text-slate-200 mb-1.5 font-bold">نوع الشريحة المطلوبة:</label>
+                    <select id="order-sim-type" class="w-full input-telecom rounded-xl px-3.5 py-3" required>
                         <option value="شريحة بلاستيك">شريحة بلاستيك</option>
                         <option value="شريحة إلكترونية (eSIM)">شريحة إلكترونية (eSIM)</option>
                     </select>
                 </div>
 
                 <div>
-                    <label class="block text-sm text-slate-300 mb-1 font-medium">مدة الاشتراك:</label>
-                    <select id="order-duration" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-amber-500" required></select>
+                    <label class="block text-sm text-slate-200 mb-1.5 font-bold">مدة الاشتراك:</label>
+                    <select id="order-duration" class="w-full input-telecom rounded-xl px-3.5 py-3" required></select>
                 </div>
 
                 <div>
-                    <label class="block text-sm text-slate-300 mb-1 font-medium">الاسم الكامل:</label>
-                    <input type="text" id="customer-name" placeholder="أدخل اسمك الثلاثي" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-amber-500" required>
+                    <label class="block text-sm text-slate-200 mb-1.5 font-bold">الاسم الكامل:</label>
+                    <input type="text" id="customer-name" placeholder="أدخل اسمك الثلاثي" class="w-full input-telecom rounded-xl px-3.5 py-3" required>
                 </div>
 
                 <div>
-                    <label class="block text-sm text-slate-300 mb-1 font-medium">رقم التواصل / واتساب:</label>
-                    <input type="tel" id="customer-phone" placeholder="مثال: 059xxxxxxx" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-amber-500" required>
+                    <label class="block text-sm text-slate-200 mb-1.5 font-bold">رقم التواصل / واتساب:</label>
+                    <input type="tel" id="customer-phone" placeholder="مثال: 059xxxxxxx" class="w-full input-telecom rounded-xl px-3.5 py-3" required>
                 </div>
 
                 <div>
-                    <label class="block text-sm text-slate-300 mb-1 font-medium">العنوان / ملاحظات الاستلام:</label>
-                    <input type="text" id="customer-address" placeholder="المدينة / الحي" class="w-full bg-slate-800 border border-slate-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-amber-500" required>
+                    <label class="block text-sm text-slate-200 mb-1.5 font-bold">العنوان / ملاحظات الاستلام:</label>
+                    <input type="text" id="customer-address" placeholder="المدينة / الحي" class="w-full input-telecom rounded-xl px-3.5 py-3" required>
                 </div>
 
-                <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-3 text-center">
-                    <span class="text-emerald-400 font-bold text-sm">✅ الدفع عند الاستلام</span>
+                <div class="bg-emerald-500/15 border border-emerald-500/30 rounded-xl p-3 text-center">
+                    <span class="text-emerald-300 font-bold text-sm">✅ الدفع عند الاستلام</span>
                 </div>
 
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl shadow-lg transition flex items-center justify-center gap-2 text-lg">
+                <button type="submit" class="w-full cyan-btn font-extrabold py-3.5 rounded-xl flex items-center justify-center gap-2 text-lg">
                     <span>إرسال وتأكيد الحجز عبر واتساب</span>
+                    <span>←</span>
                 </button>
             </form>
         </div>
     </div>
+
     <!-- زر واتساب عائم للتواصل المباشر -->
     <a id="floating-whatsapp" href="#" target="_blank" rel="noopener noreferrer" class="fixed bottom-5 left-5 bg-emerald-500 hover:bg-emerald-400 text-white px-5 py-3 rounded-full shadow-2xl flex items-center gap-2 font-bold z-40 transition transform hover:scale-105">
         <span>💬</span><span>تواصل عبر واتساب</span>
     </a>
 
     <!-- الفوتر -->
-    <footer class="bg-slate-900 border-t border-slate-800 py-6 text-center text-slate-400 text-sm mt-10">
-        <p class="font-bold text-amber-400 mb-1 inline-block">براند ستور - BRAND STORE</p>
+    <footer class="glass-panel border-t border-sky-500/20 py-6 text-center text-slate-300 text-sm mt-10">
+        <p class="font-extrabold text-[#00d2ff] mb-1">براند ستور - BRAND STORE</p>
         <p>جميع أنواع الشرائح البلاستيكية والإلكترونية | الدفع عند الاستلام</p>
     </footer>
 
@@ -208,7 +263,8 @@
                 renderProducts(activeFilter);
             } catch (e) {}
         });
-              function updateFloatingWhatsapp() {
+
+        function updateFloatingWhatsapp() {
             const cleanNum = whatsappNumber.replace(/[^0-9]/g, '');
             const msg = encodeURIComponent("مرحباً براند ستور، أود الاستفسار عن الشرائح المتوفرة.");
             document.getElementById('floating-whatsapp').href = `https://wa.me/${cleanNum}?text=${msg}`;
@@ -224,32 +280,32 @@
             filtered.forEach(product => {
                 const isAvail = (product.available || "متوفر") === "متوفر";
                 const card = document.createElement('div');
-                card.className = `card-gradient rounded-2xl p-5 flex flex-col justify-between shadow-lg ${!isAvail ? 'opacity-75' : ''}`;
+                card.className = `card-gradient rounded-2xl p-5 flex flex-col justify-between ${!isAvail ? 'opacity-75' : ''}`;
                 card.innerHTML = `
                     <div>
                         <div class="flex justify-between items-start gap-2 mb-2">
                             <h3 class="text-xl font-extrabold text-white">${escapeHtml(product.name)}</h3>
-                            <span class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold px-2.5 py-1 rounded-lg">${escapeHtml(product.type)}</span>
+                            <span class="bg-sky-500/20 text-[#00d2ff] border border-sky-400/30 text-xs font-bold px-2.5 py-1 rounded-lg">${escapeHtml(product.type)}</span>
                         </div>
                         <div class="flex items-center justify-between mb-4">
                             <p class="text-slate-300 text-sm font-medium">${escapeHtml(product.note || 'متوفرة شريحة بلاستيك وشريحة إلكترونية')}</p>
-                            <span class="text-xs font-bold px-2.5 py-0.5 rounded-full border ${isAvail ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-red-500/10 text-red-400 border-red-500/30'}">${isAvail ? '✅ متوفر' : '❌ غير متوفر'}</span>
+                            <span class="text-xs font-bold px-2.5 py-0.5 rounded-full border ${isAvail ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30' : 'bg-red-500/15 text-red-300 border-red-500/30'}">${isAvail ? '✅ متوفر' : '❌ غير متوفر'}</span>
                         </div>
                         <div class="grid grid-cols-2 gap-3 mb-5">
-                            <div class="bg-slate-800/90 border border-slate-700 rounded-xl p-3 text-center">
-                                <span class="block text-xs text-slate-400 mb-1">اشتراك شهر</span>
-                                <span class="text-2xl font-extrabold text-amber-400">${escapeHtml(product.price1M)}</span><span class="text-xs text-slate-300"> ₪</span>
+                            <div class="bg-[#0b1830]/85 border border-sky-500/25 rounded-xl p-3 text-center">
+                                <span class="block text-xs text-slate-300 mb-1">اشتراك شهر</span>
+                                <span class="text-2xl font-extrabold text-[#00d2ff]">${escapeHtml(product.price1M)}</span><span class="text-xs text-slate-300"> ₪</span>
                             </div>
-                            <div class="bg-slate-800/90 border border-slate-700 rounded-xl p-3 text-center">
-                                <span class="block text-xs text-slate-400 mb-1">اشتراك 3 شهور</span>
+                            <div class="bg-[#0b1830]/85 border border-emerald-500/25 rounded-xl p-3 text-center">
+                                <span class="block text-xs text-slate-300 mb-1">اشتراك 3 شهور</span>
                                 <span class="text-2xl font-extrabold text-emerald-400">${escapeHtml(product.price3M)}</span><span class="text-xs text-slate-300"> ₪</span>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <div class="text-center text-xs ${isAvail ? 'text-emerald-400' : 'text-red-400'} font-medium mb-3">${isAvail ? '✔ متوفر الدفع عند الاستلام' : '✖ نفذت الكمية مؤقتاً'}</div>
-                        ${isAvail ? `<button type="button" onclick="openBookingModal(${product.id})" class="w-full bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-extrabold py-3 rounded-xl shadow-md transition">حجز طلب الآن</button>`
-                        : `<button type="button" disabled class="w-full bg-slate-800 text-slate-500 border border-slate-700 font-extrabold py-3 rounded-xl cursor-not-allowed">غير متوفر حالياً</button>`}
+                        <div class="text-center text-xs ${isAvail ? 'text-emerald-300' : 'text-red-400'} font-medium mb-3">${isAvail ? '✔ متوفر الدفع عند الاستلام' : '✖ نفذت الكمية مؤقتاً'}</div>
+                        ${isAvail ? `<button type="button" onclick="openBookingModal(${product.id})" class="w-full cyan-btn font-extrabold py-3 rounded-xl flex items-center justify-center gap-2"><span>حجز طلب الآن</span><span>←</span></button>`
+                        : `<button type="button" disabled class="w-full bg-slate-800/80 text-slate-500 border border-slate-700 font-extrabold py-3 rounded-xl cursor-not-allowed">غير متوفر حالياً</button>`}
                     </div>
                 `;
                 grid.appendChild(card);
@@ -258,58 +314,279 @@
 
         function filterSim(type) {
             renderProducts(type);
-            document.getElementById('filter-all').className = type === 'all' ? 'px-4 py-2 rounded-xl text-sm font-bold bg-amber-500 text-slate-950' : 'px-4 py-2 rounded-xl text-sm font-bold bg-slate-800 text-slate-300';
-            document.getElementById('filter-plastic').className = type === 'بلاستيك' ? 'px-4 py-2 rounded-xl text-sm font-bold bg-amber-500 text-slate-950' : 'px-4 py-2 rounded-xl text-sm font-bold bg-slate-800 text-slate-300';
-            document.getElementById('filter-esim').className = type === 'إلكترونية' ? 'px-4 py-2 rounded-xl text-sm font-bold bg-amber-500 text-slate-950' : 'px-4 py-2 rounded-xl text-sm font-bold bg-slate-800 text-slate-300';
+            const activeCls = 'px-5 py-2.5 rounded-xl text-sm font-extrabold cyan-btn';
+            const normalCls = 'px-5 py-2.5 rounded-xl text-sm font-bold glass-panel text-slate-200 hover:border-sky-400 transition';
+            document.getElementById('filter-all').className = type === 'all' ? activeCls : normalCls;
+            document.getElementById('filter-plastic').className = type === 'بلاستيك' ? activeCls : normalCls;
+            document.getElementById('filter-esim').className = type === 'إلكترونية' ? activeCls : normalCls;
         }
 
         function openBookingModal(id) {
             currentSelectedProduct = products.find(p => p.id === id);
-            if (!currentSelectedProduct) return;
+           if (!currentSelectedProduct) return;
 
-            document.getElementById('modal-product-name').textContent = `${currentSelectedProduct.name} - ${currentSelectedProduct.note || ''}`;
-            const simTypeSelect = document.getElementById('order-sim-type');
-            if (currentSelectedProduct.type === 'شريحة بلاستيك فقط') {
-                simTypeSelect.innerHTML = `<option value="شريحة بلاستيك">شريحة بلاستيك</option>`;
-            } else if (currentSelectedProduct.type === 'شريحة إلكترونية (eSIM) فقط') {
-                simTypeSelect.innerHTML = `<option value="شريحة إلكترونية (eSIM)">شريحة إلكترونية (eSIM)</option>`;
-            } else {
-                simTypeSelect.innerHTML = `<option value="شريحة بلاستيك">شريحة بلاستيك</option><option value="شريحة إلكترونية (eSIM)">شريحة إلكترونية (eSIM)</option>`;
-            }
+        // تعبئة بيانات المنتج داخل النافذة المنبثقة
+        const modal = document.getElementById('bookingModal');
+        const modalTitle = document.getElementById('modalProductTitle');
+        const modalPrice = document.getElementById('modalProductPrice');
+        const modalData = document.getElementById('modalProductData');
+        const modalDuration = document.getElementById('modalProductDuration');
+        const modalType = document.getElementById('modalProductType');
+        const modalCountry = document.getElementById('modalProductCountry');
+        const modalImage = document.getElementById('modalProductImage');
 
-            document.getElementById('order-duration').innerHTML = `
-                <option value="شهر واحد (${currentSelectedProduct.price1M} ₪)">شهر واحد - السعر: ${currentSelectedProduct.price1M} ₪</option>
-                <option value="3 شهور (${currentSelectedProduct.price3M} ₪)">3 شهور - السعر: ${currentSelectedProduct.price3M} ₪</option>
-            `;
-            const modal = document.getElementById('booking-modal');
+        if (modalTitle) {
+            modalTitle.textContent = currentSelectedProduct.name || currentSelectedProduct.title || '';
+        }
+        if (modalPrice) {
+            modalPrice.textContent = `${currentSelectedProduct.price} $`;
+        }
+        if (modalData) {
+            modalData.textContent = currentSelectedProduct.data || 'غير محدد';
+        }
+        if (modalDuration) {
+            modalDuration.textContent = currentSelectedProduct.duration || '30 يوم';
+        }
+        if (modalType) {
+            modalType.textContent = currentSelectedProduct.type || 'إلكترونية';
+        }
+        if (modalCountry) {
+            modalCountry.textContent = currentSelectedProduct.country || 'عالمي';
+        }
+        if (modalImage && currentSelectedProduct.image) {
+            modalImage.src = currentSelectedProduct.image;
+        }
+
+        // إعادة تعيين حقول الإدخال والكمية
+        const quantityInput = document.getElementById('orderQuantity');
+        if (quantityInput) {
+            quantityInput.value = 1;
+        }
+
+        const customerName = document.getElementById('customerName');
+        const customerPhone = document.getElementById('customerPhone');
+        const customerEmail = document.getElementById('customerEmail');
+        const customerNotes = document.getElementById('customerNotes');
+
+        if (customerName) customerName.value = '';
+        if (customerPhone) customerPhone.value = '';
+        if (customerEmail) customerEmail.value = '';
+        if (customerNotes) customerNotes.value = '';
+
+        // تفريغ رسائل التنبيه والخطأ
+        const errorAlert = document.getElementById('modalErrorMessage');
+        if (errorAlert) {
+            errorAlert.textContent = '';
+            errorAlert.classList.add('hidden');
+        }
+
+        // تحديث الحساب الإجمالي
+        updateBookingSummary();
+
+        // إظهار نافذة الحجز
+        if (modal) {
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
         }
-        function closeModal() {
-            const modal = document.getElementById('booking-modal');
+    }
+
+    // دالة إغلاق نافذة الحجز
+    function closeBookingModal() {
+        const modal = document.getElementById('bookingModal');
+        if (modal) {
             modal.classList.add('hidden');
             modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+        currentSelectedProduct = null;
+    }
+
+    // دالة زيادة أو إنقاص الكمية المطلوبة
+    function changeQuantity(amount) {
+        const quantityInput = document.getElementById('orderQuantity');
+        if (!quantityInput) return;
+
+        let currentQty = parseInt(quantityInput.value) || 1;
+        currentQty += amount;
+
+        if (currentQty < 1) currentQty = 1;
+        if (currentQty > 10) currentQty = 10;
+
+        quantityInput.value = currentQty;
+        updateBookingSummary();
+    }
+
+    // دالة تحديث السعر الإجمالي وملخص الطلب
+    function updateBookingSummary() {
+        if (!currentSelectedProduct) return;
+
+        const quantityInput = document.getElementById('orderQuantity');
+        const totalPriceEl = document.getElementById('modalTotalPrice');
+           const summaryDetailsEl = document.getElementById('orderSummaryDetails');
+
+        const qty = quantityInput ? parseInt(quantityInput.value) || 1 : 1;
+        const unitPrice = Number(currentSelectedProduct.price) || 0;
+        const total = unitPrice * qty;
+
+        if (totalPriceEl) {
+            totalPriceEl.textContent = `${total.toFixed(2)} $`;
         }
 
-        function submitOrder(e) {
-            e.preventDefault();
-            if (!currentSelectedProduct) return;
-            const simType = document.getElementById('order-sim-type').value;
-            const duration = document.getElementById('order-duration').value;
-            const name = document.getElementById('customer-name').value;
-            const phone = document.getElementById('customer-phone').value;
-            const address = document.getElementById('customer-address').value;
+        if (summaryDetailsEl) {
+            summaryDetailsEl.innerHTML = `
+                <div class="flex justify-between py-1">
+                    <span>${currentSelectedProduct.name || 'شريحة'} (×${qty})</span>
+                    <span class="font-bold">${total.toFixed(2)} $</span>
+                </div>
+            `;
+        }
+    }
 
-            const message = `*طلب حجز جديد - براند ستور (BRAND STORE)* 🛒\n--------------------------\n📌 *الشركة:* ${currentSelectedProduct.name}\n📦 *الباقة / الوصف:* ${currentSelectedProduct.note || '-'}\n💳 *نوع الشريحة:* ${simType}\n⏳ *المدة والسعر:* ${duration}\n👤 *اسم الزبون:* ${name}\n📱 *رقم الهاتف:* ${phone}\n📍 *العنوان:* ${address}\n💵 *طريقة الدفع:* الدفع عند الاستلام`;
-            const cleanNum = whatsappNumber.replace(/[^0-9]/g, '');
-            closeModal();
-            window.open(`https://wa.me/${cleanNum}?text=${encodeURIComponent(message)}`, '_blank');
+    // دالة التحقق من صحة بيانات النموذج
+    function validateBookingForm() {
+        const name = document.getElementById('customerName')?.value.trim();
+        const phone = document.getElementById('customerPhone')?.value.trim();
+        const email = document.getElementById('customerEmail')?.value.trim();
+        const errorAlert = document.getElementById('modalErrorMessage');
+
+        if (!name) {
+            showFormError('يرجى كتابة الاسم الكريم بالكامل');
+            return false;
         }
 
-        updateFloatingWhatsapp();
-        renderProducts();
-        syncFromControlPage();
-        setInterval(syncFromControlPage, 20000);
-    </script>
+        if (!phone || phone.length < 8) {
+            showFormError('يرجى إدخال رقم هاتف أو واتساب صحيح للتواصل');
+            return false;
+        }
+
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            showFormError('يرجى التأكد من صحة البريد الإلكتروني أو تركه فارغاً');
+            return false;
+        }
+
+        if (errorAlert) {
+            errorAlert.textContent = '';
+            errorAlert.classList.add('hidden');
+        }
+        return true;
+    }
+
+    // دالة إظهار رسالة خطأ داخل النافذة
+    function showFormError(msg) {
+        const errorAlert = document.getElementById('modalErrorMessage');
+        if (errorAlert) {
+            errorAlert.textContent = msg;
+            errorAlert.classList.remove('hidden');
+        } else {
+            alert(msg);
+        }
+    }
+
+    // دالة إرسال وحجز الطلب وتوجيهه إلى واتساب
+    function handleOrderSubmit(e) {
+        if (e) e.preventDefault();
+
+        if (!validateBookingForm()) return;
+        if (!currentSelectedProduct) return;
+
+        const name = document.getElementById('customerName').value.trim();
+        const phone = document.getElementById('customerPhone').value.trim();
+        const email = document.getElementById('customerEmail')?.value.trim() || 'غير متوفر';
+        const notes = document.getElementById('customerNotes')?.value.trim() || 'لا توجد ملاحظات';
+        const quantity = parseInt(document.getElementById('orderQuantity')?.value) || 1;
+        const totalPrice = ((Number(currentSelectedProduct.price) || 0) * quantity).toFixed(2);
+
+        // رقم الواتساب المعتمد للمتجر (استبدله برقمك الدولي)
+        const storeWhatsAppNumber = '970000000000';
+
+        // تنسيق رسالة الطلب
+        const msg = `مرحباً، أود حجز الباقة التالية:\n` +
+                    `----------------------------\n` +
+                    `*المنتج:* ${currentSelectedProduct.name}\n` +
+                    `*النوع:* ${currentSelectedProduct.type || 'إلكترونية'}\n` +
+                    `*البيانات:* ${currentSelectedProduct.data || 'غير محدد'}\n` +
+                    `*الصلاحية:* ${currentSelectedProduct.duration || '30 يوم'}\n` +
+                    `*الكمية:* ${quantity}\n` +
+                    `*الإجمالي:* ${totalPrice} $\n` +
+                    `----------------------------\n` +
+                    `*بيانات العميل:*\n` +
+                    `- الاسم: ${name}\n` +
+                    `- الهاتف: ${phone}\n` +
+                    `- البريد: ${email}\n` +
+                    `- الملاحظات: ${notes}\n` +
+                    `----------------------------\n` +
+                    `يرجى تأكيد الحجز وإرسال تفاصيل الدفع.`;
+
+        const url = `https://wa.me/${storeWhatsAppNumber}?text=${encodeURIComponent(msg)}`;
+
+        closeBookingModal();
+        showToast('جاري توجيهك إلى واتساب لإتمام الحجز...', 'success');
+        setTimeout(() => { window.open(url, '_blank'); }, 800);
+         }
+
+    // دالة عرض إشعار عائم على الشاشة (Toast)
+    function showToast(message, type = 'info') {
+        let toast = document.getElementById('globalToast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'globalToast';
+            document.body.appendChild(toast);
+        }
+
+        const bg = type === 'success' ? '#10B981' : (type === 'error' ? '#EF4444' : '#2563EB');
+        toast.textContent = message;
+        toast.style.cssText = `
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background-color: ${bg};
+            color: #ffffff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+            z-index: 99999;
+            transition: opacity 0.3s ease;
+            opacity: 1;
+        `;
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => {
+                if (toast.parentNode) toast.parentNode.removeChild(toast);
+            }, 300);
+        }, 3000);
+    }
+
+    // إعداد مستمعات الأحداث عند اكتمال تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', () => {
+        const modal = document.getElementById('bookingModal');
+        
+        // إغلاق النافذة عند الضغط على المساحة الخارجية
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeBookingModal();
+                }
+            });
+        }
+
+        // إغلاق النافذة بزر Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeBookingModal();
+            }
+        });
+
+        // ربط نموذج الحجز بدالة الإرسال إن وُجد
+        const bookingForm = document.getElementById('bookingForm');
+        if (bookingForm) {
+            bookingForm.addEventListener('submit', handleOrderSubmit);
+        }
+    });
+</script>
 </body>
 </html>
+ 
