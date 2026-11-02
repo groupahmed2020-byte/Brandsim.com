@@ -17,7 +17,7 @@ body{
 #loginSection{
   width:100%;
   max-width:400px;
-  margin:80px auto;
+  margin:70px auto;
   background:radial-gradient(circle at top,#0a2a42 0%,#041423 100%);
   border:2px solid #00e5ff;
   border-radius:20px;
@@ -79,18 +79,30 @@ body{
   flex-wrap:wrap;
   gap:10px;
 }
+.header-btns{display:flex;gap:10px;flex-wrap:wrap}
 .btn-save-gh{
   background:linear-gradient(90deg,#00e676,#00b0ff);
   color:#021422;
   font-weight:900;
-  padding:10px 20px;
+  padding:10px 18px;
   border:none;
   border-radius:10px;
   cursor:pointer;
-  font-size:1rem;
+  font-size:.95rem;
   box-shadow:0 0 15px rgba(0,230,118,0.4);
 }
+.btn-download{
+  background:#ffa000;
+  color:#001b29;
+  font-weight:800;
+  padding:10px 14px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:.9rem;
+}
 .btn-logout{background:#ff5252;color:#fff;border:none;padding:9px 15px;border-radius:10px;font-weight:700;cursor:pointer}
+
 .nav-tabs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
 .nav-tab-btn{
   background:rgba(6,27,43,0.6);
@@ -165,21 +177,22 @@ body{
 </head>
 <body>
 
-<!-- شاشة تسجيل الدخول بكلمة السر فقط -->
+<!-- شاشة تسجيل الدخول -->
 <div id="loginSection">
   <div style="font-size:3rem;margin-bottom:10px">🔐</div>
   <div class="login-title">لوحة الإدارة - BRAND SIM</div>
-  <input type="password" id="adminPass" class="form-input" placeholder="أدخل كلمة المرور">
+  <input type="password" id="adminPass" class="form-input" placeholder="كلمة المرور">
   <button type="button" class="btn-primary" id="loginBtn">دخول 🚀</button>
   <div id="loginError"></div>
 </div>
 
-<!-- لوحة التحكم الرئيسية -->
+<!-- لوحة التحكم -->
 <div id="adminPanel">
   <div class="panel-header">
-    <div style="font-size:1.3rem;font-weight:900;color:#00e5ff">🛠️ إدارة الباقات (مربوط تلقائياً بـ GitHub)</div>
-    <div style="display:flex;gap:10px;align-items:center">
-      <button type="button" class="btn-save-gh" id="saveToGhBtn">☁️ حفظ وتحديث في GitHub مباشرة</button>
+    <div style="font-size:1.25rem;font-weight:900;color:#00e5ff">🛠️ إدارة الباقات والشرائح</div>
+    <div class="header-btns">
+      <button type="button" class="btn-save-gh" id="saveToGhBtn">☁️ حفظ وتحديث في GitHub</button>
+      <button type="button" class="btn-download" id="downloadJsonBtn">📥 تنزيل data.json</button>
       <button type="button" class="btn-logout" id="logoutBtn">خروج</button>
     </div>
   </div>
@@ -222,16 +235,14 @@ body{
   </div>
 </div>
 
-<div id="toastBox">✅ تم الحفظ ورفع التحديث إلى GitHub بنجاح!</div>
+<div id="toastBox">✅ تم الحفظ بنجاح!</div>
 
 <script>
 (function(){
   "use strict";
 
-  // البيانات الخاصة بمستودعك مضمنة بالكامل
   const PASS = "Aa@@2468";
   const GH_REPO = "groupahmed2020-byte/BrandSim.com";
-  const GH_TOKEN = "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";
 
   let appData = { esim: [], plastic: [] };
   let currentSha = null;
@@ -244,66 +255,90 @@ body{
     setTimeout(() => t.classList.remove("show"), 3500);
   }
 
-  // جلب الملف من مستودع جيثب مباشرة
-  async function fetchFromGitHub(){
-    const res = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/data.json`, {
-      headers: {
-        "Authorization": `token ${GH_TOKEN}`,
-        "Accept": "application/vnd.github.v3+json"
+  // تحميل البيانات: يقرأ مباشرة من data.json المحلي على الموقع ليعمل الدخول دائماً وبدون أخطاء
+  async function loadData(){
+    try {
+      const res = await fetch("data.json?t=" + Date.now());
+      if(res.ok){
+        appData = await res.json();
+        return;
       }
-    });
+    } catch(e) {}
 
-    if(!res.ok){
-      throw new Error("تعذر جلب ملف data.json من المستودع! تأكد من وجوده.");
-    }
+    // محاولة بديلة من رابط GitHub المباشر
+    try {
+      const resRaw = await fetch(`https://raw.githubusercontent.com/${GH_REPO}/main/data.json?t=` + Date.now());
+      if(resRaw.ok){
+        appData = await resRaw.json();
+        return;
+      }
+    } catch(e) {}
 
-    const json = await res.json();
-    currentSha = json.sha;
-    const content = decodeURIComponent(escape(atob(json.content)));
-    return JSON.parse(content);
+    throw new Error("تعذر قراءة ملف data.json من الموقع! يرجى التأكد من أن الملف موجود ومحتواه سليم.");
   }
 
-  // تحديث وحفظ الملف في جيثب
+  // حفظ وتحديث في GitHub مباشرة
   async function commitToGitHub(){
-    const contentStr = unescape(encodeURIComponent(JSON.stringify(appData, null, 2)));
-    const base64Content = btoa(contentStr);
+    let token = localStorage.getItem("my_secret_token");
+    if(!token){
+      token = prompt("يرجى إدخال رمز GitHub Token الخاص بك للحفظ (سيتم حفظه في هاتفك فقط):");
+      if(!token || !token.trim()) return;
+      token = token.trim();
+      localStorage.setItem("my_secret_token", token);
+    }
 
     const btn = document.getElementById("saveToGhBtn");
     btn.textContent = "⏳ جاري التحديث على GitHub...";
     btn.disabled = true;
 
     try {
+      // جلب الـ sha الحالي أولاً
+      const fileInfo = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/data.json`, {
+        headers: { "Authorization": `token ${token}` }
+      });
+
+      if(!fileInfo.ok){
+        throw new Error("رمز GitHub Token غير صالح أو انتهت صلاحيته. قم بإنشاء Token جديد.");
+      }
+
+      const fileData = await fileInfo.json();
+      currentSha = fileData.sha;
+
+      const contentStr = unescape(encodeURIComponent(JSON.stringify(appData, null, 2)));
+      const base64Content = btoa(contentStr);
+
       const res = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/data.json`, {
         method: "PUT",
         headers: {
-          "Authorization": `token ${GH_TOKEN}`,
+          "Authorization": `token ${token}`,
           "Accept": "application/vnd.github.v3+json",
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          message: "تحديث الباقات عبر لوحة التحكم",
+          message: "تحديث الباقات والأسعار عبر لوحة التحكم",
           content: base64Content,
           sha: currentSha
         })
       });
 
-      if(!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || "فشل التحديث في GitHub");
+      if(!res.ok){
+        throw new Error("فشل الرفع إلى GitHub. تأكد من إعطاء صلاحية repo للرمز.");
       }
 
-      const resData = await res.json();
-      currentSha = resData.content.sha;
-      showToast("🚀 تم تحديث الموقع على GitHub بنجاح!");
+      showToast("🚀 تم تحديث المستودع بنجاح وستظهر التعديلات بالموقع فوراً!");
     } catch(e) {
-      alert("خطأ أثناء الحفظ على GitHub: " + e.message);
+      alert(e.message);
+      // في حال كان التوكن خطأ يتيح للمستخدم إعادة إدخاله في المرة القادمة
+      if(e.message.includes("Token")){
+        localStorage.removeItem("my_secret_token");
+      }
     } finally {
-      btn.textContent = "☁️ حفظ وتحديث في GitHub مباشرة";
+      btn.textContent = "☁️ حفظ وتحديث في GitHub";
       btn.disabled = false;
     }
   }
 
-  // زر تسجيل الدخول
+  // تسجيل الدخول بكلمة المرور فقط
   document.getElementById("loginBtn").addEventListener("click", async () => {
     const p = document.getElementById("adminPass").value;
     const err = document.getElementById("loginError");
@@ -316,9 +351,9 @@ body{
 
     try {
       err.style.display = "none";
-      document.getElementById("loginBtn").textContent = "جاري الاتصال والتحميل...";
-      appData = await fetchFromGitHub();
-      sessionStorage.setItem("gh_admin_auth", "true");
+      document.getElementById("loginBtn").textContent = "جاري فتح البيانات...";
+      await loadData();
+      sessionStorage.setItem("brand_admin_open", "true");
       document.getElementById("loginSection").style.display = "none";
       document.getElementById("adminPanel").style.display = "block";
       render();
@@ -329,21 +364,29 @@ body{
     }
   });
 
-  // البقاء مسجل في حال إعادة تحميل الصفحة
-  if(sessionStorage.getItem("gh_admin_auth") === "true"){
-    fetchFromGitHub().then(data => {
-      appData = data;
+  if(sessionStorage.getItem("brand_admin_open") === "true"){
+    loadData().then(() => {
       document.getElementById("loginSection").style.display = "none";
       document.getElementById("adminPanel").style.display = "block";
       render();
-    }).catch(() => {
-      sessionStorage.removeItem("gh_admin_auth");
-    });
+    }).catch(() => {});
   }
+
+  // تنزيل ملف data.json كخيار احتياطي فوري وسريع
+  document.getElementById("downloadJsonBtn").addEventListener("click", () => {
+    const blob = new Blob([JSON.stringify(appData, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "data.json";
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast("📥 تم تنزيل الملف! يمكنك رفعه لـ GitHub بضغطة واحدة.");
+  });
 
   document.getElementById("saveToGhBtn").addEventListener("click", commitToGitHub);
   document.getElementById("logoutBtn").addEventListener("click", () => {
-    sessionStorage.removeItem("gh_admin_auth");
+    sessionStorage.removeItem("brand_admin_open");
     location.reload();
   });
 
@@ -372,7 +415,7 @@ body{
     render();
   });
 
-  // رسم الشركات والباقات
+  // رسم الواجهة
   function render(){
     const list = appData[currentTab] || [];
     const container = document.getElementById("companiesContainer");
