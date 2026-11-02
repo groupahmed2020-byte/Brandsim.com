@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة التحكم - BRAND SIM</title>
+<title>لوحة التحكم - إدارة الباقات | BRAND SIM</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif;-webkit-tap-highlight-color:transparent}
@@ -14,59 +14,12 @@ body{
   padding:15px;
   background-image:radial-gradient(ellipse at top,#072033 0%,#04101c 70%);
 }
-#loginSection{
-  width:100%;
-  max-width:400px;
-  margin:70px auto;
-  background:radial-gradient(circle at top,#0a2a42 0%,#041423 100%);
-  border:2px solid #00e5ff;
-  border-radius:20px;
-  padding:32px 20px;
-  box-shadow:0 0 30px rgba(0,229,255,0.25);
-  text-align:center;
-}
-.login-title{color:#00e5ff;font-size:1.5rem;font-weight:900;margin-bottom:20px}
-.form-input,.form-select{
-  width:100%;
-  background:#03121e;
-  border:1.5px solid rgba(0,229,255,0.35);
-  border-radius:10px;
-  padding:12px 14px;
-  color:#fff;
-  font-size:1rem;
-  margin-bottom:16px;
-  outline:none;
-}
-.form-input:focus,.form-select:focus{
-  border-color:#00e5ff;
-  box-shadow:0 0 10px rgba(0,229,255,0.4);
-}
-.btn-primary{
-  background:linear-gradient(90deg,#00d2ff,#00a8cc);
-  color:#001b29;
-  border:none;
-  border-radius:10px;
-  padding:13px;
-  font-weight:900;
-  font-size:1rem;
-  cursor:pointer;
-  width:100%;
-  box-shadow:0 0 15px rgba(0,210,255,0.3);
-}
-.btn-primary:active{transform:scale(0.98)}
-#loginError{
-  color:#ff5252;
-  font-size:.88rem;
-  font-weight:700;
-  margin-top:12px;
-  display:none;
-  background:rgba(255,82,82,0.15);
-  padding:8px;
-  border-radius:8px;
-  border:1px solid #ff5252;
-}
 
-#adminPanel{display:none;max-width:1100px;margin:0 auto}
+#adminPanel{
+  max-width:1100px;
+  margin:0 auto;
+  display:block;
+}
 .panel-header{
   display:flex;
   justify-content:space-between;
@@ -101,7 +54,16 @@ body{
   cursor:pointer;
   font-size:.9rem;
 }
-.btn-logout{background:#ff5252;color:#fff;border:none;padding:9px 15px;border-radius:10px;font-weight:700;cursor:pointer}
+.btn-view{
+  background:rgba(0,229,255,0.15);
+  color:#00e5ff;
+  border:1px solid #00e5ff;
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:800;
+  text-decoration:none;
+  font-size:.9rem;
+}
 
 .nav-tabs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
 .nav-tab-btn{
@@ -120,6 +82,7 @@ body{
   color:#00e5ff;
   box-shadow:0 0 15px rgba(0,229,255,0.3);
 }
+
 .add-bar{
   background:rgba(6,35,53,0.7);
   border:1px solid rgba(0,229,255,0.35);
@@ -130,7 +93,34 @@ body{
   gap:10px;
   flex-wrap:wrap;
 }
+.form-input,.form-select{
+  width:100%;
+  background:#03121e;
+  border:1.5px solid rgba(0,229,255,0.35);
+  border-radius:10px;
+  padding:12px 14px;
+  color:#fff;
+  font-size:1rem;
+  margin-bottom:12px;
+  outline:none;
+}
+.form-input:focus,.form-select:focus{
+  border-color:#00e5ff;
+  box-shadow:0 0 10px rgba(0,229,255,0.4);
+}
 .add-bar input{margin-bottom:0;flex:1;min-width:220px}
+
+.btn-primary{
+  background:linear-gradient(90deg,#00d2ff,#00a8cc);
+  color:#001b29;
+  border:none;
+  border-radius:10px;
+  padding:11px 20px;
+  font-weight:900;
+  font-size:.95rem;
+  cursor:pointer;
+}
+
 .comp-card{
   background:rgba(6,26,41,0.75);
   border:1.5px solid rgba(0,229,255,0.35);
@@ -177,21 +167,14 @@ body{
 </head>
 <body>
 
-<div id="loginSection">
-  <div style="font-size:3rem;margin-bottom:10px">🔐</div>
-  <div class="login-title">لوحة الإدارة - BRAND SIM</div>
-  <input type="password" id="adminPass" class="form-input" placeholder="كلمة المرور">
-  <button type="button" class="btn-primary" id="loginBtn">دخول 🚀</button>
-  <div id="loginError"></div>
-</div>
-
+<!-- لوحة التحكم مباشرة دون شاشة تسجيل دخول -->
 <div id="adminPanel">
   <div class="panel-header">
-    <div style="font-size:1.25rem;font-weight:900;color:#00e5ff">🛠️ إدارة الباقات والشرائح</div>
+    <div style="font-size:1.25rem;font-weight:900;color:#00e5ff">🛠️ لوحة تحكم BRAND SIM</div>
     <div class="header-btns">
       <button type="button" class="btn-save-gh" id="saveToGhBtn">☁️ حفظ وتحديث في GitHub</button>
       <button type="button" class="btn-download" id="downloadJsonBtn">📥 تنزيل data.json</button>
-      <button type="button" class="btn-logout" id="logoutBtn">خروج</button>
+      <a href="index.html" target="_blank" class="btn-view">🌐 فتح الموقع</a>
     </div>
   </div>
 
@@ -202,12 +185,13 @@ body{
 
   <div class="add-bar">
     <input type="text" id="newCompName" class="form-input" placeholder="اسم شركة رئيسية جديدة...">
-    <button type="button" class="btn-primary" style="width:auto" id="addCompBtn">➕ إضافة شركة</button>
+    <button type="button" class="btn-primary" id="addCompBtn">➕ إضافة شركة</button>
   </div>
 
   <div id="companiesContainer"></div>
 </div>
 
+<!-- نافذة إضافة / تعديل باقة -->
 <div id="pkgModal" class="modal-overlay">
   <div class="modal-content">
     <h3 id="modalTitle" style="color:#00e5ff;margin-bottom:12px">إدارة الباقة</h3>
@@ -226,8 +210,8 @@ body{
       <option value="false">❌ غير متوفر</option>
     </select>
     <div style="display:flex;gap:10px;margin-top:12px">
-      <button type="button" class="btn-primary" id="savePkgModalBtn">حفظ الباقة</button>
-      <button type="button" class="btn-logout" id="closeModalBtn" style="background:#455a64">إلغاء</button>
+      <button type="button" class="btn-primary" style="flex:1" id="savePkgModalBtn">حفظ الباقة</button>
+      <button type="button" style="background:#455a64;color:#fff;border:none;border-radius:10px;padding:10px 16px;cursor:pointer;font-weight:700" id="closeModalBtn">إلغاء</button>
     </div>
   </div>
 </div>
@@ -238,10 +222,8 @@ body{
 (function(){
   "use strict";
 
-  const PASS = "Aa@@2468";
   const GH_REPO = "groupahmed2020-byte/BrandSim.com";
 
-  // بيانات افتراضية تفتح مباشرة كبديل فوري عند تعذر قراءة الملف عبر المتصفح
   const DEFAULT_FALLBACK = {
     esim: [
       {name:"ألوها (Aloha)", pkgs:[{d:"باقة شهر",s:"شهر",p:50,g:"100 جيجا",available:true},{d:"باقة 3 شهور",s:"3 شهور",p:130,g:"300 جيجا",available:true}]},
@@ -275,51 +257,49 @@ body{
     setTimeout(() => t.classList.remove("show"), 3500);
   }
 
-  // تحميل البيانات بمرونة تامة
+  // تحميل البيانات فور فتح الصفحة
   async function loadData(){
-    // 1. فحص الذاكرة المحلية أولاً في حال كان هناك تعديل سابق محفوظ
     const localSaved = localStorage.getItem("brand_local_cache");
     if(localSaved){
       try{
         appData = JSON.parse(localSaved);
-        return;
+        render();
       }catch(e){}
     }
 
-    // 2. محاولة جلب data.json من الموقع
     try {
       const res = await fetch("data.json?t=" + Date.now(), { cache: "no-store" });
       if(res.ok){
         appData = await res.json();
+        render();
         return;
       }
     } catch(e) {}
 
-    // 3. محاولة جلب من raw GitHub
     try {
       const resRaw = await fetch(`https://raw.githubusercontent.com/${GH_REPO}/main/data.json?t=` + Date.now());
       if(resRaw.ok){
         appData = await resRaw.json();
+        render();
         return;
       }
     } catch(e) {}
 
-    // 4. في أسوأ الأحوال استخدام البيانات الافتراضية الجاهزة حتى تفتح الصفحة فوراً
-    appData = DEFAULT_FALLBACK;
+    render();
   }
 
   // حفظ وتحديث في GitHub مباشرة
   async function commitToGitHub(){
     let token = localStorage.getItem("my_secret_token");
     if(!token){
-      token = prompt("يرجى إدخال رمز GitHub Token الخاص بك للحفظ (سيتم حفظه في هاتفك فقط):");
+      token = prompt("أدخل رمز GitHub Token الخاص بك للحفظ التلقائي في المستودع:");
       if(!token || !token.trim()) return;
       token = token.trim();
       localStorage.setItem("my_secret_token", token);
     }
 
     const btn = document.getElementById("saveToGhBtn");
-    btn.textContent = "⏳ جاري التحديث على GitHub...";
+    btn.textContent = "⏳ جاري التحديث...";
     btn.disabled = true;
 
     try {
@@ -328,7 +308,7 @@ body{
       });
 
       if(!fileInfo.ok){
-        throw new Error("رمز GitHub Token غير صالح أو انتهت صلاحيته. قم بإنشاء Token جديد.");
+        throw new Error("رمز GitHub Token غير صحيح أو انتهت صلاحيته.");
       }
 
       const fileData = await fileInfo.json();
@@ -355,7 +335,7 @@ body{
         throw new Error("فشل الرفع إلى GitHub. تأكد من إعطاء صلاحية repo للرمز.");
       }
 
-      showToast("🚀 تم تحديث المستودع بنجاح وستظهر التعديلات بالموقع فوراً!");
+      showToast("🚀 تم تحديث المستودع بنجاح!");
     } catch(e) {
       alert(e.message);
       if(e.message.includes("Token")){
@@ -367,35 +347,7 @@ body{
     }
   }
 
-  // الدخول الفوري بمجرد صحة كلمة السر
-  document.getElementById("loginBtn").addEventListener("click", async () => {
-    const p = document.getElementById("adminPass").value;
-    const err = document.getElementById("loginError");
-
-    if(p !== PASS){
-      err.textContent = "كلمة المرور غير صحيحة!";
-      err.style.display = "block";
-      return;
-    }
-
-    err.style.display = "none";
-    document.getElementById("loginBtn").textContent = "جاري الفتح...";
-    await loadData();
-    sessionStorage.setItem("brand_admin_open", "true");
-    document.getElementById("loginSection").style.display = "none";
-    document.getElementById("adminPanel").style.display = "block";
-    render();
-  });
-
-  if(sessionStorage.getItem("brand_admin_open") === "true"){
-    loadData().then(() => {
-      document.getElementById("loginSection").style.display = "none";
-      document.getElementById("adminPanel").style.display = "block";
-      render();
-    });
-  }
-
-  // زر تنزيل الملف
+  // تنزيل الملف كخيار إضافي
   document.getElementById("downloadJsonBtn").addEventListener("click", () => {
     const blob = new Blob([JSON.stringify(appData, null, 2)], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -408,10 +360,6 @@ body{
   });
 
   document.getElementById("saveToGhBtn").addEventListener("click", commitToGitHub);
-  document.getElementById("logoutBtn").addEventListener("click", () => {
-    sessionStorage.removeItem("brand_admin_open");
-    location.reload();
-  });
 
   // التبديل بين التبويبات
   document.getElementById("tabEsimBtn").addEventListener("click", function(){
@@ -526,4 +474,32 @@ body{
     const d = document.getElementById("pkgD").value.trim();
     const s = document.getElementById("pkgS").value.trim();
     const p = parseFloat(document.getElementById("pkgP").value);
-    const g =
+    const g = document.getElementById("pkgG").value.trim();
+    const available = document.getElementById("pkgAvail").value === "true";
+
+    if(!d || !s || isNaN(p)) return alert("يرجى إدخال البيانات بشكل صحيح!");
+
+    const item = { d, s, p, g, available };
+    if(pIdx !== "") appData[currentTab][cIdx].pkgs[pIdx] = item;
+    else {
+      if(!appData[currentTab][cIdx].pkgs) appData[currentTab][cIdx].pkgs = [];
+      appData[currentTab][cIdx].pkgs.push(item);
+    }
+    localStorage.setItem("brand_local_cache", JSON.stringify(appData));
+    modal.classList.remove("active");
+    render();
+  });
+
+  window.delPkg = function(cIdx, pIdx){
+    if(confirm("هل أنت متأكد من حذف هذه الباقة؟")){
+      appData[currentTab][cIdx].pkgs.splice(pIdx, 1);
+      localStorage.setItem("brand_local_cache", JSON.stringify(appData));
+      render();
+    }
+  };
+
+  loadData();
+})();
+</script>
+</body>
+</html>
