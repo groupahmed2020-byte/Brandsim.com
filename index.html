@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none';" />
+<meta http-equiv="X-Content-Type-Options" content="nosniff" />
+<meta http-equiv="X-Frame-Options" content="DENY" />
+<meta name="referrer" content="no-referrer" />
+<title>BRAND SIM | متجر الشرائح الإلكترونية والبلاستيكية</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+:root{--neon:#00f2fe;--cyan:#0ea5e9;--bg:#040b16;--card:rgba(11,27,48,0.75);--border:rgba(0,242,254,0.38);--txt:#f0f9ff;--muted:#94a3b8}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif}
+body{background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden}
+.bg-tower{position:fixed;inset:0;z-index:-2;background:linear-gradient(to bottom,rgba(4,11,22,0.5),rgba(4,11,22,0.88)),url('tower-bg.jpg') center/cover fixed}
+.neon-glow{position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 50% 25%,rgba(0,242,254,0.25),transparent 55%),radial-gradient(circle at 50% 75%,rgba(14,165,233,0.2),transparent 60%);pointer-events:none}
+.container{max-width:1100px;margin:0 auto;padding:24px 14px 85px}
+header{text-align:center;margin-bottom:24px}
+.brand-title{font-size:2.5rem;font-weight:800;letter-spacing:2px;color:#fff;text-shadow:0 0 10px var(--neon),0 0 25px var(--cyan),0 0 45px var(--neon)}
+.brand-sub{color:var(--muted);font-size:.98rem}
+.cats-nav{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:560px;margin:0 auto 28px}
+.cat-btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;background:var(--card);backdrop-filter:blur(12px);border:1.5px solid var(--border);border-radius:16px;color:var(--txt);text-decoration:none;font-weight:700;transition:.25s}
+.cat-btn:hover,.cat-btn.active{border-color:var(--neon);box-shadow:0 0 20px rgba(0,242,254,0.4),inset 0 0 12px rgba(0,242,254,0.15);transform:translateY(-2px)}
+.cat-icon{width:36px;height:36px;border-radius:10px;background:rgba(0,242,254,0.12);border:1px solid var(--neon);display:flex;align-items:center;justify-content:center;color:var(--neon)}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin:32px 0 16px;padding:12px 18px;background:rgba(14,165,233,0.14);border-right:4px solid var(--neon);border-radius:12px;backdrop-filter:blur(10px)}
+.sec-title{display:flex;align-items:center;gap:10px;font-size:1.25rem;font-weight:800;color:var(--neon);text-shadow:0 0 12px rgba(0,242,254,0.45)}
+.badge{background:rgba(0,242,254,0.15);border:1px solid var(--neon);color:#fff;padding:3px 12px;border-radius:20px;font-size:.82rem;font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:15px}
+.card{background:var(--card);backdrop-filter:blur(14px);border:1px solid var(--border);border-radius:18px;padding:16px;transition:.25s}
+.card:hover{border-color:var(--neon);box-shadow:0 0 22px rgba(0,242,254,0.3);transform:translateY(-3px)}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.co-name{font-size:1.08rem;font-weight:800;color:#fff;display:flex;align-items:center;gap:6px}
+.tag{font-size:.74rem;font-weight:700;padding:3px 9px;border-radius:8px;background:rgba(0,242,254,0.15);color:var(--neon);border:1px solid var(--border)}
+.avail{font-size:.73rem;font-weight:700;color:#34d399;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.45);padding:1px 7px;border-radius:6px;margin-right:4px}
+.prices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.p-box{background:rgba(4,11,22,0.7);border:1px solid rgba(0,242,254,0.28);border-radius:12px;padding:10px 8px;text-align:center;cursor:pointer;transition:.2s}
+.p-box:hover{background:rgba(0,242,254,0.15);border-color:var(--neon);box-shadow:0 0 14px rgba(0,242,254,0.35)}
+.dur{display:flex;align-items:center;justify-content:center;gap:4px;font-size:.82rem;color:var(--muted);margin-bottom:4px;font-weight:600}
+.val{font-size:1.25rem;font-weight:800;color:var(--neon)}
+.book-btn{display:flex;align-items:center;justify-content:center;gap:5px;font-size:.78rem;color:#fff;margin-top:7px;background:linear-gradient(90deg,#0284c7,#00c6ff);padding:5px 0;border-radius:7px;font-weight:700;box-shadow:0 0 10px rgba(0,198,255,0.35)}
+.fab-wa{position:fixed;bottom:20px;left:20px;z-index:95;display:flex;align-items:center;gap:8px;background:rgba(0,119,182,0.7);backdrop-filter:blur(6px);color:#fff;text-decoration:none;padding:12px 18px;border-radius:50px;font-weight:800;font-size:.95rem;border:1.5px solid var(--neon);box-shadow:0 0 20px rgba(0,242,254,0.6);opacity:0.7;transition:.25s}
+.fab-wa:hover{opacity:1;transform:scale(1.05);box-shadow:0 0 28px rgba(0,242,254,0.9)}
+.modal-bg{position:fixed;inset:0;background:rgba(2,6,15,0.85);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:100;padding:14px}
+.modal-bg.show{display:flex}
+.modal{background:#081629;border:1.5px solid var(--neon);box-shadow:0 0 35px rgba(0,242,254,0.4);border-radius:20px;width:100%;max-width:440px;padding:20px;text-align:center;max-height:92vh;overflow-y:auto}
+.m-title{color:var(--neon);font-size:1.25rem;font-weight:800;margin-bottom:8px}
+.summary{font-size:.9rem;color:var(--txt);background:rgba(0,242,254,0.1);border:1px solid var(--border);padding:9px;border-radius:10px;margin-bottom:12px;font-weight:700}
+.f-grp{text-align:right;margin-bottom:10px}
+.f-grp label{display:block;font-size:.84rem;margin-bottom:4px;color:var(--neon);font-weight:700}
+.inp{width:100%;padding:9px 12px;border-radius:10px;border:1.5px solid var(--border);background:rgba(4,11,22,0.9);color:#fff;font-size:.92rem;outline:none}
+.inp:focus{border-color:var(--neon);box-shadow:0 0 10px rgba(0,242,254,0.4)}
+.err{color:#f87171;font-size:.78rem;margin-bottom:8px;display:none}
+.btn-wa{width:100%;padding:11px;border:none;border-radius:11px;background:linear-gradient(90deg,#10b981,#059669);color:#fff;font-size:1rem;font-weight:800;cursor:pointer;box-shadow:0 0 16px rgba(16,185,129,0.45);margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-cls{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:.86rem}
+</style>
+</head>
+<body>
+<div class="bg-tower"></div>
+<div class="neon-glow"></div>
+<div class="container">
+  <header>
+    <h1 class="brand-title">BRAND SIM</h1>
+    <p class="brand-sub">براند ستور (BRAND STORE) - تفعيل فوري للشرائح الإلكترونية والبلاستيكية</p>
+  </header>
+  <nav class="cats-nav">
+    <a href="#esim-sec" class="cat-btn active">
+      <span class="cat-icon">📲</span>
+      <span>الشرائح الالكترونية (ESIM)</span>
+    </a>
+    <a href="#plastic-sec" class="cat-btn">
+      <span class="cat-icon">💳</span>
+      <span>شرائح بلاستيك</span>
+    </a>
+  </nav>
+  <section id="esim-sec">
+    <div class="sec-hdr">
+      <div class="sec-title"><span>📲 أولاً: أسعار الشرائح الالكترونية (ESIM)</span></div>
+      <span class="badge">11 شركة</span>
+    </div>
+    <div id="esim-grid" class="grid"></div>
+  </section>
+  <section id="plastic-sec">
+    <div class="sec-hdr">
+      <div class="sec-title"><span>💳 ثانياً: أسعار الشرائح البلاستيكية</span></div>
+      <span class="badge">11 شركة</span>
+    </div>
+    <div id="plastic-grid" class="grid"></div>
+  </section>
+</div>
+<a href="https://wa.me/972599783984" target="_blank" rel="noopener noreferrer" class="fab-wa" aria-label="تواصل معنا عبر واتساب">
+  <span>💬</span>
+  <span>تواصل معنا</span>
+</a>
+<div id="orderModal" class="modal-bg" role="dialog" aria-modal="true">
+  <div class="modal">
+    <h3 class="m-title">🛒 حجز الطلب عبر واتساب</h3>
+    <div id="pkgSummary" class="summary"></div>
+    <form id="orderForm" novalidate>
+      <div class="f-grp">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https:; script-src 'self' 'unsafe-inline'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none';" />
+<meta http-equiv="X-Content-Type-Options" content="nosniff" />
+<meta http-equiv="X-Frame-Options" content="DENY" />
+<meta name="referrer" content="no-referrer" />
+<title>BRAND SIM | متجر الشرائح الإلكترونية والبلاستيكية</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet" />
+<style>
+:root{--neon:#00f2fe;--cyan:#0ea5e9;--bg:#040b16;--card:rgba(11,27,48,0.75);--border:rgba(0,242,254,0.38);--txt:#f0f9ff;--muted:#94a3b8}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif}
+body{background:var(--bg);color:var(--txt);min-height:100vh;overflow-x:hidden}
+.bg-tower{position:fixed;inset:0;z-index:-2;background:linear-gradient(to bottom,rgba(4,11,22,0.5),rgba(4,11,22,0.88)),url('tower-bg.jpg') center/cover fixed}
+.neon-glow{position:fixed;inset:0;z-index:-1;background:radial-gradient(circle at 50% 25%,rgba(0,242,254,0.25),transparent 55%),radial-gradient(circle at 50% 75%,rgba(14,165,233,0.2),transparent 60%);pointer-events:none}
+.container{max-width:1100px;margin:0 auto;padding:24px 14px 85px}
+header{text-align:center;margin-bottom:24px}
+.brand-title{font-size:2.5rem;font-weight:800;letter-spacing:2px;color:#fff;text-shadow:0 0 10px var(--neon),0 0 25px var(--cyan),0 0 45px var(--neon)}
+.brand-sub{color:var(--muted);font-size:.98rem}
+.cats-nav{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:560px;margin:0 auto 28px}
+.cat-btn{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px;background:var(--card);backdrop-filter:blur(12px);border:1.5px solid var(--border);border-radius:16px;color:var(--txt);text-decoration:none;font-weight:700;transition:.25s}
+.cat-btn:hover,.cat-btn.active{border-color:var(--neon);box-shadow:0 0 20px rgba(0,242,254,0.4),inset 0 0 12px rgba(0,242,254,0.15);transform:translateY(-2px)}
+.cat-icon{width:36px;height:36px;border-radius:10px;background:rgba(0,242,254,0.12);border:1px solid var(--neon);display:flex;align-items:center;justify-content:center;color:var(--neon)}
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin:32px 0 16px;padding:12px 18px;background:rgba(14,165,233,0.14);border-right:4px solid var(--neon);border-radius:12px;backdrop-filter:blur(10px)}
+.sec-title{display:flex;align-items:center;gap:10px;font-size:1.25rem;font-weight:800;color:var(--neon);text-shadow:0 0 12px rgba(0,242,254,0.45)}
+.badge{background:rgba(0,242,254,0.15);border:1px solid var(--neon);color:#fff;padding:3px 12px;border-radius:20px;font-size:.82rem;font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(285px,1fr));gap:15px}
+.card{background:var(--card);backdrop-filter:blur(14px);border:1px solid var(--border);border-radius:18px;padding:16px;transition:.25s}
+.card:hover{border-color:var(--neon);box-shadow:0 0 22px rgba(0,242,254,0.3);transform:translateY(-3px)}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.co-name{font-size:1.08rem;font-weight:800;color:#fff;display:flex;align-items:center;gap:6px}
+.tag{font-size:.74rem;font-weight:700;padding:3px 9px;border-radius:8px;background:rgba(0,242,254,0.15);color:var(--neon);border:1px solid var(--border)}
+.avail{font-size:.73rem;font-weight:700;color:#34d399;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.45);padding:1px 7px;border-radius:6px;margin-right:4px}
+.prices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.p-box{background:rgba(4,11,22,0.7);border:1px solid rgba(0,242,254,0.28);border-radius:12px;padding:10px 8px;text-align:center;cursor:pointer;transition:.2s}
+.p-box:hover{background:rgba(0,242,254,0.15);border-color:var(--neon);box-shadow:0 0 14px rgba(0,242,254,0.35)}
+.dur{display:flex;align-items:center;justify-content:center;gap:4px;font-size:.82rem;color:var(--muted);margin-bottom:4px;font-weight:600}
+.val{font-size:1.25rem;font-weight:800;color:var(--neon)}
+.book-btn{display:flex;align-items:center;justify-content:center;gap:5px;font-size:.78rem;color:#fff;margin-top:7px;background:linear-gradient(90deg,#0284c7,#00c6ff);padding:5px 0;border-radius:7px;font-weight:700;box-shadow:0 0 10px rgba(0,198,255,0.35)}
+.fab-wa{position:fixed;bottom:20px;left:20px;z-index:95;display:flex;align-items:center;gap:8px;background:rgba(0,119,182,0.7);backdrop-filter:blur(6px);color:#fff;text-decoration:none;padding:12px 18px;border-radius:50px;font-weight:800;font-size:.95rem;border:1.5px solid var(--neon);box-shadow:0 0 20px rgba(0,242,254,0.6);opacity:0.7;transition:.25s}
+.fab-wa:hover{opacity:1;transform:scale(1.05);box-shadow:0 0 28px rgba(0,242,254,0.9)}
+.modal-bg{position:fixed;inset:0;background:rgba(2,6,15,0.85);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:100;padding:14px}
+.modal-bg.show{display:flex}
+.modal{background:#081629;border:1.5px solid var(--neon);box-shadow:0 0 35px rgba(0,242,254,0.4);border-radius:20px;width:100%;max-width:440px;padding:20px;text-align:center;max-height:92vh;overflow-y:auto}
+.m-title{color:var(--neon);font-size:1.25rem;font-weight:800;margin-bottom:8px}
+.summary{font-size:.9rem;color:var(--txt);background:rgba(0,242,254,0.1);border:1px solid var(--border);padding:9px;border-radius:10px;margin-bottom:12px;font-weight:700}
+.f-grp{text-align:right;margin-bottom:10px}
+.f-grp label{display:block;font-size:.84rem;margin-bottom:4px;color:var(--neon);font-weight:700}
+.inp{width:100%;padding:9px 12px;border-radius:10px;border:1.5px solid var(--border);background:rgba(4,11,22,0.9);color:#fff;font-size:.92rem;outline:none}
+.inp:focus{border-color:var(--neon);box-shadow:0 0 10px rgba(0,242,254,0.4)}
+.err{color:#f87171;font-size:.78rem;margin-bottom:8px;display:none}
+.btn-wa{width:100%;padding:11px;border:none;border-radius:11px;background:linear-gradient(90deg,#10b981,#059669);color:#fff;font-size:1rem;font-weight:800;cursor:pointer;box-shadow:0 0 16px rgba(16,185,129,0.45);margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-cls{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:.86rem}
+</style>
+</head>
+<body>
+<div class="bg-tower"></div>
+<div class="neon-glow"></div>
+<div class="container">
+  <header>
+    <h1 class="brand-title">BRAND SIM</h1>
+    <p class="brand-sub">براند ستور (BRAND STORE) - تفعيل فوري للشرائح الإلكترونية والبلاستيكية</p>
+  </header>
+  <nav class="cats-nav">
+    <a href="#esim-sec" class="cat-btn active">
+      <span class="cat-icon">📲</span>
+      <span>الشرائح الالكترونية (ESIM)</span>
+    </a>
+    <a href="#plastic-sec" class="cat-btn">
+      <span class="cat-icon">💳</span>
+      <span>شرائح بلاستيك</span>
+    </a>
+  </nav>
+  <section id="esim-sec">
+    <div class="sec-hdr">
+      <div class="sec-title"><span>📲 أولاً: أسعار الشرائح الالكترونية (ESIM)</span></div>
+      <span class="badge">11 شركة</span>
+    </div>
+    <div id="esim-grid" class="grid"></div>
+  </section>
+  <section id="plastic-sec">
+    <div class="sec-hdr">
+      <div class="sec-title"><span>💳 ثانياً: أسعار الشرائح البلاستيكية</span></div>
+      <span class="badge">11 شركة</span>
+    </div>
+    <div id="plastic-grid" class="grid"></div>
+  </section>
+</div>
+<a href="https://wa.me/972599783984" target="_blank" rel="noopener noreferrer" class="fab-wa" aria-label="تواصل معنا عبر واتساب">
+  <span>💬</span>
+  <span>تواصل معنا</span>
+</a>
+<div id="orderModal" class="modal-bg" role="dialog" aria-modal="true">
+  <div class="modal">
+    <h3 class="m-title">🛒 حجز الطلب عبر واتساب</h3>
+    <div id="pkgSummary" class="summary"></div>
+    <form id="orderForm" novalidate>
+      <div class="f-grp">
+        <label for="pkgDesc">📦 الباقة / الوصف</label>
+        <input type="text" id="pkgDesc" class="inp" value="300 جيجا" maxlength="40" required />
+      </div>
+      <div class="f-grp">
+        <label for="custName">👤 اسم الزبون</label>
+        <input type="text" id="custName" class="inp" placeholder="مثال: ابراهيم" maxlength="40" required />
+      </div>
+      <div class="f-grp">
+        <label for="custPhone">📱 رقم الهاتف</label>
+        <input type="tel" id="custPhone" class="inp" placeholder="05xxxxxxxx" maxlength="10" dir="ltr" required />
+      </div>
+      <div class="f-grp">
+        <label for="custAddr">📍 العنوان</label>
+        <input type="text" id="custAddr" class="inp" placeholder="مثال: Gaza" maxlength="60" required />
+      </div>
+      <div class="f-grp">
+        <label for="payMethod">💵 طريقة الدفع</label>
+        <select id="payMethod" class="inp">
+          <option value="الدفع عند الاستلام">الدفع عند الاستلام</option>
+          <option value="الدفع بنكي / جوال بي">الدفع بنكي / جوال بي</option>
+        </select>
+      </div>
+      <p id="formErr" class="err">يرجى تعبئة جميع الحقول وإدخال رقم هاتف صحيح يبدأ بـ 05 (10 أرقام).</p>
+      <button type="submit" class="btn-wa"><span>🛒</span><span>إرسال وحجز الطلب عبر واتساب</span></button>
+      <button type="button" id="closeBtn" class="btn-cls">إلغاء والعودة للمتجر</button>
+    </form>
+  </div>
+</div>
+<script>
+"use strict";
+const WA_NUMBER = "972599783984";
+const packagesData = [
+  { name: "ألوها (Aloha)", m1: 50, m3: 130 }, { name: "بارتنر (Partner)", m1: 50, m3: 130 },
+  { name: "سيلكوم (Cellcom)", m1: 50, m3: 120 }, { name: "ويكوم (Wecom)", m1: 50, m3: 120 },
+  { name: "هوت موبايل (Hot Mobile)", m1: 45, m3: 130 }, { name: "بيليفون (Pelephone)", m1: 60, m3: 130 },
+  { name: "رامي ليفي (Rami Levy)", m1: 60, m3: 130 }, { name: "019 (019 Mobile)", m1: 60, m3: 130 },
+  { name: "جولان (Golan)", m1: 60, m3: 130 }, { name: "سيمفوني (Symphony)", m1: 60, m3: 130 },
+  { name: "كلام (Kalam)", m1: 60, m3: 130 }
+];
+let currentSelection = null;
+function sanitize(str) { return String(str).replace(/[<>'"`\\]/g, "").trim(); }
+function createPriceBox(company, simType, duration, price) {
+  const box = document.createElement("div"); box.className = "p-box";
+  const durEl = document.createElement("span"); durEl.className = "dur";
+  const durTxt = document.createElement("span"); durTxt.textContent = "باقة " + duration;
+  const avEl = document.createElement("span"); avEl.className = "avail"; avEl.textContent = "(متوفر)";
+  durEl.append(durTxt, avEl);
+  const valEl = document.createElement("div"); valEl.className = "val"; valEl.textContent = price + " ₪";
+  const btnEl = document.createElement("span"); btnEl.className = "book-btn"; btnEl.textContent = "🛒 حجز الطلب";
+  box.append(durEl, valEl, btnEl);
+  box.addEventListener("click", () => openModal(company, simType, duration, price));
+  return box;
+}
+function renderSection(gridId, simTypeLabel) {
+  const grid = document.getElementById(gridId);
+  packagesData.forEach((p) => {
+    const card = document.createElement("div"); card.className = "card";
+    const hdr = document.createElement("div"); hdr.className = "card-hdr";
+    const title = document.createElement("span"); title.className = "co-name"; title.textContent = "📌 " + p.name;
+    const tag = document.createElement("span"); tag.className = "tag"; tag.textContent = simTypeLabel;
+    hdr.append(title, tag);
+    const prices = document.createElement("div"); prices.className = "prices";
+    prices.append(createPriceBox(p.name, simTypeLabel, "شهر", p.m1), createPriceBox(p.name, simTypeLabel, "3 شهور", p.m3));
+    card.append(hdr, prices); grid.appendChild(card);
+  });
+}
+const modal = document.getElementById("orderModal");
+const phoneInp = document.getElementById("custPhone");
+const errEl = document.getElementById("formErr");
+function openModal(company, simType, duration, price) {
+  currentSelection = { company, simType, duration, price };
+  document.getElementById("pkgSummary").textContent = company + " | " + simType + " | " + duration + " (" + price + " ₪) - متوفر";
+  errEl.style.display = "none";
+  modal.classList.add("show");
+}
+document.getElementById("closeBtn").addEventListener("click", () => modal.classList.remove("show"));
+phoneInp.addEventListener("input", () => { phoneInp.value = phoneInp.value.replace(/[^0-9]/g, ""); });
+document.getElementById("orderForm").addEventListener("submit", (e) => {
+  e.preventDefault();
+  if (!currentSelection) return;
+  const desc = sanitize(document.getElementById("pkgDesc").value);
+  const name = sanitize(document.getElementById("custName").value);
+  const phone = phoneInp.value.trim();
+  const addr = sanitize(document.getElementById("custAddr").value);
+  const pay = sanitize(document.getElementById("payMethod").value);
+  if (!desc || !name || !addr || !/^05[0-9]{8}$/.test(phone)) { errEl.style.display = "block"; return; }
+  const msg = [
+    "*طلب حجز جديد - براند ستور (BRAND STORE)* 🛒", "--------------------------",
+    "📌 *الشركة:* " + currentSelection.company,
+    "📦 *الباقة / الوصف:* " + desc,
+    "💳 *نوع الشريحة:* " + currentSelection.simType,
+    "⏳ *المدة والسعر:* " + currentSelection.duration + " (" + currentSelection.price + " ₪) - متوفر",
+    "👤 *اسم الزبون:* " + name, "📱 *رقم الهاتف:* " + phone,
+    "📍 *العنوان:* " + addr, "💵 *طريقة الدفع:* " + pay
+  ].join("\n");
+  window.open("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(msg), "_blank", "noopener,noreferrer");
+  modal.classList.remove("show");
+}); renderSection("esim-grid", "الشرائح الالكترونية (ESIM)"); renderSection("plastic-grid", "شريحة بلاستيكية (SIM)"); </script></body></html>
