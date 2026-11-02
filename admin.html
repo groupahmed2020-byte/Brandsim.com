@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة التحكم - إدارة GitHub المباشرة | BRAND SIM</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif}
+body{background-color:#04101c;color:#fff;min-height:100vh;padding:15px;background-image:radial-gradient(ellipse at top,#072033 0%,#04101c 70%)}
+#loginSection{width:100%;max-width:440px;margin:70px auto;background:#062335;border:2px solid #00e5ff;border-radius:20px;padding:30px 20px;box-shadow:0 0 25px rgba(0,229,255,0.3);text-align:center}
+.login-title{color:#00e5ff;font-size:1.5rem;font-weight:900;margin-bottom:15px}
+.form-input,.form-select{width:100%;background:#03121e;border:1.5px solid rgba(0,229,255,0.35);border-radius:10px;padding:10px 14px;color:#fff;font-size:.95rem;margin-bottom:14px;outline:none}
+.form-input:focus,.form-select:focus{border-color:#00e5ff;box-shadow:0 0 10px rgba(0,229,255,0.4)}
+.btn-primary{background:linear-gradient(90deg,#00d2ff,#00a8cc);color:#001b29;border:none;border-radius:10px;padding:12px;font-weight:800;font-size:1rem;cursor:pointer;width:100%}
+#adminPanel{display:none;max-width:1100px;margin:0 auto}
+.panel-header{display:flex;justify-content:space-between;align-items:center;background:rgba(6,34,53,0.85);border:1.5px solid #00e5ff;border-radius:16px;padding:14px 20px;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.btn-save-gh{background:linear-gradient(90deg,#00e676,#00b0ff);color:#021422;font-weight:900;padding:10px 20px;border:none;border-radius:10px;cursor:pointer;font-size:1rem;box-shadow:0 0 15px rgba(0,230,118,0.4)}
+.btn-logout{background:#ff5252;color:#fff;border:none;padding:9px 15px;border-radius:10px;font-weight:700;cursor:pointer}
+.nav-tabs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.nav-tab-btn{background:rgba(6,27,43,0.6);border:2px solid rgba(0,229,255,0.3);border-radius:14px;padding:12px;color:#fff;font-weight:800;cursor:pointer;text-align:center}
+.nav-tab-btn.active{border-color:#00e5ff;background:rgba(10,48,74,0.85);color:#00e5ff}
+.add-bar{background:rgba(6,35,53,0.7);border:1px solid rgba(0,229,255,0.35);border-radius:14px;padding:14px;margin-bottom:18px;display:flex;gap:10px;flex-wrap:wrap}
+.add-bar input{margin-bottom:0;flex:1;min-width:220px}
+.comp-card{background:rgba(6,26,41,0.75);border:1.5px solid rgba(0,229,255,0.35);border-radius:16px;padding:16px;margin-bottom:16px}
+.comp-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(0,229,255,0.2);padding-bottom:10px;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.pkg-table{width:100%;border-collapse:collapse}
+.pkg-table th,.pkg-table td{padding:10px;text-align:right;border-bottom:1px solid rgba(255,255,255,0.06);font-size:.88rem}
+.status-pill{padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:800}
+.status-pill.avail{background:rgba(0,200,83,0.18);border:1px solid #00c853;color:#69f0ae}
+.status-pill.unavail{background:rgba(255,82,82,0.18);border:1px solid #ff5252;color:#ff8a80}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(2,10,18,0.85);z-index:3000;align-items:center;justify-content:center;padding:15px}
+.modal-overlay.active{display:flex}
+.modal-content{width:100%;max-width:440px;background:#041523;border:2px solid #00e5ff;border-radius:18px;padding:20px}
+#toastBox{position:fixed;bottom:25px;left:50%;transform:translateX(-50%) translateY(120px);background:#062335;border:2px solid #00e676;color:#fff;padding:12px 24px;border-radius:30px;font-weight:800;z-index:9999;transition:.3s;opacity:0}
+#toastBox.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div id="loginSection">
+  <div style="font-size:3rem;margin-bottom:10px">🔐</div>
+  <div class="login-title">لوحة الإدارة - BRAND SIM</div>
+  <input type="password" id="adminPass" class="form-input" placeholder="كلمة المرور (Aa@@2468)[span_0](start_span)"[span_0](end_span)>
+  <input type="text" id="ghRepo" class="form-input" placeholder="اسم المستودع (مثال: username/repo)">
+  <button type="button" class="btn-primary" id="loginBtn">دخول ومزامنة مع GitHub 🚀</button>
+  <div id="loginError" style="color:#ff5252;font-size:.85rem;margin-top:10px;display:none"></div>
+</div>
+
+<div id="adminPanel">
+  <div class="panel-header">
+    <div style="font-size:1.3rem;font-weight:900;color:#00e5ff">🛠️ إدارة الباقات (متصل بـ GitHub)</div>
+    <div style="display:flex;gap:10px;align-items:center">
+      <button type="button" class="btn-save-gh" id="saveToGhBtn">☁️ حفظ وتحديث في GitHub مباشرة</button>
+      <button type="button" class="btn-logout" id="logoutBtn">خروج</button>
+    </div>
+  </div>
+
+  <div class="nav-tabs">
+    <div class="nav-tab-btn active" id="tabEsimBtn">📲 شرائح إلكترونية (eSIM)</div>
+    <div class="nav-tab-btn" id="tabPlasticBtn">💳 شرائح بلاستيكية (Plastic)</div>
+  </div>
+
+  <div class="add-bar">
+    <input type="text" id="newCompName" class="form-input" placeholder="اسم شركة رئيسية جديدة...">
+    <button type="button" class="btn-primary" style="width:auto" id="addCompBtn">➕ إضافة شركة</button>
+  </div>
+
+  <div id="companiesContainer"></div>
+</div>
+
+<div id="pkgModal" class="modal-overlay">
+  <div class="modal-content">
+    <h3 id="modalTitle" style="color:#00e5ff;margin-bottom:12px">إدارة الباقة</h3>
+    <input type="hidden" id="modalCompIdx"><input type="hidden" id="modalPkgIdx">
+    <label style="font-size:.8rem;color:#8ab4c9">اسم الباقة:</label>
+    <input type="text" id="pkgD" class="form-input" placeholder="باقة شهر">
+    <label style="font-size:.8rem;color:#8ab4c9">المدة:</label>
+    <input type="text" id="pkgS" class="form-input" placeholder="شهر">
+    <label style="font-size:.8rem;color:#8ab4c9">السعر (شيكل):</label>
+    <input type="number" id="pkgP" class="form-input" placeholder="50">
+    <label style="font-size:.8rem;color:#8ab4c9">المواصفات:</label>
+    <input type="text" id="pkgG" class="form-input" placeholder="100 جيجا">
+    <label style="font-size:.8rem;color:#8ab4c9">الحالة:</label>
+    <select id="pkgAvail" class="form-select">
+      <option value="true">✅ متوفر</option>
+      <option value="false">❌ غير متوفر</option>
+    </select>
+    <div style="display:flex;gap:10px;margin-top:12px">
+      <button type="button" class="btn-primary" id="savePkgModalBtn">حفظ الباقة</button>
+      <button type="button" class="btn-logout" id="closeModalBtn" style="background:#455a64">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div id="toastBox">✅ تم الحفظ ورفع التحديث إلى GitHub بنجاح!</div>
+
+<script>
+(function(){
+  const PASS = "Aa@@2468";[span_1](start_span)[span_1](end_span)
+  // التوكن مدمج تلقائياً
+  const GH_TOKEN = "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";
+  
+  let appData = { esim: [], plastic: [] };
+  let currentSha = null;
+  let currentTab = "esim";
+
+  function showToast(text){
+    const t = document.getElementById("toastBox");
+    t.textContent = text;
+    t.classList.add("show");
+    setTimeout(()=>t.classList.remove("show"), 3500);
+  }
+
+  // تحميل البيانات مباشرة من GitHub
+  async function fetchFromGitHub(repo){
+    const res = await fetch(`https://api.github.com/repos/${repo}/contents/data.json`, {
+      headers: { "Authorization": `token ${GH_TOKEN}`, "Accept": "application/vnd.github.v3+json" }
+    });
+    if(!res.ok) throw new Error("تعذر جلب البيانات. تأكد من اسم المستودع (repo) ووجود ملف data.json فيه!");
+    const json = await res.json();
+    currentSha = json.sha;
+    const content = decodeURIComponent(escape(atob(json.content)));
+    return JSON.parse(content);
+  }
+
+  // الحفظ والرفع إلى GitHub مباشرة
+  async function commitToGitHub(){
+    const repo = localStorage.getItem("gh_repo");
+    if(!repo) return alert("يرجى إدخال اسم المستودع!");
+
+    const contentStr = unescape(encodeURIComponent(JSON.stringify(appData, null, 2)));
+    const base64Content = btoa(contentStr);
+
+    const btn = document.getElementById("saveToGhBtn");
+    btn.textContent = "⏳ جاري التحديث على GitHub...";
+    btn.disabled = true;
+
+    try {
+      const res = await fetch(`https://api.github.com/repos/${repo}/contents/data.json`, {
+        method: "PUT",
+        headers: {
+          "Authorization": `token ${GH_TOKEN}`,
+          "Accept": "application/vnd.github.v3+json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: "تحديث الباقات والأسعار عبر لوحة التحكم",
+          content: base64Content,
+          sha: currentSha
+        })
+      });
+
+      if(!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "فشل التحديث في GitHub");
+      }
+
+      const resData = await res.json();
+      currentSha = resData.content.sha;
+      showToast("🚀 تم تحديث GitHub بنجاح! الموقع سيتحدث فوراً.");
+    } catch(e) {
+      alert("خطأ أثناء الحفظ على GitHub: " + e.message);
+    } finally {
+      btn.textContent = "☁️ حفظ وتحديث في GitHub مباشرة";
+      btn.disabled = false;
+    }
+  }
+
+  // تسجيل الدخول
+  document.getElementById("loginBtn").addEventListener("click", async () => {
+    const p = document.getElementById("adminPass").value;
+    const repo = document.getElementById("ghRepo").value.trim();
+    const err = document.getElementById("loginError");
+
+    if(p !== PASS){
+      err.textContent = "كلمة المرور غير صحيحة!";
+      err.style.display = "block";
+      return;
+    }
+    if(!repo){
+      err.textContent = "يرجى إدخال اسم المستودع (مثال: username/repository)";
+      err.style.display = "block";
+      return;
+    }
+
+    try {
+      err.style.display = "none";
+      document.getElementById("loginBtn").textContent = "جاري الاتصال بـ GitHub...";
+      appData = await fetchFromGitHub(repo);
+      localStorage.setItem("gh_repo", repo);
+      sessionStorage.setItem("gh_admin_auth", "true");
+      document.getElementById("loginSection").style.display = "none";
+      document.getElementById("adminPanel").style.display = "block";
+      render();
+    } catch(e) {
+      err.textContent = e.message;
+      err.style.display = "block";
+      document.getElementById("loginBtn").textContent = "دخول ومزامنة مع GitHub 🚀";
+    }
+  });
+
+  // استرجاع الجلسة المحفوظة
+  if(sessionStorage.getItem("gh_admin_auth") === "true"){
+    const repo = localStorage.getItem("gh_repo");
+    if(repo){
+      fetchFromGitHub(repo).then(data => {
+        appData = data;
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("adminPanel").style.display = "block";
+        render();
+      }).catch(()=>{ sessionStorage.removeItem("gh_admin_auth"); location.reload(); });
+    }
+  }
+
+  // استرجاع اسم المستودع تلقائياً في شاشة الدخول
+  if(localStorage.getItem("gh_repo")){
+    document.getElementById("ghRepo").value = localStorage.getItem("gh_repo");
+  }
+
+  document.getElementById("saveToGhBtn").addEventListener("click", commitToGitHub);
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    sessionStorage.removeItem("gh_admin_auth");
+    location.reload();
+  });
+
+  // التبديل بين التبويبات
+  document.getElementById("tabEsimBtn").addEventListener("click", function(){
+    currentTab = "esim";
+    this.classList.add("active");
+    document.getElementById("tabPlasticBtn").classList.remove("active");
+    render();
+  });
+  document.getElementById("tabPlasticBtn").addEventListener("click", function(){
+    currentTab = "plastic";
+    this.classList.add("active");
+    document.getElementById("tabEsimBtn").classList.remove("active");
+    render();
+  });
+
+  // إضافة شركة
+  document.getElementById("addCompBtn").addEventListener("click", () => {
+    const val = document.getElementById("newCompName").value.trim();
+    if(!val) return alert("أدخل اسم الشركة أولاً!");
+    if(!appData[currentTab]) appData[currentTab] = [];
+    appData[currentTab].push({ name: val, pkgs: [] });
+    document.getElementById("newCompName").value = "";
+    render();
+  });
+
+  // رسم الواجهة
+  function render(){
+    const list = appData[currentTab] || [];
+    const container = document.getElementById("companiesContainer");
+    container.innerHTML = "";
+
+    list.forEach((comp, cIdx) => {
+      const card = document.createElement("div");
+      card.className = "comp-card";
+      card.innerHTML = `
+        <div class="comp-header">
+          <div style="font-weight:900;color:#00e5ff">🏢 ${comp.name}</div>
+          <div style="display:flex;gap:6px">
+            <button onclick="openModal(${cIdx})" style="background:#00c853;color:#fff;border:none;padding:5px 10px;border-radius:6px;cursor:pointer">➕ باقة فرعية</button>
+            <button onclick="editComp(${cIdx})" style="background:#fb8c00;color:#fff;border:none;padding:5px 10px;border-radius:6px;cursor:pointer">✏️ تعديل الاسم</button>
+            <button onclick="delComp(${cIdx})" style="background:#e53935;color:#fff;border:none;padding:5px 10px;border-radius:6px;cursor:pointer">🗑️ حذف</button>
+          </div>
+        </div>
+        <table class="pkg-table">
+          <thead><tr><th>الباقة</th><th>المدة</th><th>السعر</th><th>المواصفات</th><th>الحالة</th><th>إجراء</th></tr></thead>
+          <tbody>
+            ${(comp.pkgs || []).map((pkg, pIdx) => `
+              <tr>
+                <td>${pkg.d}</td>
+                <td>${pkg.s}</td>
+                <td style="color:#00e5ff;font-weight:800">${pkg.p} ₪</td>
+                <td>${pkg.g}</td>
+                <td><span class="status-pill ${pkg.available !== false ? 'avail':'unavail'}">${pkg.available !== false ? 'متوفر':'غير متوفر'}</span></td>
+                <td>
+                  <button onclick="openModal(${cIdx}, ${pIdx})" style="background:#fb8c00;border:none;padding:3px 6px;color:#fff;border-radius:4px;cursor:pointer">✏️</button>
+                  <button onclick="delPkg(${cIdx}, ${pIdx})" style="background:#e53935;border:none;padding:3px 6px;color:#fff;border-radius:4px;cursor:pointer">🗑️</button>
+                </td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  window.editComp = function(idx){
+    const n = prompt("تعديل اسم الشركة:", appData[currentTab][idx].name);
+    if(n && n.trim()){ appData[currentTab][idx].name = n.trim(); render(); }
+  };
+  window.delComp = function(idx){
+    if(confirm("هل أنت متأكد من حذف هذه الشركة بالكامل؟")){ appData[currentTab].splice(idx, 1); render(); }
+  };
+
+  const modal = document.getElementById("pkgModal");
+  window.openModal = function(cIdx, pIdx = null){
+    document.getElementById("modalCompIdx").value = cIdx;
+    document.getElementById("modalPkgIdx").value = pIdx !== null ? pIdx : "";
+    if(pIdx !== null){
+      const pkg = appData[currentTab][cIdx].pkgs[pIdx];
+      document.getElementById("pkgD").value = pkg.d;
+      document.getElementById("pkgS").value = pkg.s;
+      document.getElementById("pkgP").value = pkg.p;
+      document.getElementById("pkgG").value = pkg.g;
+      document.getElementById("pkgAvail").value = (pkg.available !== false).toString();
+    } else {
+      document.getElementById("pkgD").value = "";
+      document.getElementById("pkgS"].value = "";
+      document.getElementById("pkgP").value = "";
+      document.getElementById("pkgG").value = "";
+      document.getElementById("pkgAvail").value = "true";
+    }
+    modal.classList.add("active");
+  };
+
+  document.getElementById("closeModalBtn").addEventListener("click", ()=>modal.classList.remove("active"));
+
+  document.getElementById("savePkgModalBtn").addEventListener("click", () => {
+    const cIdx = document.getElementById("modalCompIdx").value;
+    const pIdx = document.getElementById("modalPkgIdx").value;
+    const d = document.getElementById("pkgD").value.trim();
+    const s = document.getElementById("pkgS").value.trim();
+    const p = parseFloat(document.getElementById("pkgP").value);
+    const g = document.getElementById("pkgG").value.trim();
+    const available = document.getElementById("pkgAvail").value === "true";
+
+    if(!d || !s || isNaN(p)) return alert("يرجى إدخال البيانات بشكل صحيح!");
+
+    const item = { d, s, p, g, available };
+    if(pIdx !== "") appData[currentTab][cIdx].pkgs[pIdx] = item;
+    else {
+      if(!appData[currentTab][cIdx].pkgs) appData[currentTab][cIdx].pkgs = [];
+      appData[currentTab][cIdx].pkgs.push(item);
+    }
+    modal.classList.remove("active");
+    render();
+  });
+
+  window.delPkg = function(cIdx, pIdx){
+    if(confirm("هل أنت متأكد من حذف هذه الباقة؟")){
+      appData[currentTab][cIdx].pkgs.splice(pIdx, 1);
+      render();
+    }
+  };
+})();
+</script>
+</body>
+</html>
