@@ -3,53 +3,181 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة التحكم - إدارة GitHub المباشرة | BRAND SIM</title>
+<title>لوحة التحكم - BRAND SIM</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif}
-body{background-color:#04101c;color:#fff;min-height:100vh;padding:15px;background-image:radial-gradient(ellipse at top,#072033 0%,#04101c 70%)}
-#loginSection{width:100%;max-width:440px;margin:70px auto;background:#062335;border:2px solid #00e5ff;border-radius:20px;padding:30px 20px;box-shadow:0 0 25px rgba(0,229,255,0.3);text-align:center}
-.login-title{color:#00e5ff;font-size:1.5rem;font-weight:900;margin-bottom:15px}
-.form-input,.form-select{width:100%;background:#03121e;border:1.5px solid rgba(0,229,255,0.35);border-radius:10px;padding:10px 14px;color:#fff;font-size:.95rem;margin-bottom:14px;outline:none}
-.form-input:focus,.form-select:focus{border-color:#00e5ff;box-shadow:0 0 10px rgba(0,229,255,0.4)}
-.btn-primary{background:linear-gradient(90deg,#00d2ff,#00a8cc);color:#001b29;border:none;border-radius:10px;padding:12px;font-weight:800;font-size:1rem;cursor:pointer;width:100%}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif;-webkit-tap-highlight-color:transparent}
+body{
+  background-color:#04101c;
+  color:#fff;
+  min-height:100vh;
+  padding:15px;
+  background-image:radial-gradient(ellipse at top,#072033 0%,#04101c 70%);
+}
+#loginSection{
+  width:100%;
+  max-width:400px;
+  margin:80px auto;
+  background:radial-gradient(circle at top,#0a2a42 0%,#041423 100%);
+  border:2px solid #00e5ff;
+  border-radius:20px;
+  padding:32px 20px;
+  box-shadow:0 0 30px rgba(0,229,255,0.25);
+  text-align:center;
+}
+.login-title{color:#00e5ff;font-size:1.5rem;font-weight:900;margin-bottom:20px}
+.form-input,.form-select{
+  width:100%;
+  background:#03121e;
+  border:1.5px solid rgba(0,229,255,0.35);
+  border-radius:10px;
+  padding:12px 14px;
+  color:#fff;
+  font-size:1rem;
+  margin-bottom:16px;
+  outline:none;
+}
+.form-input:focus,.form-select:focus{
+  border-color:#00e5ff;
+  box-shadow:0 0 10px rgba(0,229,255,0.4);
+}
+.btn-primary{
+  background:linear-gradient(90deg,#00d2ff,#00a8cc);
+  color:#001b29;
+  border:none;
+  border-radius:10px;
+  padding:13px;
+  font-weight:900;
+  font-size:1rem;
+  cursor:pointer;
+  width:100%;
+  box-shadow:0 0 15px rgba(0,210,255,0.3);
+}
+.btn-primary:active{transform:scale(0.98)}
+#loginError{
+  color:#ff5252;
+  font-size:.88rem;
+  font-weight:700;
+  margin-top:12px;
+  display:none;
+  background:rgba(255,82,82,0.15);
+  padding:8px;
+  border-radius:8px;
+  border:1px solid #ff5252;
+}
+
 #adminPanel{display:none;max-width:1100px;margin:0 auto}
-.panel-header{display:flex;justify-content:space-between;align-items:center;background:rgba(6,34,53,0.85);border:1.5px solid #00e5ff;border-radius:16px;padding:14px 20px;margin-bottom:18px;flex-wrap:wrap;gap:10px}
-.btn-save-gh{background:linear-gradient(90deg,#00e676,#00b0ff);color:#021422;font-weight:900;padding:10px 20px;border:none;border-radius:10px;cursor:pointer;font-size:1rem;box-shadow:0 0 15px rgba(0,230,118,0.4)}
+.panel-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  background:rgba(6,34,53,0.85);
+  border:1.5px solid #00e5ff;
+  border-radius:16px;
+  padding:14px 20px;
+  margin-bottom:18px;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.btn-save-gh{
+  background:linear-gradient(90deg,#00e676,#00b0ff);
+  color:#021422;
+  font-weight:900;
+  padding:10px 20px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-size:1rem;
+  box-shadow:0 0 15px rgba(0,230,118,0.4);
+}
 .btn-logout{background:#ff5252;color:#fff;border:none;padding:9px 15px;border-radius:10px;font-weight:700;cursor:pointer}
 .nav-tabs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
-.nav-tab-btn{background:rgba(6,27,43,0.6);border:2px solid rgba(0,229,255,0.3);border-radius:14px;padding:12px;color:#fff;font-weight:800;cursor:pointer;text-align:center}
-.nav-tab-btn.active{border-color:#00e5ff;background:rgba(10,48,74,0.85);color:#00e5ff}
-.add-bar{background:rgba(6,35,53,0.7);border:1px solid rgba(0,229,255,0.35);border-radius:14px;padding:14px;margin-bottom:18px;display:flex;gap:10px;flex-wrap:wrap}
+.nav-tab-btn{
+  background:rgba(6,27,43,0.6);
+  border:2px solid rgba(0,229,255,0.3);
+  border-radius:14px;
+  padding:14px;
+  color:#fff;
+  font-weight:800;
+  cursor:pointer;
+  text-align:center;
+}
+.nav-tab-btn.active{
+  border-color:#00e5ff;
+  background:rgba(10,48,74,0.85);
+  color:#00e5ff;
+  box-shadow:0 0 15px rgba(0,229,255,0.3);
+}
+.add-bar{
+  background:rgba(6,35,53,0.7);
+  border:1px solid rgba(0,229,255,0.35);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:18px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
 .add-bar input{margin-bottom:0;flex:1;min-width:220px}
-.comp-card{background:rgba(6,26,41,0.75);border:1.5px solid rgba(0,229,255,0.35);border-radius:16px;padding:16px;margin-bottom:16px}
-.comp-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(0,229,255,0.2);padding-bottom:10px;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.comp-card{
+  background:rgba(6,26,41,0.75);
+  border:1.5px solid rgba(0,229,255,0.35);
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:16px;
+}
+.comp-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid rgba(0,229,255,0.2);
+  padding-bottom:10px;
+  margin-bottom:12px;
+  flex-wrap:wrap;
+  gap:8px;
+}
 .pkg-table{width:100%;border-collapse:collapse}
 .pkg-table th,.pkg-table td{padding:10px;text-align:right;border-bottom:1px solid rgba(255,255,255,0.06);font-size:.88rem}
 .status-pill{padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:800}
 .status-pill.avail{background:rgba(0,200,83,0.18);border:1px solid #00c853;color:#69f0ae}
 .status-pill.unavail{background:rgba(255,82,82,0.18);border:1px solid #ff5252;color:#ff8a80}
+
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(2,10,18,0.85);z-index:3000;align-items:center;justify-content:center;padding:15px}
 .modal-overlay.active{display:flex}
 .modal-content{width:100%;max-width:440px;background:#041523;border:2px solid #00e5ff;border-radius:18px;padding:20px}
-#toastBox{position:fixed;bottom:25px;left:50%;transform:translateX(-50%) translateY(120px);background:#062335;border:2px solid #00e676;color:#fff;padding:12px 24px;border-radius:30px;font-weight:800;z-index:9999;transition:.3s;opacity:0}
+#toastBox{
+  position:fixed;
+  bottom:25px;
+  left:50%;
+  transform:translateX(-50%) translateY(120px);
+  background:#062335;
+  border:2px solid #00e676;
+  color:#fff;
+  padding:12px 24px;
+  border-radius:30px;
+  font-weight:800;
+  z-index:9999;
+  transition:.3s;
+  opacity:0;
+}
 #toastBox.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
 
+<!-- شاشة تسجيل الدخول بكلمة السر فقط -->
 <div id="loginSection">
   <div style="font-size:3rem;margin-bottom:10px">🔐</div>
   <div class="login-title">لوحة الإدارة - BRAND SIM</div>
-  <input type="password" id="adminPass" class="form-input" placeholder="كلمة المرور (Aa@@2468)[span_0](start_span)"[span_0](end_span)>
-  <input type="text" id="ghRepo" class="form-input" placeholder="اسم المستودع (مثال: username/repo)">
-  <button type="button" class="btn-primary" id="loginBtn">دخول ومزامنة مع GitHub 🚀</button>
-  <div id="loginError" style="color:#ff5252;font-size:.85rem;margin-top:10px;display:none"></div>
+  <input type="password" id="adminPass" class="form-input" placeholder="أدخل كلمة المرور">
+  <button type="button" class="btn-primary" id="loginBtn">دخول 🚀</button>
+  <div id="loginError"></div>
 </div>
 
+<!-- لوحة التحكم الرئيسية -->
 <div id="adminPanel">
   <div class="panel-header">
-    <div style="font-size:1.3rem;font-weight:900;color:#00e5ff">🛠️ إدارة الباقات (متصل بـ GitHub)</div>
+    <div style="font-size:1.3rem;font-weight:900;color:#00e5ff">🛠️ إدارة الباقات (مربوط تلقائياً بـ GitHub)</div>
     <div style="display:flex;gap:10px;align-items:center">
       <button type="button" class="btn-save-gh" id="saveToGhBtn">☁️ حفظ وتحديث في GitHub مباشرة</button>
       <button type="button" class="btn-logout" id="logoutBtn">خروج</button>
@@ -69,6 +197,7 @@ body{background-color:#04101c;color:#fff;min-height:100vh;padding:15px;backgroun
   <div id="companiesContainer"></div>
 </div>
 
+<!-- نافذة إضافة / تعديل باقة -->
 <div id="pkgModal" class="modal-overlay">
   <div class="modal-content">
     <h3 id="modalTitle" style="color:#00e5ff;margin-bottom:12px">إدارة الباقة</h3>
@@ -97,10 +226,13 @@ body{background-color:#04101c;color:#fff;min-height:100vh;padding:15px;backgroun
 
 <script>
 (function(){
-  const PASS = "Aa@@2468";[span_1](start_span)[span_1](end_span)
-  // التوكن مدمج تلقائياً
+  "use strict";
+
+  // البيانات الخاصة بمستودعك مضمنة بالكامل
+  const PASS = "Aa@@2468";
+  const GH_REPO = "groupahmed2020-byte/BrandSim.com";
   const GH_TOKEN = "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";
-  
+
   let appData = { esim: [], plastic: [] };
   let currentSha = null;
   let currentTab = "esim";
@@ -109,26 +241,30 @@ body{background-color:#04101c;color:#fff;min-height:100vh;padding:15px;backgroun
     const t = document.getElementById("toastBox");
     t.textContent = text;
     t.classList.add("show");
-    setTimeout(()=>t.classList.remove("show"), 3500);
+    setTimeout(() => t.classList.remove("show"), 3500);
   }
 
-  // تحميل البيانات مباشرة من GitHub
-  async function fetchFromGitHub(repo){
-    const res = await fetch(`https://api.github.com/repos/${repo}/contents/data.json`, {
-      headers: { "Authorization": `token ${GH_TOKEN}`, "Accept": "application/vnd.github.v3+json" }
+  // جلب الملف من مستودع جيثب مباشرة
+  async function fetchFromGitHub(){
+    const res = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/data.json`, {
+      headers: {
+        "Authorization": `token ${GH_TOKEN}`,
+        "Accept": "application/vnd.github.v3+json"
+      }
     });
-    if(!res.ok) throw new Error("تعذر جلب البيانات. تأكد من اسم المستودع (repo) ووجود ملف data.json فيه!");
+
+    if(!res.ok){
+      throw new Error("تعذر جلب ملف data.json من المستودع! تأكد من وجوده.");
+    }
+
     const json = await res.json();
     currentSha = json.sha;
     const content = decodeURIComponent(escape(atob(json.content)));
     return JSON.parse(content);
   }
 
-  // الحفظ والرفع إلى GitHub مباشرة
+  // تحديث وحفظ الملف في جيثب
   async function commitToGitHub(){
-    const repo = localStorage.getItem("gh_repo");
-    if(!repo) return alert("يرجى إدخال اسم المستودع!");
-
     const contentStr = unescape(encodeURIComponent(JSON.stringify(appData, null, 2)));
     const base64Content = btoa(contentStr);
 
@@ -137,7 +273,7 @@ body{background-color:#04101c;color:#fff;min-height:100vh;padding:15px;backgroun
     btn.disabled = true;
 
     try {
-      const res = await fetch(`https://api.github.com/repos/${repo}/contents/data.json`, {
+      const res = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/data.json`, {
         method: "PUT",
         headers: {
           "Authorization": `token ${GH_TOKEN}`,
@@ -145,7 +281,7 @@ body{background-color:#04101c;color:#fff;min-height:100vh;padding:15px;backgroun
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          message: "تحديث الباقات والأسعار عبر لوحة التحكم",
+          message: "تحديث الباقات عبر لوحة التحكم",
           content: base64Content,
           sha: currentSha
         })
@@ -158,7 +294,7 @@ body{background-color:#04101c;color:#fff;min-height:100vh;padding:15px;backgroun
 
       const resData = await res.json();
       currentSha = resData.content.sha;
-      showToast("🚀 تم تحديث GitHub بنجاح! الموقع سيتحدث فوراً.");
+      showToast("🚀 تم تحديث الموقع على GitHub بنجاح!");
     } catch(e) {
       alert("خطأ أثناء الحفظ على GitHub: " + e.message);
     } finally {
@@ -167,10 +303,9 @@ body{background-color:#04101c;color:#fff;min-height:100vh;padding:15px;backgroun
     }
   }
 
-  // تسجيل الدخول
+  // زر تسجيل الدخول
   document.getElementById("loginBtn").addEventListener("click", async () => {
     const p = document.getElementById("adminPass").value;
-    const repo = document.getElementById("ghRepo").value.trim();
     const err = document.getElementById("loginError");
 
     if(p !== PASS){
@@ -178,17 +313,11 @@ body{background-color:#04101c;color:#fff;min-height:100vh;padding:15px;backgroun
       err.style.display = "block";
       return;
     }
-    if(!repo){
-      err.textContent = "يرجى إدخال اسم المستودع (مثال: username/repository)";
-      err.style.display = "block";
-      return;
-    }
 
     try {
       err.style.display = "none";
-      document.getElementById("loginBtn").textContent = "جاري الاتصال بـ GitHub...";
-      appData = await fetchFromGitHub(repo);
-      localStorage.setItem("gh_repo", repo);
+      document.getElementById("loginBtn").textContent = "جاري الاتصال والتحميل...";
+      appData = await fetchFromGitHub();
       sessionStorage.setItem("gh_admin_auth", "true");
       document.getElementById("loginSection").style.display = "none";
       document.getElementById("adminPanel").style.display = "block";
@@ -196,26 +325,20 @@ body{background-color:#04101c;color:#fff;min-height:100vh;padding:15px;backgroun
     } catch(e) {
       err.textContent = e.message;
       err.style.display = "block";
-      document.getElementById("loginBtn").textContent = "دخول ومزامنة مع GitHub 🚀";
+      document.getElementById("loginBtn").textContent = "دخول 🚀";
     }
   });
 
-  // استرجاع الجلسة المحفوظة
+  // البقاء مسجل في حال إعادة تحميل الصفحة
   if(sessionStorage.getItem("gh_admin_auth") === "true"){
-    const repo = localStorage.getItem("gh_repo");
-    if(repo){
-      fetchFromGitHub(repo).then(data => {
-        appData = data;
-        document.getElementById("loginSection").style.display = "none";
-        document.getElementById("adminPanel").style.display = "block";
-        render();
-      }).catch(()=>{ sessionStorage.removeItem("gh_admin_auth"); location.reload(); });
-    }
-  }
-
-  // استرجاع اسم المستودع تلقائياً في شاشة الدخول
-  if(localStorage.getItem("gh_repo")){
-    document.getElementById("ghRepo").value = localStorage.getItem("gh_repo");
+    fetchFromGitHub().then(data => {
+      appData = data;
+      document.getElementById("loginSection").style.display = "none";
+      document.getElementById("adminPanel").style.display = "block";
+      render();
+    }).catch(() => {
+      sessionStorage.removeItem("gh_admin_auth");
+    });
   }
 
   document.getElementById("saveToGhBtn").addEventListener("click", commitToGitHub);
@@ -231,6 +354,7 @@ body{background-color:#04101c;color:#fff;min-height:100vh;padding:15px;backgroun
     document.getElementById("tabPlasticBtn").classList.remove("active");
     render();
   });
+
   document.getElementById("tabPlasticBtn").addEventListener("click", function(){
     currentTab = "plastic";
     this.classList.add("active");
@@ -248,7 +372,7 @@ body{background-color:#04101c;color:#fff;min-height:100vh;padding:15px;backgroun
     render();
   });
 
-  // رسم الواجهة
+  // رسم الشركات والباقات
   function render(){
     const list = appData[currentTab] || [];
     const container = document.getElementById("companiesContainer");
@@ -293,8 +417,12 @@ body{background-color:#04101c;color:#fff;min-height:100vh;padding:15px;backgroun
     const n = prompt("تعديل اسم الشركة:", appData[currentTab][idx].name);
     if(n && n.trim()){ appData[currentTab][idx].name = n.trim(); render(); }
   };
+
   window.delComp = function(idx){
-    if(confirm("هل أنت متأكد من حذف هذه الشركة بالكامل؟")){ appData[currentTab].splice(idx, 1); render(); }
+    if(confirm("هل أنت متأكد من حذف هذه الشركة بالكامل؟")){
+      appData[currentTab].splice(idx, 1);
+      render();
+    }
   };
 
   const modal = document.getElementById("pkgModal");
@@ -310,7 +438,7 @@ body{background-color:#04101c;color:#fff;min-height:100vh;padding:15px;backgroun
       document.getElementById("pkgAvail").value = (pkg.available !== false).toString();
     } else {
       document.getElementById("pkgD").value = "";
-      document.getElementById("pkgS"].value = "";
+      document.getElementById("pkgS").value = "";
       document.getElementById("pkgP").value = "";
       document.getElementById("pkgG").value = "";
       document.getElementById("pkgAvail").value = "true";
@@ -318,7 +446,7 @@ body{background-color:#04101c;color:#fff;min-height:100vh;padding:15px;backgroun
     modal.classList.add("active");
   };
 
-  document.getElementById("closeModalBtn").addEventListener("click", ()=>modal.classList.remove("active"));
+  document.getElementById("closeModalBtn").addEventListener("click", () => modal.classList.remove("active"));
 
   document.getElementById("savePkgModalBtn").addEventListener("click", () => {
     const cIdx = document.getElementById("modalCompIdx").value;
