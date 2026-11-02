@@ -3,15 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; connect-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none';">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="no-referrer">
 <title>BRAND SIM - براند ستور</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif;-webkit-tap-highlight-color:transparent}
-body{background:#04101c linear-gradient(rgba(4,16,28,0.65),rgba(4,16,28,0.8)),url('tower-bg.jpg') no-repeat center center fixed;background-size:cover;color:#fff;padding:12px;min-height:100vh;overflow-x:hidden}
-.main-wrap{max-width:480px;margin:0 auto;border:2px solid #00e5ff;border-radius:22px;padding:16px 12px;background:radial-gradient(circle at top,rgba(10,39,61,0.78) 0%,rgba(4,18,31,0.85) 100%);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 0 25px rgba(0,229,255,0.3)}
+body{
+  background-color:#04101c;
+  color:#fff;
+  padding:12px;
+  min-height:100vh;
+  overflow-x:hidden;
+  position:relative;
+}
+/* طبقة خلفية ثابتة وواضحة جداً تعمل على جميع الهواتف والمتصفحات */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  background-image:linear-gradient(rgba(4,16,28,0.15),rgba(4,16,28,0.3)),url('tower-bg.jpg');
+  background-position:center center;
+  background-repeat:no-repeat;
+  background-size:cover;
+}
+.main-wrap{
+  max-width:480px;
+  margin:0 auto;
+  border:2px solid #00e5ff;
+  border-radius:22px;
+  padding:16px 12px;
+  background:rgba(4,18,31,0.25);
+  box-shadow:0 0 25px rgba(0,229,255,0.3);
+}
 #bookingOverlay{display:none;position:fixed;inset:0;background:rgba(2,10,18,0.85);backdrop-filter:blur(6px);z-index:2000;align-items:center;justify-content:center;padding:14px}
 #bookingOverlay.active{display:flex;animation:fadeIn .2s ease}
 .modal-box{width:100%;max-width:440px;max-height:92vh;overflow-y:auto;background:radial-gradient(circle at top,#0a273d 0%,#04121f 100%);border:2px solid #00e5ff;border-radius:20px;padding:18px 14px;box-shadow:0 0 28px rgba(0,229,255,0.4)}
@@ -28,25 +54,25 @@ body{background:#04101c linear-gradient(rgba(4,16,28,0.65),rgba(4,16,28,0.8)),ur
 .btn-close{background:rgba(255,255,255,0.08);color:#b0cddb;border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:11px 16px;font-weight:700;cursor:pointer}
 .brand-header{text-align:center;margin:10px 0 20px}
 .brand-logo{font-size:2.3rem;font-weight:900;letter-spacing:2px;color:#fff;text-shadow:0 0 12px #00e5ff,0 0 24px #00e5ff,0 0 38px #00b8d4}
-.brand-sub{color:#c2e2f2;font-size:.95rem;font-weight:600;margin-top:8px;line-height:1.6}
+.brand-sub{color:#ffffff;font-size:.95rem;font-weight:700;margin-top:8px;line-height:1.6;text-shadow:0 2px 6px rgba(0,0,0,0.9)}
 .tabs-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
-.tab-box{background:rgba(6,27,43,0.85);border:1.5px solid rgba(0,229,255,0.35);border-radius:16px;padding:16px 10px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:.2s}
-.tab-box.active{border-color:#00e5ff;box-shadow:0 0 15px rgba(0,229,255,0.3);background:rgba(8,38,58,0.92)}
+.tab-box{background:rgba(6,27,43,0.45);border:1.5px solid rgba(0,229,255,0.45);border-radius:16px;padding:16px 10px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:.2s;text-shadow:0 1px 4px rgba(0,0,0,0.8)}
+.tab-box.active{border-color:#00e5ff;box-shadow:0 0 15px rgba(0,229,255,0.35);background:rgba(8,38,58,0.65)}
 .tab-text{font-weight:800;font-size:1.05rem;line-height:1.4;text-align:center;flex:1}
-.tab-icon{width:38px;height:48px;border:1.5px solid #00e5ff;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(0,229,255,0.08);font-size:1.2rem}
-.section-banner{background:linear-gradient(90deg,rgba(8,54,79,0.9),rgba(6,34,53,0.9));border:1.5px solid #00e5ff;border-radius:18px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;box-shadow:0 0 14px rgba(0,229,255,0.2)}
-.banner-title{color:#00e5ff;font-size:1.25rem;font-weight:800;text-shadow:0 0 8px rgba(0,229,255,0.35)}
-.company-count{border:1.5px solid #00e5ff;border-radius:14px;padding:6px 14px;text-align:center;font-weight:700;font-size:.9rem;color:#fff;background:rgba(0,229,255,0.1)}
-.company-card{background:rgba(6,26,41,0.82);border:1px solid rgba(0,229,255,0.3);border-radius:18px;padding:14px 12px;margin-bottom:16px}
+.tab-icon{width:38px;height:48px;border:1.5px solid #00e5ff;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(0,229,255,0.12);font-size:1.2rem}
+.section-banner{background:linear-gradient(90deg,rgba(8,54,79,0.55),rgba(6,34,53,0.55));border:1.5px solid #00e5ff;border-radius:18px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;box-shadow:0 0 14px rgba(0,229,255,0.2)}
+.banner-title{color:#00e5ff;font-size:1.25rem;font-weight:800;text-shadow:0 0 8px rgba(0,229,255,0.45)}
+.company-count{border:1.5px solid #00e5ff;border-radius:14px;padding:6px 14px;text-align:center;font-weight:700;font-size:.9rem;color:#fff;background:rgba(0,229,255,0.15)}
+.company-card{background:rgba(6,26,41,0.38);border:1px solid rgba(0,229,255,0.4);border-radius:18px;padding:14px 12px;margin-bottom:16px;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
 .company-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
-.company-name{font-size:1.15rem;font-weight:800;color:#fff}
-.esim-badge{background:rgba(0,229,255,0.12);border:1px solid rgba(0,229,255,0.45);color:#00e5ff;font-size:.78rem;font-weight:700;padding:4px 10px;border-radius:20px}
+.company-name{font-size:1.15rem;font-weight:800;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,0.85)}
+.esim-badge{background:rgba(0,229,255,0.15);border:1px solid rgba(0,229,255,0.5);color:#00e5ff;font-size:.78rem;font-weight:700;padding:4px 10px;border-radius:20px}
 .pkg-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.pkg-box{background:rgba(4,19,31,0.88);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px 8px;text-align:center;display:flex;flex-direction:column;justify-content:space-between}
+.pkg-box{background:rgba(4,19,31,0.48);border:1px solid rgba(0,229,255,0.2);border-radius:14px;padding:12px 8px;text-align:center;display:flex;flex-direction:column;justify-content:space-between}
 .pkg-top{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:8px}
-.pkg-title{font-weight:700;font-size:.92rem;color:#d2e6f0}
-.status-tag{background:rgba(0,200,83,0.15);border:1px solid #00c853;color:#4caf50;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:12px}
-.pkg-price{color:#00e5ff;font-size:1.35rem;font-weight:800;margin:6px 0 10px}
+.pkg-title{font-weight:700;font-size:.92rem;color:#ffffff;text-shadow:0 1px 3px rgba(0,0,0,0.9)}
+.status-tag{background:rgba(0,200,83,0.2);border:1px solid #00c853;color:#69f0ae;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:12px}
+.pkg-price{color:#00e5ff;font-size:1.35rem;font-weight:800;margin:6px 0 10px;text-shadow:0 2px 6px rgba(0,0,0,0.9)}
 .btn-book{background:linear-gradient(180deg,#18c8ff,#0099cc);color:#fff;border:none;border-radius:10px;padding:8px 10px;font-weight:800;font-size:.9rem;cursor:pointer;width:100%;box-shadow:0 0 10px rgba(0,200,255,0.35);transition:.2s}
 .btn-book:active{transform:scale(0.97)}
 .float-contact{position:fixed;bottom:18px;left:18px;background:rgba(6,34,53,0.92);border:1.5px solid #00e5ff;color:#fff;padding:10px 18px;border-radius:30px;font-weight:800;font-size:.95rem;box-shadow:0 0 16px rgba(0,229,255,0.45);cursor:pointer;z-index:999;display:flex;align-items:center;gap:8px;backdrop-filter:blur(6px)}
