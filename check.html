@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline'; connect-src 'self' https://raw.githubusercontent.com; object-src 'none'; base-uri 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline'; connect-src 'self' https://incredible-crumble-58566c.netlify.app; object-src 'none'; base-uri 'self';">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="no-referrer">
 <title>BRAND SIM | استعلام عن الاشتراك</title>
@@ -113,8 +113,9 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;background-image:linea
 <script>
 (function(){"use strict";
 document.getElementById("yearSpan").textContent=new Date().getFullYear();
-const CIRC=477.5,WA_NUM="972599783984",GITHUB_RAW_DB="https://raw.githubusercontent.com/groupahmed2020-byte/BrandSim.com/main/customers.json";
-let customersDB=[],lastSearchTime=0;
+const CIRC=477.5,WA_NUM="972599783984";
+const BACKEND_API_URL="https://incredible-crumble-58566c.netlify.app/.netlify/functions/query";
+let lastSearchTime=0;
 const phoneInput=document.getElementById("phoneInput"),searchBtn=document.getElementById("searchBtn"),btnText=document.getElementById("ui-btn"),notFoundBox=document.getElementById("notFoundBox"),resultContainer=document.getElementById("resultContainer");
 function normPhone(raw){
   if(!raw)return"";
@@ -126,16 +127,6 @@ function normPhone(raw){
   else if(c.length===9&&c.startsWith("5"))c="0"+c;
   else if(c.length>10&&c.startsWith("05"))c=c.slice(0,10);
   return c;
-}
-async function hashPhone(phone){
-  const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("BS_PHONE_2026_"+phone));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
-}
-async function loadData(){
-  if(customersDB.length>0)return;
-  for(const u of["customers.json?t="+Date.now(),GITHUB_RAW_DB+"?t="+Date.now()]){
-    try{const res=await fetch(u,{cache:"no-store"});if(res.ok){const d=await res.json();if(Array.isArray(d)&&d.length){customersDB=d;return;}}}catch(e){}
-  }
 }
 function calcStatus(expStr){
   if(expStr==="موصول")return{code:"active",num:"∞",label:"خط موصول وفعال",badge:"✅ اشتراك نشط وساري",cls:"badge-active",color:"#00e5ff",pct:100};
@@ -179,15 +170,26 @@ async function handleSearch(){
     notFoundBox.className="alert-box warning";return;
   }
   lastSearchTime=Date.now();searchBtn.disabled=true;btnText.textContent="⏳ جاري البحث...";
-  await loadData();
-  searchBtn.disabled=false;btnText.textContent="عرض تفاصيل الاشتراك";
-  const qHash=await hashPhone(q);
-  const found=customersDB.find(c=>c.phoneHash===qHash||normPhone(c.simPhone)===q||normPhone(c.contactPhone)===q);
-  if(found)showResult(found,q);
-  else{
+  try{
+    const res=await fetch(BACKEND_API_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({phone:q})
+    });
+    const json=await res.json();
+    if(res.ok&&json.ok){
+      showResult(json.data,q);
+    }else{
+      resultContainer.classList.remove("show");
+      document.getElementById("errorTitle").textContent="❌ الرقم المدخل غير مسجل في قاعدة البيانات";
+      notFoundBox.className="alert-box error";
+    }
+  }catch(e){
     resultContainer.classList.remove("show");
-    document.getElementById("errorTitle").textContent="❌ الرقم المدخل غير مسجل في قاعدة البيانات";
-    notFoundBox.className="alert-box error";
+    document.getElementById("errorTitle").textContent="⚠️ تعذر الاتصال بالخادم، يرجى المحاولة لاحقاً";
+    notFoundBox.className="alert-box warning";
+  }finally{
+    searchBtn.disabled=false;btnText.textContent="عرض تفاصيل الاشتراك";
   }
 }
 phoneInput.addEventListener("input",e=>{const n=normPhone(e.target.value);if(e.target.value!==n)e.target.value=n;});
@@ -199,5 +201,4 @@ window.addEventListener("DOMContentLoaded",()=>{
 })();
 </script>
 </body>
-    </html>
-    
+</html>
