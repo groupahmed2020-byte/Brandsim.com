@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; connect-src 'none'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'none';">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="no-referrer">
+<title>BRAND SIM - براند ستور</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#04101c;color:#fff;padding:12px;min-height:100vh;overflow-x:hidden}
+.main-wrap{max-width:480px;margin:0 auto;border:2px solid #00e5ff;border-radius:22px;padding:16px 12px;background:radial-gradient(circle at top,#0a273d 0%,#04121f 100%);box-shadow:0 0 20px rgba(0,229,255,0.25)}
+#bookingOverlay{display:none;position:fixed;inset:0;background:rgba(2,10,18,0.85);backdrop-filter:blur(6px);z-index:2000;align-items:center;justify-content:center;padding:14px}
+#bookingOverlay.active{display:flex;animation:fadeIn .2s ease}
+.modal-box{width:100%;max-width:440px;max-height:92vh;overflow-y:auto;background:radial-gradient(circle at top,#0a273d 0%,#04121f 100%);border:2px solid #00e5ff;border-radius:20px;padding:18px 14px;box-shadow:0 0 28px rgba(0,229,255,0.4)}
+@keyframes fadeIn{from{opacity:0;transform:scale(0.95)}to{opacity:1;transform:scale(1)}}
+.booking-title{color:#00e5ff;font-size:1.3rem;font-weight:800;text-align:center;margin-bottom:12px;text-shadow:0 0 10px rgba(0,229,255,0.4)}
+.booking-card{background:#062335;border:1px solid rgba(0,229,255,0.45);border-radius:14px;padding:12px 10px;text-align:center;font-weight:700;font-size:.95rem;line-height:1.7;color:#fff;margin-bottom:12px;box-shadow:inset 0 0 12px rgba(0,229,255,0.1)}
+.form-group{margin-bottom:10px;text-align:right}
+.form-label{display:block;font-size:.85rem;font-weight:700;color:#8ab4c9;margin-bottom:4px}
+.form-input,.form-select{width:100%;background:#041523;border:1px solid rgba(0,229,255,0.35);border-radius:10px;padding:9px 12px;color:#fff;font-size:.92rem;font-weight:600;outline:none;transition:.2s}
+.form-input:focus,.form-select:focus{border-color:#00e5ff;box-shadow:0 0 8px rgba(0,229,255,0.3)}
+.error-msg{color:#ff5252;font-size:.82rem;font-weight:700;text-align:center;margin:6px 0;display:none}
+.booking-actions{display:flex;gap:10px;margin-top:14px}
+.btn-wa{flex:1;background:linear-gradient(90deg,#00d2ff,#00a8cc);color:#001b29;border:none;border-radius:10px;padding:11px;font-weight:800;font-size:.95rem;cursor:pointer;box-shadow:0 0 12px rgba(0,210,255,0.4)}
+.btn-close{background:rgba(255,255,255,0.08);color:#b0cddb;border:1px solid rgba(255,255,255,0.2);border-radius:10px;padding:11px 16px;font-weight:700;cursor:pointer}
+.brand-header{text-align:center;margin:10px 0 20px}
+.brand-logo{font-size:2.3rem;font-weight:900;letter-spacing:2px;color:#fff;text-shadow:0 0 12px #00e5ff,0 0 24px #00e5ff,0 0 38px #00b8d4}
+.brand-sub{color:#8ab4c9;font-size:.95rem;font-weight:600;margin-top:8px;line-height:1.6}
+.tabs-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.tab-box{background:#061b2b;border:1.5px solid rgba(0,229,255,0.35);border-radius:16px;padding:16px 10px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:.2s}
+.tab-box.active{border-color:#00e5ff;box-shadow:0 0 15px rgba(0,229,255,0.3);background:#08263a}
+.tab-text{font-weight:800;font-size:1.05rem;line-height:1.4;text-align:center;flex:1}
+.tab-icon{width:38px;height:48px;border:1.5px solid #00e5ff;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(0,229,255,0.08);font-size:1.2rem}
+.section-banner{background:linear-gradient(90deg,#08364f,#062235);border:1.5px solid #00e5ff;border-radius:18px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;box-shadow:0 0 14px rgba(0,229,255,0.2)}
+.banner-title{color:#00e5ff;font-size:1.25rem;font-weight:800;text-shadow:0 0 8px rgba(0,229,255,0.35)}
+.company-count{border:1.5px solid #00e5ff;border-radius:14px;padding:6px 14px;text-align:center;font-weight:700;font-size:.9rem;color:#fff;background:rgba(0,229,255,0.1)}
+.company-card{background:#061a29;border:1px solid rgba(0,229,255,0.3);border-radius:18px;padding:14px 12px;margin-bottom:16px}
+.company-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.company-name{font-size:1.15rem;font-weight:800;color:#fff}
+.esim-badge{background:rgba(0,229,255,0.12);border:1px solid rgba(0,229,255,0.45);color:#00e5ff;font-size:.78rem;font-weight:700;padding:4px 10px;border-radius:20px}
+.pkg-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pkg-box{background:#04131f;border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:12px 8px;text-align:center;display:flex;flex-direction:column;justify-content:space-between}
+.pkg-top{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.pkg-title{font-weight:700;font-size:.92rem;color:#d2e6f0}
+.status-tag{background:rgba(0,200,83,0.15);border:1px solid #00c853;color:#4caf50;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:12px}
+.pkg-price{color:#00e5ff;font-size:1.35rem;font-weight:800;margin:6px 0 10px}
+.btn-book{background:linear-gradient(180deg,#18c8ff,#0099cc);color:#fff;border:none;border-radius:10px;padding:8px 10px;font-weight:800;font-size:.9rem;cursor:pointer;width:100%;box-shadow:0 0 10px rgba(0,200,255,0.35);transition:.2s}
+.btn-book:active{transform:scale(0.97)}
+.float-contact{position:fixed;bottom:18px;left:18px;background:rgba(6,34,53,0.92);border:1.5px solid #00e5ff;color:#fff;padding:10px 18px;border-radius:30px;font-weight:800;font-size:.95rem;box-shadow:0 0 16px rgba(0,229,255,0.45);cursor:pointer;z-index:999;display:flex;align-items:center;gap:8px;backdrop-filter:blur(6px)}
+</style>
+</head>
+<body>
+<div id="bookingOverlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-box">
+    <div class="booking-title" id="modalTitle">🛒 حجز الطلب عبر واتساب</div>
+    <div class="booking-card" id="selectedPkgText"></div>
+    <div class="form-group">
+      <label class="form-label" for="pkgDesc">📦 الباقة / الوصف:</label>
+      <input type="text" id="pkgDesc" class="form-input" placeholder="مثال: 300 جيجا" maxlength="60" value="300 جيجا">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="custName">👤 اسم الزبون:</label>
+      <input type="text" id="custName" class="form-input" placeholder="مثال: ابراهيم" maxlength="50" autocomplete="name">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="custPhone">📱 رقم الهاتف:</label>
+      <input type="tel" id="custPhone" class="form-input" placeholder="مثال: 0599783984" maxlength="15" inputmode="tel" autocomplete="tel">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="custAddr">📍 العنوان:</label>
+      <input type="text" id="custAddr" class="form-input" placeholder="مثال: Gaza" maxlength="80" autocomplete="street-address">
+    </div>
+    <div class="form-group">
+      <label class="form-label" for="payMethod">💵 طريقة الدفع:</label>
+      <select id="payMethod" class="form-select">
+        <option value="الدفع عند الاستلام">الدفع عند الاستلام</option>
+        <option value="تحويل بنكي / محفظة">تحويل بنكي / محفظة</option>
+      </select>
+    </div>
+    <div class="error-msg" id="formError">⚠️ يرجى إدخال الاسم، رقم الهاتف، والعنوان بشكل صحيح</div>
+    <div class="booking-actions">
+      <button type="button" class="btn-wa" id="confirmWaBtn">إرسال الطلب عبر واتساب</button>
+      <button type="button" class="btn-close" id="closeBookBtn">إغلاق</button>
+    </div>
+  </div>
+</div>
+<div class="main-wrap">
+  <div class="brand-header">
+    <div class="brand-logo">BRAND SIM</div>
+    <div class="brand-sub">براند ستور (BRAND STORE) - تفعيل فوري للشرائح الإلكترونية والبلاستيكية</div>
+  </div>
+  <div class="tabs-grid">
+    <div class="tab-box active" id="tabEsim">
+      <div class="tab-text">الشرائح<br>الالكترونية<br>(ESIM)</div>
+      <div class="tab-icon">📲</div>
+    </div>
+    <div class="tab-box" id="tabPlastic">
+      <div class="tab-text">شرائح<br>بلاستيك</div>
+      <div class="tab-icon">💳</div>
+    </div>
+  </div>
+  <div class="section-banner">
+    <div class="banner-title" id="bannerTitle">📲 الشرائح الالكترونية (ESIM)</div>
+    <div class="company-count">11<br>شركة</div>
+  </div>
+  <div id="companiesContainer"></div>
+</div>
+<button type="button" class="float-contact" id="contactBtn">💬 تواصل معنا</button>
+<script>
+(function(){
+  "use strict";
+  const WHATSAPP_NUMBER = "972599783984";
+  const companies = Object.freeze([
+    { name: "ألوها (Aloha)", pkgs: [{ d: "باقة شهر", s: "شهر", p: 50, g: "100 جيجا" }, { d: "باقة 3 شهور", s: "3 شهور", p: 130, g: "300 جيجا" }] },
+    { name: "بارتنر (Partner)", pkgs: [{ d: "باقة شهر", s: "شهر", p: 50, g: "100 جيجا" }, { d: "باقة 3 شهور", s: "3 شهور", p: 120, g: "300 جيجا" }] },
+    { name: "بيليفون (Pelephone)", pkgs: [{ d: "باقة شهر", s: "شهر", p: 55, g: "100 جيجا" }, { d: "باقة 3 شهور", s: "3 شهور", p: 140, g: "300 جيجا" }] },
+    { name: "سيلكوم (Cellcom)", pkgs: [{ d: "باقة شهر", s: "شهر", p: 50, g: "100 جيجا" }, { d: "باقة 3 شهور", s: "3 شهور", p: 135, g: "300 جيجا" }] },
+    { name: "هوت موبايل (Hot Mobile)", pkgs: [{ d: "باقة شهر", s: "شهر", p: 45, g: "100 جيجا" }, { d: "باقة 3 شهور", s: "3 شهور", p: 120, g: "300 جيجا" }] },
+    { name: "جولان تليكوم (Golan)", pkgs: [{ d: "باقة شهر", s: "شهر", p: 50, g: "100 جيجا" }, { d: "باقة 3 شهور", s: "3 شهور", p: 130, g: "300 جيجا" }] },
+    { name: "019 موبايل (019 Mobile)", pkgs: [{ d: "باقة شهر", s: "شهر", p: 45, g: "100 جيجا" }, { d: "باقة 3 شهور", s: "3 شهور", p: 120, g: "300 جيجا" }] },
+    { name: "رامي ليفي (Rami Levy)", pkgs: [{ d: "باقة شهر", s: "شهر", p: 45, g: "100 جيجا" }, { d: "باقة 3 شهور", s: "3 شهور", p: 120, g: "300 جيجا" }] },
+    { name: "ويكوم (Wecom)", pkgs: [{ d: "باقة شهر", s: "شهر", p: 50, g: "100 جيجا" }, { d: "باقة 3 شهور", s: "3 شهور", p: 130, g: "300 جيجا" }] },
+    { name: "012 موبايل (012 Mobile)", pkgs: [{ d: "باقة شهر", s: "شهر", p: 50, g: "100 جيجا" }, { d: "باقة 3 شهور", s: "3 شهور", p: 130, g: "300 جيجا" }] },
+    { name: "يوفون (YouPhone)", pkgs: [{ d: "باقة شهر", s: "شهر", p: 45, g: "100 جيجا" }, { d: "باقة 3 شهور", s: "3 شهور", p: 120, g: "300 جيجا" }] }
+  ]);
+  let isEsim = true, currentBooking = null, lastClick = 0;
+  const clean = (str) => String(str || "").replace(/[\u0000-\u001F\u007F-\u009F\u200E\u200F\u202A-\u202E<>'"`\\]/g, "").trim();
+  const container = document.getElementById("companiesContainer");
+  const bookingOverlay = document.getElementById("bookingOverlay");
+  const selectedPkgText = document.getElementById("selectedPkgText");
+  const formError = document.getElementById("formError");
+  function closeModal() { bookingOverlay.classList.remove("active"); document.body.style.overflow = ""; }
+  function renderCompanies() {
+    container.textContent = "";
+    const badgeLabel = isEsim ? "الشرائح الالكترونية (ESIM)" : "شرائح بلاستيك";
+    companies.forEach(function(comp) {
+      const card = document.createElement("div"); card.className = "company-card";
+      const head = document.createElement("div"); head.className = "company-head";
+      const title = document.createElement("div"); title.className = "company-name"; title.textContent = "📌 " + comp.name;
+      const badge = document.createElement("span"); badge.className = "esim-badge"; badge.textContent = badgeLabel;
+      head.append(title, badge);
+      const grid = document.createElement("div"); grid.className = "pkg-grid";
+      comp.pkgs.forEach(function(pkg) {
+        const box = document.createElement("div"); box.className = "pkg-box";
+        const top = document.createElement("div"); top.className = "pkg-top";
+        const pTitle = document.createElement("span"); pTitle.className = "pkg-title"; pTitle.textContent = pkg.d;
+        const status = document.createElement("span"); status.className = "status-tag"; status.textContent = "(متوفر)";
+        top.append(pTitle, status);
+        const price = document.createElement("div"); price.className = "pkg-price"; price.textContent = pkg.p + " ₪";
+        const btn = document.createElement("button"); btn.type = "button"; btn.className = "btn-book"; btn.textContent = "🛒 حجز الطلب";
+        btn.addEventListener("click", function() {
+          currentBooking = { company: comp.name, simType: isEsim ? "شريحة إلكترونية (eSIM)" : "شريحة بلاستيكية", durPrice: pkg.s + " (" + pkg.p + " ₪)" };
+          selectedPkgText.textContent = comp.name + " | " + badgeLabel + " | " + pkg.s + " (" + pkg.p + " ₪) - متوفر";
+          document.getElementById("pkgDesc").value = pkg.g;
+          formError.style.display = "none";
+          bookingOverlay.classList.add("active");
+          document.body.style.overflow = "hidden";
+        });
+        box.append(top, price, btn); grid.appendChild(box);
+      });
+      card.append(head, grid); container.appendChild(card);
+    });
+  }
+  document.getElementById("tabEsim").addEventListener("click", function() {
+    isEsim = true; this.classList.add("active"); document.getElementById("tabPlastic").classList.remove("active");
+    document.getElementById("bannerTitle").textContent = "📲 الشرائح الالكترونية (ESIM)"; renderCompanies();
+  });
+  document.getElementById("tabPlastic").addEventListener("click", function() {
+    isEsim = false; this.classList.add("active"); document.getElementById("tabEsim").classList.remove("active");
+    document.getElementById("bannerTitle").textContent = "💳 شرائح بلاستيك"; renderCompanies();
+  });
+  document.getElementById("confirmWaBtn").addEventListener("click", function() {
+    if (!currentBooking || Date.now() - lastClick < 1500) return;
+    const desc = clean(document.getElementById("pkgDesc").value);
+    const name = clean(document.getElementById("custName").value);
+    const phone = clean(document.getElementById("custPhone").value).replace(/[^0-9+]/g, "");
+    const addr = clean(document.getElementById("custAddr").value);
+    const pay = clean(document.getElementById("payMethod").value);
+    if (!desc || name.length < 2 || phone.length < 9 || addr.length < 2) { formError.style.display = "block"; return; }
+    formError.style.display = "none"; lastClick = Date.now();
+    const msg = ["*طلب حجز جديد - براند ستور (BRAND STORE)* 🛒", "--------------------------", "📌 *الشركة:* " + currentBooking.company, "📦 *الباقة / الوصف:* " + desc, "💳 *نوع الشريحة:* " + currentBooking.simType, "⏳ *المدة والسعر:* " + currentBooking.durPrice, "👤 *اسم الزبون:* " + name, "📱 *رقم الهاتف:* " + phone, "📍 *العنوان:* " + addr, "💵 *طريقة الدفع:* " + pay].join("\n");
+    window.open("https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(msg), "_blank", "noopener,noreferrer");
+    closeModal();
+  });
+  document.getElementById("closeBookBtn").addEventListener("click", closeModal);
+  bookingOverlay.addEventListener("click", function(e) { if (e.target === bookingOverlay) closeModal(); });
+  document.addEventListener("keydown", function(e) { if (e.key === "Escape") closeModal(); });
+  document.getElementById("contactBtn").addEventListener("click", function() { window.open("https://wa.me/" + WHATSAPP_NUMBER, "_blank", "noopener,noreferrer"); });
+  renderCompanies();
+})();
+</script>
+</body>
+</html>
