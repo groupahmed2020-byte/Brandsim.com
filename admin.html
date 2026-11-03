@@ -7,191 +7,58 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif;-webkit-tap-highlight-color:transparent}
-body{
-  background-color:#04101c;
-  color:#fff;
-  min-height:100vh;
-  padding:15px;
-  background-image:radial-gradient(ellipse at top,#072033 0%,#04101c 70%);
-}
-
-#adminPanel{
-  max-width:1100px;
-  margin:0 auto;
-  display:block;
-}
-.panel-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:rgba(6,34,53,0.85);
-  border:1.5px solid #00e5ff;
-  border-radius:16px;
-  padding:14px 20px;
-  margin-bottom:18px;
-  flex-wrap:wrap;
-  gap:10px;
-}
+body{background:#04101c;color:#fff;min-height:100vh;padding:15px;background-image:radial-gradient(ellipse at top,#072033 0%,#04101c 70%)}
+#adminPanel{max-width:1100px;margin:0 auto;display:block}
+.panel-header{display:flex;justify-content:space-between;align-items:center;background:rgba(6,34,53,0.85);border:1.5px solid #00e5ff;border-radius:16px;padding:14px 20px;margin-bottom:18px;flex-wrap:wrap;gap:10px}
 .header-btns{display:flex;gap:10px;flex-wrap:wrap}
-.btn-save-gh{
-  background:linear-gradient(90deg,#00e676,#00b0ff);
-  color:#021422;
-  font-weight:900;
-  padding:10px 18px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  font-size:.95rem;
-  box-shadow:0 0 15px rgba(0,230,118,0.4);
-}
-.btn-download{
-  background:#ffa000;
-  color:#001b29;
-  font-weight:800;
-  padding:10px 14px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  font-size:.9rem;
-}
-.btn-view{
-  background:rgba(0,229,255,0.15);
-  color:#00e5ff;
-  border:1px solid #00e5ff;
-  padding:10px 14px;
-  border-radius:10px;
-  font-weight:800;
-  text-decoration:none;
-  font-size:.9rem;
-}
-
+.btn-save-gh{background:linear-gradient(90deg,#00e676,#00b0ff);color:#021422;font-weight:900;padding:10px 18px;border:none;border-radius:10px;cursor:pointer;font-size:.95rem;box-shadow:0 0 15px rgba(0,230,118,0.4)}
+.btn-token{background:rgba(255,255,255,0.1);color:#ffd740;border:1px solid #ffd740;font-weight:800;padding:10px 14px;border-radius:10px;cursor:pointer;font-size:.9rem}
+.btn-download{background:#ffa000;color:#001b29;font-weight:800;padding:10px 14px;border:none;border-radius:10px;cursor:pointer;font-size:.9rem}
+.btn-view{background:rgba(0,229,255,0.15);color:#00e5ff;border:1px solid #00e5ff;padding:10px 14px;border-radius:10px;font-weight:800;text-decoration:none;font-size:.9rem}
 .nav-tabs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
-.nav-tab-btn{
-  background:rgba(6,27,43,0.6);
-  border:2px solid rgba(0,229,255,0.3);
-  border-radius:14px;
-  padding:14px;
-  color:#fff;
-  font-weight:800;
-  cursor:pointer;
-  text-align:center;
-}
-.nav-tab-btn.active{
-  border-color:#00e5ff;
-  background:rgba(10,48,74,0.85);
-  color:#00e5ff;
-  box-shadow:0 0 15px rgba(0,229,255,0.3);
-}
-
-.add-bar{
-  background:rgba(6,35,53,0.7);
-  border:1px solid rgba(0,229,255,0.35);
-  border-radius:14px;
-  padding:14px;
-  margin-bottom:18px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
-.form-input,.form-select{
-  width:100%;
-  background:#03121e;
-  border:1.5px solid rgba(0,229,255,0.35);
-  border-radius:10px;
-  padding:12px 14px;
-  color:#fff;
-  font-size:1rem;
-  margin-bottom:12px;
-  outline:none;
-}
-.form-input:focus,.form-select:focus{
-  border-color:#00e5ff;
-  box-shadow:0 0 10px rgba(0,229,255,0.4);
-}
+.nav-tab-btn{background:rgba(6,27,43,0.6);border:2px solid rgba(0,229,255,0.3);border-radius:14px;padding:14px;color:#fff;font-weight:800;cursor:pointer;text-align:center}
+.nav-tab-btn.active{border-color:#00e5ff;background:rgba(10,48,74,0.85);color:#00e5ff;box-shadow:0 0 15px rgba(0,229,255,0.3)}
+.add-bar{background:rgba(6,35,53,0.7);border:1px solid rgba(0,229,255,0.35);border-radius:14px;padding:14px;margin-bottom:18px;display:flex;gap:10px;flex-wrap:wrap}
+.form-input,.form-select{width:100%;background:#03121e;border:1.5px solid rgba(0,229,255,0.35);border-radius:10px;padding:12px 14px;color:#fff;font-size:1rem;margin-bottom:12px;outline:none}
+.form-input:focus,.form-select:focus{border-color:#00e5ff;box-shadow:0 0 10px rgba(0,229,255,0.4)}
 .add-bar input{margin-bottom:0;flex:1;min-width:220px}
-
-.btn-primary{
-  background:linear-gradient(90deg,#00d2ff,#00a8cc);
-  color:#001b29;
-  border:none;
-  border-radius:10px;
-  padding:11px 20px;
-  font-weight:900;
-  font-size:.95rem;
-  cursor:pointer;
-}
-
-.comp-card{
-  background:rgba(6,26,41,0.75);
-  border:1.5px solid rgba(0,229,255,0.35);
-  border-radius:16px;
-  padding:16px;
-  margin-bottom:16px;
-}
-.comp-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:1px solid rgba(0,229,255,0.2);
-  padding-bottom:10px;
-  margin-bottom:12px;
-  flex-wrap:wrap;
-  gap:8px;
-}
+.btn-primary{background:linear-gradient(90deg,#00d2ff,#00a8cc);color:#001b29;border:none;border-radius:10px;padding:11px 20px;font-weight:900;font-size:.95rem;cursor:pointer}
+.comp-card{background:rgba(6,26,41,0.75);border:1.5px solid rgba(0,229,255,0.35);border-radius:16px;padding:16px;margin-bottom:16px}
+.comp-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(0,229,255,0.2);padding-bottom:10px;margin-bottom:12px;flex-wrap:wrap;gap:8px}
 .pkg-table{width:100%;border-collapse:collapse}
 .pkg-table th,.pkg-table td{padding:10px;text-align:right;border-bottom:1px solid rgba(255,255,255,0.06);font-size:.88rem}
 .status-pill{padding:3px 10px;border-radius:20px;font-size:.78rem;font-weight:800}
 .status-pill.avail{background:rgba(0,200,83,0.18);border:1px solid #00c853;color:#69f0ae}
 .status-pill.unavail{background:rgba(255,82,82,0.18);border:1px solid #ff5252;color:#ff8a80}
-
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(2,10,18,0.85);z-index:3000;align-items:center;justify-content:center;padding:15px}
 .modal-overlay.active{display:flex}
 .modal-content{width:100%;max-width:440px;background:#041523;border:2px solid #00e5ff;border-radius:18px;padding:20px}
-#toastBox{
-  position:fixed;
-  bottom:25px;
-  left:50%;
-  transform:translateX(-50%) translateY(120px);
-  background:#062335;
-  border:2px solid #00e676;
-  color:#fff;
-  padding:12px 24px;
-  border-radius:30px;
-  font-weight:800;
-  z-index:9999;
-  transition:.3s;
-  opacity:0;
-}
+#toastBox{position:fixed;bottom:25px;left:50%;transform:translateX(-50%) translateY(120px);background:#062335;border:2px solid #00e676;color:#fff;padding:12px 24px;border-radius:30px;font-weight:800;z-index:9999;transition:.3s;opacity:0;text-align:center}
 #toastBox.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
-
-<!-- لوحة التحكم مباشرة دون شاشة تسجيل دخول -->
 <div id="adminPanel">
   <div class="panel-header">
     <div style="font-size:1.25rem;font-weight:900;color:#00e5ff">🛠️ لوحة تحكم BRAND SIM</div>
     <div class="header-btns">
       <button type="button" class="btn-save-gh" id="saveToGhBtn">☁️ حفظ وتحديث في GitHub</button>
+      <button type="button" class="btn-token" id="setTokenBtn">🔑 رمز GitHub</button>
       <button type="button" class="btn-download" id="downloadJsonBtn">📥 تنزيل data.json</button>
       <a href="index.html" target="_blank" class="btn-view">🌐 فتح الموقع</a>
     </div>
   </div>
-
   <div class="nav-tabs">
     <div class="nav-tab-btn active" id="tabEsimBtn">📲 شرائح إلكترونية (eSIM)</div>
     <div class="nav-tab-btn" id="tabPlasticBtn">💳 شرائح بلاستيكية (Plastic)</div>
   </div>
-
   <div class="add-bar">
     <input type="text" id="newCompName" class="form-input" placeholder="اسم شركة رئيسية جديدة...">
     <button type="button" class="btn-primary" id="addCompBtn">➕ إضافة شركة</button>
   </div>
-
   <div id="companiesContainer"></div>
 </div>
 
-<!-- نافذة إضافة / تعديل باقة -->
 <div id="pkgModal" class="modal-overlay">
   <div class="modal-content">
     <h3 id="modalTitle" style="color:#00e5ff;margin-bottom:12px">إدارة الباقة</h3>
@@ -221,9 +88,7 @@ body{
 <script>
 (function(){
   "use strict";
-
-  const GH_REPO = "groupahmed2020-byte/BrandSim.com";
-
+  const GH_REPO = "groupahmed2020-byte/BrandSim.com", GH_BRANCH = "main", FILE_PATH = "data.json";
   const DEFAULT_FALLBACK = {
     esim: [
       {name:"ألوها (Aloha)", pkgs:[{d:"باقة شهر",s:"شهر",p:50,g:"100 جيجا",available:true},{d:"باقة 3 شهور",s:"3 شهور",p:130,g:"300 جيجا",available:true}]},
@@ -246,157 +111,129 @@ body{
     ]
   };
 
-  let appData = DEFAULT_FALLBACK;
-  let currentSha = null;
-  let currentTab = "esim";
+  let appData = DEFAULT_FALLBACK, currentTab = "esim";
 
-  function showToast(text){
+  function showToast(text, isError = false){
     const t = document.getElementById("toastBox");
     t.textContent = text;
+    t.style.borderColor = isError ? "#ff5252" : "#00e676";
     t.classList.add("show");
-    setTimeout(() => t.classList.remove("show"), 3500);
+    setTimeout(() => t.classList.remove("show"), 4000);
   }
 
-  // تحميل البيانات فور فتح الصفحة
+  function toBase64(str){
+    const bytes = new TextEncoder().encode(str);
+    let bin = "";
+    for(let i=0; i<bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
+  }
+
+  function fromBase64(b64){
+    const bin = atob(b64.replace(/\s/g, ""));
+    const bytes = new Uint8Array(bin.length);
+    for(let i=0; i<bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+
   async function loadData(){
     const localSaved = localStorage.getItem("brand_local_cache");
-    if(localSaved){
-      try{
-        appData = JSON.parse(localSaved);
-        render();
-      }catch(e){}
+    if(localSaved){ try{ appData = JSON.parse(localSaved); render(); }catch(e){} }
+    const token = localStorage.getItem("my_secret_token");
+    if(token){
+      try {
+        const r = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${FILE_PATH}?ref=${GH_BRANCH}&t=${Date.now()}`, {
+          cache: "no-store", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }
+        });
+        if(r.ok){
+          const d = await r.json();
+          appData = JSON.parse(fromBase64(d.content));
+          localStorage.setItem("brand_local_cache", JSON.stringify(appData));
+          render(); return;
+        }
+      } catch(e){}
     }
-
-    try {
-      const res = await fetch("data.json?t=" + Date.now(), { cache: "no-store" });
-      if(res.ok){
-        appData = await res.json();
-        render();
-        return;
-      }
-    } catch(e) {}
-
-    try {
-      const resRaw = await fetch(`https://raw.githubusercontent.com/${GH_REPO}/main/data.json?t=` + Date.now());
-      if(resRaw.ok){
-        appData = await resRaw.json();
-        render();
-        return;
-      }
-    } catch(e) {}
-
+    if(!localSaved){
+      try {
+        const r = await fetch(`data.json?t=${Date.now()}`, { cache: "no-store" });
+        if(r.ok){ appData = await r.json(); localStorage.setItem("brand_local_cache", JSON.stringify(appData)); }
+      } catch(e){}
+    }
     render();
   }
 
-  // حفظ وتحديث في GitHub مباشرة
+  async function saveChanges(){
+    localStorage.setItem("brand_local_cache", JSON.stringify(appData));
+    render();
+    await commitToGitHub();
+  }
+
   async function commitToGitHub(){
     let token = localStorage.getItem("my_secret_token");
     if(!token){
-      token = prompt("أدخل رمز GitHub Token الخاص بك للحفظ التلقائي في المستودع:");
-      if(!token || !token.trim()) return;
+      token = prompt("أدخل رمز GitHub Token للحفظ في المستودع:");
+      if(!token || !token.trim()){ showToast("⚠️ حُفظ في الهاتف فقط (أدخل رمز GitHub)", true); return; }
       token = token.trim();
       localStorage.setItem("my_secret_token", token);
     }
-
     const btn = document.getElementById("saveToGhBtn");
-    btn.textContent = "⏳ جاري التحديث...";
-    btn.disabled = true;
-
+    btn.textContent = "⏳ جاري الحفظ..."; btn.disabled = true;
     try {
-      const fileInfo = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/data.json`, {
-        headers: { "Authorization": `token ${token}` }
+      const info = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${FILE_PATH}?ref=${GH_BRANCH}&t=${Date.now()}`, {
+        cache: "no-store", headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json" }
       });
-
-      if(!fileInfo.ok){
-        throw new Error("رمز GitHub Token غير صحيح أو انتهت صلاحيته.");
-      }
-
-      const fileData = await fileInfo.json();
-      currentSha = fileData.sha;
-
-      const contentStr = unescape(encodeURIComponent(JSON.stringify(appData, null, 2)));
-      const base64Content = btoa(contentStr);
-
-      const res = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/data.json`, {
-        method: "PUT",
-        headers: {
-          "Authorization": `token ${token}`,
-          "Accept": "application/vnd.github.v3+json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          message: "تحديث الباقات والأسعار عبر لوحة التحكم",
-          content: base64Content,
-          sha: currentSha
-        })
-      });
-
-      if(!res.ok){
-        throw new Error("فشل الرفع إلى GitHub. تأكد من إعطاء صلاحية repo للرمز.");
-      }
-
-      showToast("🚀 تم تحديث المستودع بنجاح!");
-    } catch(e) {
-      alert(e.message);
-      if(e.message.includes("Token")){
+      let sha;
+      if(info.ok){ sha = (await info.json()).sha; }
+      else if(info.status === 401 || info.status === 403){
         localStorage.removeItem("my_secret_token");
+        throw new Error("رمز GitHub غير صالح أو لا يملك صلاحية repo.");
       }
+      const payload = { message: "تحديث الباقات عبر لوحة التحكم", content: toBase64(JSON.stringify(appData, null, 2)), branch: GH_BRANCH };
+      if(sha) payload.sha = sha;
+      const res = await fetch(`https://api.github.com/repos/${GH_REPO}/contents/${FILE_PATH}`, {
+        method: "PUT", cache: "no-store",
+        headers: { "Authorization": `Bearer ${token}`, "Accept": "application/vnd.github+json", "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if(!res.ok) throw new Error((await res.json().catch(()=>({}))).message || "فشل الرفع إلى GitHub");
+      showToast("🚀 تم الحفظ والتحديث في GitHub بنجاح!");
+    } catch(e) {
+      alert("❌ خطأ GitHub:\n" + e.message);
+      showToast("⚠️ تم الحفظ على الهاتف فقط", true);
     } finally {
-      btn.textContent = "☁️ حفظ وتحديث في GitHub";
-      btn.disabled = false;
+      btn.textContent = "☁️ حفظ وتحديث في GitHub"; btn.disabled = false;
     }
   }
 
-  // تنزيل الملف كخيار إضافي
-  document.getElementById("downloadJsonBtn").addEventListener("click", () => {
-    const blob = new Blob([JSON.stringify(appData, null, 2)], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
+  document.getElementById("setTokenBtn").onclick = () => {
+    const inp = prompt("أدخل رمز GitHub Token الجديد (أو اتركه فارغاً للحذف):", localStorage.getItem("my_secret_token") || "");
+    if(inp === null) return;
+    if(!inp.trim()){ localStorage.removeItem("my_secret_token"); showToast("🗑️ تم حذف الرمز"); }
+    else { localStorage.setItem("my_secret_token", inp.trim()); showToast("🔑 تم حفظ الرمز بنجاح!"); }
+  };
+
+  document.getElementById("downloadJsonBtn").onclick = () => {
     const a = document.createElement("a");
-    a.href = url;
-    a.download = "data.json";
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast("📥 تم تنزيل الملف بنجاح!");
-  });
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(appData, null, 2)], { type: "application/json" }));
+    a.download = "data.json"; a.click();
+    showToast("📥 تم تنزيل data.json");
+  };
 
-  document.getElementById("saveToGhBtn").addEventListener("click", commitToGitHub);
+  document.getElementById("saveToGhBtn").onclick = commitToGitHub;
+  document.getElementById("tabEsimBtn").onclick = function(){ currentTab="esim"; this.classList.add("active"); document.getElementById("tabPlasticBtn").classList.remove("active"); render(); };
+  document.getElementById("tabPlasticBtn").onclick = function(){ currentTab="plastic"; this.classList.add("active"); document.getElementById("tabEsimBtn").classList.remove("active"); render(); };
 
-  // التبديل بين التبويبات
-  document.getElementById("tabEsimBtn").addEventListener("click", function(){
-    currentTab = "esim";
-    this.classList.add("active");
-    document.getElementById("tabPlasticBtn").classList.remove("active");
-    render();
-  });
-
-  document.getElementById("tabPlasticBtn").addEventListener("click", function(){
-    currentTab = "plastic";
-    this.classList.add("active");
-    document.getElementById("tabEsimBtn").classList.remove("active");
-    render();
-  });
-
-  // إضافة شركة
-  document.getElementById("addCompBtn").addEventListener("click", () => {
+  document.getElementById("addCompBtn").onclick = () => {
     const val = document.getElementById("newCompName").value.trim();
     if(!val) return alert("أدخل اسم الشركة أولاً!");
-    if(!appData[currentTab]) appData[currentTab] = [];
-    appData[currentTab].push({ name: val, pkgs: [] });
+    (appData[currentTab] = appData[currentTab] || []).push({ name: val, pkgs: [] });
     document.getElementById("newCompName").value = "";
-    localStorage.setItem("brand_local_cache", JSON.stringify(appData));
-    render();
-  });
+    saveChanges();
+  };
 
-  // رسم الشركات والباقات
   function render(){
-    const list = appData[currentTab] || [];
     const container = document.getElementById("companiesContainer");
-    container.innerHTML = "";
-
-    list.forEach((comp, cIdx) => {
-      const card = document.createElement("div");
-      card.className = "comp-card";
-      card.innerHTML = `
+    container.innerHTML = (appData[currentTab] || []).map((comp, cIdx) => `
+      <div class="comp-card">
         <div class="comp-header">
           <div style="font-weight:900;color:#00e5ff">🏢 ${comp.name}</div>
           <div style="display:flex;gap:6px">
@@ -410,92 +247,47 @@ body{
           <tbody>
             ${(comp.pkgs || []).map((pkg, pIdx) => `
               <tr>
-                <td>${pkg.d}</td>
-                <td>${pkg.s}</td>
-                <td style="color:#00e5ff;font-weight:800">${pkg.p} ₪</td>
-                <td>${pkg.g}</td>
+                <td>${pkg.d}</td><td>${pkg.s}</td>
+                <td style="color:#00e5ff;font-weight:800">${pkg.p} ₪</td><td>${pkg.g}</td>
                 <td><span class="status-pill ${pkg.available !== false ? 'avail':'unavail'}">${pkg.available !== false ? 'متوفر':'غير متوفر'}</span></td>
                 <td>
-                  <button onclick="openModal(${cIdx}, ${pIdx})" style="background:#fb8c00;border:none;padding:3px 6px;color:#fff;border-radius:4px;cursor:pointer">✏️</button>
-                  <button onclick="delPkg(${cIdx}, ${pIdx})" style="background:#e53935;border:none;padding:3px 6px;color:#fff;border-radius:4px;cursor:pointer">🗑️</button>
+                  <button onclick="openModal(${cIdx},${pIdx})" style="background:#fb8c00;border:none;padding:3px 6px;color:#fff;border-radius:4px;cursor:pointer">✏️</button>
+                  <button onclick="delPkg(${cIdx},${pIdx})" style="background:#e53935;border:none;padding:3px 6px;color:#fff;border-radius:4px;cursor:pointer">🗑️</button>
                 </td>
-              </tr>
-            `).join("")}
+              </tr>`).join("")}
           </tbody>
         </table>
-      `;
-      container.appendChild(card);
-    });
+      </div>`).join("");
   }
 
-  window.editComp = function(idx){
-    const n = prompt("تعديل اسم الشركة:", appData[currentTab][idx].name);
-    if(n && n.trim()){
-      appData[currentTab][idx].name = n.trim();
-      localStorage.setItem("brand_local_cache", JSON.stringify(appData));
-      render();
-    }
-  };
-
-  window.delComp = function(idx){
-    if(confirm("هل أنت متأكد من حذف هذه الشركة بالكامل؟")){
-      appData[currentTab].splice(idx, 1);
-      localStorage.setItem("brand_local_cache", JSON.stringify(appData));
-      render();
-    }
-  };
+  window.editComp = idx => { const n = prompt("تعديل اسم الشركة:", appData[currentTab][idx].name); if(n && n.trim()){ appData[currentTab][idx].name = n.trim(); saveChanges(); } };
+  window.delComp = idx => { if(confirm("حذف الشركة بالكامل؟")){ appData[currentTab].splice(idx, 1); saveChanges(); } };
+  window.delPkg = (cIdx, pIdx) => { if(confirm("حذف هذه الباقة؟")){ appData[currentTab][cIdx].pkgs.splice(pIdx, 1); saveChanges(); } };
 
   const modal = document.getElementById("pkgModal");
-  window.openModal = function(cIdx, pIdx = null){
+  window.openModal = (cIdx, pIdx = null) => {
     document.getElementById("modalCompIdx").value = cIdx;
     document.getElementById("modalPkgIdx").value = pIdx !== null ? pIdx : "";
-    if(pIdx !== null){
-      const pkg = appData[currentTab][cIdx].pkgs[pIdx];
-      document.getElementById("pkgD").value = pkg.d;
-      document.getElementById("pkgS").value = pkg.s;
-      document.getElementById("pkgP").value = pkg.p;
-      document.getElementById("pkgG").value = pkg.g;
-      document.getElementById("pkgAvail").value = (pkg.available !== false).toString();
-    } else {
-      document.getElementById("pkgD").value = "";
-      document.getElementById("pkgS").value = "";
-      document.getElementById("pkgP").value = "";
-      document.getElementById("pkgG").value = "";
-      document.getElementById("pkgAvail").value = "true";
-    }
+    const pkg = pIdx !== null ? appData[currentTab][cIdx].pkgs[pIdx] : { d:"", s:"", p:"", g:"", available:true };
+    document.getElementById("pkgD").value = pkg.d;
+    document.getElementById("pkgS").value = pkg.s;
+    document.getElementById("pkgP").value = pkg.p;
+    document.getElementById("pkgG").value = pkg.g;
+    document.getElementById("pkgAvail").value = (pkg.available !== false).toString();
     modal.classList.add("active");
   };
 
-  document.getElementById("closeModalBtn").addEventListener("click", () => modal.classList.remove("active"));
-
-  document.getElementById("savePkgModalBtn").addEventListener("click", () => {
-    const cIdx = document.getElementById("modalCompIdx").value;
-    const pIdx = document.getElementById("modalPkgIdx").value;
-    const d = document.getElementById("pkgD").value.trim();
-    const s = document.getElementById("pkgS").value.trim();
-    const p = parseFloat(document.getElementById("pkgP").value);
-    const g = document.getElementById("pkgG").value.trim();
+  document.getElementById("closeModalBtn").onclick = () => modal.classList.remove("active");
+  document.getElementById("savePkgModalBtn").onclick = () => {
+    const cIdx = document.getElementById("modalCompIdx").value, pIdx = document.getElementById("modalPkgIdx").value;
+    const d = document.getElementById("pkgD").value.trim(), s = document.getElementById("pkgS").value.trim();
+    const p = parseFloat(document.getElementById("pkgP").value), g = document.getElementById("pkgG").value.trim();
     const available = document.getElementById("pkgAvail").value === "true";
-
     if(!d || !s || isNaN(p)) return alert("يرجى إدخال البيانات بشكل صحيح!");
-
-    const item = { d, s, p, g, available };
-    if(pIdx !== "") appData[currentTab][cIdx].pkgs[pIdx] = item;
-    else {
-      if(!appData[currentTab][cIdx].pkgs) appData[currentTab][cIdx].pkgs = [];
-      appData[currentTab][cIdx].pkgs.push(item);
-    }
-    localStorage.setItem("brand_local_cache", JSON.stringify(appData));
+    if(pIdx !== "") appData[currentTab][cIdx].pkgs[pIdx] = { d, s, p, g, available };
+    else (appData[currentTab][cIdx].pkgs = appData[currentTab][cIdx].pkgs || []).push({ d, s, p, g, available });
     modal.classList.remove("active");
-    render();
-  });
-
-  window.delPkg = function(cIdx, pIdx){
-    if(confirm("هل أنت متأكد من حذف هذه الباقة؟")){
-      appData[currentTab][cIdx].pkgs.splice(pIdx, 1);
-      localStorage.setItem("brand_local_cache", JSON.stringify(appData));
-      render();
-    }
+    saveChanges();
   };
 
   loadData();
