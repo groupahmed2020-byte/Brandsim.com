@@ -1,0 +1,62 @@
+{
+  "apiKey": "98daac36e1667a2c84fa2611b36ef2fc",
+  "senderId": "XONE1",
+  "netlifyUrl": "https://incredible-crumble-58566c.netlify.app/custom.json",
+  "netlifyFunc": "https://incredible-crumble-58566c.netlify.app/.netlify/functions/query",
+  "ghRepo": "groupahmed2020-byte/BrandSim.com",
+  "ghBranch": "main",
+  "adminPass": "123456",
+  "agents": [
+    {
+      "id": "ag_1793733418767_khvh",
+      "name": "سلكوم ب 44 شيكل ( بدون ) 400GB",
+      "phone": "",
+      "region": "",
+      "notes": "تمت إضافته تلقائياً عند استيراد الملف",
+      "createdAt": "2026-11-03"
+    },
+    {
+      "id": "ag_1793733418768_5wmh",
+      "name": "جيغا وي ب 32 شيكل (بدون عمولة) 500GB",
+      "phone": "",
+      "region": "",
+      "notes": "تمت إضافته تلقائياً عند استيراد الملف",
+      "createdAt": "2026-11-03"
+    },
+    {
+      "id": "ag_1793733418769_407c",
+      "name": "دافا فاط 500GB",
+      "phone": "",
+      "region": "",
+      "notes": "تمت إضافته تلقائياً عند استيراد الملف",
+      "createdAt": "2026-11-03"
+    },
+    {
+      "id": "ag_1793733418807_zafz",
+      "name": "جيغا وي ب 39 شيكل 500GB",
+      "phone": "",
+      "region": "",
+      "notes": "تمت إضافته تلقائياً عند استيراد الملف",
+      "createdAt": "2026-11-03"
+    },
+    {
+      "id": "ag_1793733418808_je7d",
+      "name": "الجيل 5 ب 49.90 شيكل - 150GB",
+      "phone": "",
+      "region": "",
+      "notes": "تمت إضافته تلقائياً عند استيراد الملف",
+      "createdAt": "2026-11-03"
+    },
+    {
+      "id": "ag_1793733418808_p6mj",
+      "name": "الجيل 4 ب 44.90 شيكل - 150GB",
+      "phone": "",
+      "region": "",
+      "notes": "تمت إضافته تلقائياً عند استيراد الملف",
+      "createdAt": "2026-11-03"
+    }
+  ],
+  "customerEdits": {},
+  "deletedPhones": [],
+  "updatedAt": "2026-11-03T22:19:20.776Z"
+}
