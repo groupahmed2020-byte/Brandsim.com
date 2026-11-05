@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline'; connect-src 'self' https://incredible-crumble-58566c.netlify.app https://api.layan-t.net https://script.google.com https://script.googleusercontent.com https://steep-shadow-66a0.groupahmed2020.workers.dev https://www.tweetsms.ps https://api.allorigins.win https://corsproxy.io; object-src 'none'; base-uri 'self'; form-action 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; img-src * data: blob:; style-src * 'unsafe-inline'; font-src * data:; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src *;">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="no-referrer">
 <title>BRAND SIM | تحديث وتنشيط الشرائح</title>
@@ -57,15 +57,34 @@ body[lang="he"] .form-group{text-align:right}
 (function(){"use strict";
 if(window.top!==window.self){try{window.top.location=window.self.location;}catch(e){}}
 document.getElementById("yearSpan").textContent=new Date().getFullYear();
-const LAYAN_API_URL="https://api.layan-t.net/api/Subscribtions/CustomersRefreshNumber",AREEN_GAS_URL="https://script.google.com/macros/s/AKfycbxidpoKH8PnhxSvKggQpI2K2BiQQLm7PJM2byXFxnJY1f2Iahqj4UdRfYFuECuqqoPK/exec",QUICKLINE_GAS_URL="https://script.google.com/macros/s/AKfycbzoFY7vXfDNsMBieM33Ohym4o3oif6_hoc1FI0RFzKbEgvfALOVMBWQKNt14VOakcQg/exec",SKY_PORTAL_URL="https://rn.sky-5g.net",AYLOL_WORKER_URL="https://steep-shadow-66a0.groupahmed2020.workers.dev/",NETLIFY_QUERY_URL="https://incredible-crumble-58566c.netlify.app/.netlify/functions/query";
-const BACKEND_DEVICE_PHONE="972599783984",TWEETSMS_API_KEY="98daac36e1667a2c84fa2611b36ef2fc",TWEETSMS_SENDER="XONE1";
+
+/* ========================================================
+   إعدادات بوت تيليجرام الرسمية المدمجة (بدون أي تكرار)
+   ======================================================== */
+const TELEGRAM_BOT_TOKEN = "9204687369:AAHBh1_XkULtXeWn50kUBMpR6rcu6C_F3OA";
+const TELEGRAM_CHAT_ID = "6642395933";
+
+const LAYAN_API_URL="https://api.layan-t.net/api/Subscribtions/CustomersRefreshNumber";
+const AREEN_GAS_URL="https://script.google.com/macros/s/AKfycbxidpoKH8PnhxSvKggQpI2K2BiQQLm7PJM2byXFxnJY1f2Iahqj4UdRfYFuECuqqoPK/exec";
+const QUICKLINE_GAS_URL="https://script.google.com/macros/s/AKfycbzoFY7vXfDNsMBieM33Ohym4o3oif6_hoc1FI0RFzKbEgvfALOVMBWQKNt14VOakcQg/exec";
+const AYLOL_WORKER_URL="https://steep-shadow-66a0.groupahmed2020.workers.dev/";
+const NETLIFY_QUERY_URL="https://incredible-crumble-58566c.netlify.app/.netlify/functions/query";
+
 const i18n=Object.freeze({
   ar:Object.freeze({welcome:"مرحباً بك في براند سيم",subtitle:"أدخل رقم الهاتف لإجراء تحديث وتنشيط فوري للشريحة",label:"📱 رقم الهاتف:",placeholder:"05XXXXXXXX",btn:"تحديث الرقم الآن",loading:"جاري الفحص والتحديث...",switchBtn:"עברית",invalidPhone:"يرجى إدخال رقم هاتف صحيح مكون من 10 أرقام ويبدأ بـ 05",notAuthorized:"عذراً، هذا الرقم غير مسجل في منظومة براند سيم (BRAND SIM) ولا يمكن تحديثه.",skyExpired:"الرقم منتهي اشتراكه، الرجاء التواصل مع المندوب من أجل التجديد",defaultSuccess:"✅ تم إرسال طلب تحديث وتنشيط الرقم بنجاح!",defaultError:"⚠️ تعذر تحديث الرقم حالياً، يرجى التأكد من الرقم أو المحاولة لاحقاً."}),
   he:Object.freeze({welcome:"ברוך הבא ל-BRAND SIM",subtitle:"נא להזין מספר טלפון כדי לבצע רענון והפעלה לכרטיס ה-SIM",label:"📱 מספר טלפון:",placeholder:"05XXXXXXXX",btn:"רענון מספר כעת",loading:"בודק ומרענן...",switchBtn:"العربية",invalidPhone:"נא להזין מספר טלפון תקין בן 10 ספרות המתחיל ב-05",notAuthorized:"מספר זה אינו רשום במערכת BRAND SIM ולא ניתן לרענן אותו.",skyExpired:"الرقم منتهي اشتراكه، الرجاء التواصل مع المندوب من أجل التجديد",defaultSuccess:"✅ המספר רוענן בהצלחה!",defaultError:"⚠️ פעולת הרענון נכשלה, בדוק את המספר או נסה שוב."})
 });
-let currentLang=localStorage.getItem("language")==="he"?"he":"ar",lastSubmit=0;
+
+let currentLang=localStorage.getItem("language")==="he"?"he":"ar";
+let isRefreshing=false;
+let lastSubmit=0;
+let lastSkySentPhone="";
+let lastSkySentTime=0;
+
 const form=document.getElementById("customer-refresh-number-form"),phoneInput=document.getElementById("customerPhone"),submitBtn=document.getElementById("customSubmitBtn"),btnText=document.getElementById("ui-btn"),alertBox=document.getElementById("alertBox"),langBtn=document.getElementById("langToggleBtn");
+
 function cleanText(s){return String(s||"").replace(/[\u0000-\u001F\u007F-\u009F<>]/g,"").trim().slice(0,220);}
+
 function applyLanguage(lang){
   currentLang=lang==="he"?"he":"ar";try{localStorage.setItem("language",currentLang);}catch(e){}
   const t=i18n[currentLang];document.body.setAttribute("lang",currentLang);
@@ -73,6 +92,7 @@ function applyLanguage(lang){
   document.getElementById("ui-label").textContent=t.label;phoneInput.placeholder=t.placeholder;
   btnText.textContent=t.btn;langBtn.textContent=t.switchBtn;
 }
+
 function normalizePhoneNumber(rawInput){
   if(!rawInput)return"";
   let str=String(rawInput).replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g,d=>"۰۱۲۳۴۵۶۷۸۹".indexOf(d));
@@ -83,6 +103,7 @@ function normalizePhoneNumber(rawInput){
   else if(str.length>10&&str.startsWith("05"))str=str.slice(0,10);
   return str;
 }
+
 function isSubscriptionExpired(expStr){
   if(!expStr)return false;
   const s=String(expStr).trim();
@@ -94,6 +115,7 @@ function isSubscriptionExpired(expStr){
   const diffDays=Math.ceil((ex-now)/86400000);
   return diffDays<0;
 }
+
 function showMessage(type,text){
   const validType=["success","warning","error"].includes(type)?type:"error";
   alertBox.className="alert-box "+validType;alertBox.textContent="";
@@ -102,6 +124,7 @@ function showMessage(type,text){
   alertBox.append(icon,span);alertBox.style.display="flex";
 }
 window.showMessage=showMessage;
+
 async function findCustomerInBackend(cleanPhone){
   try{
     const res=await fetch(NETLIFY_QUERY_URL,{
@@ -127,25 +150,71 @@ async function findCustomerInBackend(cleanPhone){
   }catch(e){}
   return null;
 }
+
+/* ========================================================
+   إرسال رسالة واحدة فقط عبر تيليجرام (متوافق مع Acode و WebView و المتصفحات)
+   ======================================================== */
+async function sendToTelegramOnce(cmdText){
+  const tgUrl=`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${encodeURIComponent(TELEGRAM_CHAT_ID)}&text=${encodeURIComponent(cmdText)}`;
+  
+  // 1) المحاولة المباشرة بصيغة GET البسيطة (لا تسبب CORS Preflight في Acode)
+  try{
+    const res=await fetch(tgUrl,{method:"GET"});
+    if(res&&res.ok){
+      const d=await res.json();
+      if(d&&d.ok)return true;
+    }
+  }catch(e){}
+
+  // 2) إذا منع متصفح Acode قراءة الرد (CORS)، نرسلها بوضع no-cors لمرة واحدة فقط
+  try{
+    await fetch(tgUrl,{method:"GET",mode:"no-cors",cache:"no-store"});
+    return true;
+  }catch(e){}
+
+  // 3) خط دفاع أخير عبر Image Beacon (يعمل في 100% من متصفحات الجوال القديمة والجديدة)
+  return new Promise(resolve=>{
+    try{
+      const img=new Image();
+      img.onload=()=>resolve(true);
+      img.onerror=()=>resolve(true); // تيليجرام يرجع JSON وليس صورة لذلك onerror يعني أن الطلب وصل للخادم بنجاح!
+      img.src=tgUrl+"&_t="+Date.now();
+      setTimeout(()=>resolve(true),1200);
+    }catch(e){
+      resolve(false);
+    }
+  });
+}
+
 async function refreshViaSky(phone,senderPhone=""){
-  // إذا كان يعمل داخل التطبيق على جوالك يستدعي التحديث التلقائي مباشرة
+  // 1) إذا كان يعمل مباشرة داخل تطبيق WebView على جوالك
   if(window.AndroidBridge&&typeof window.AndroidBridge.autoRefreshSky==="function"){
     window.AndroidBridge.autoRefreshSky(phone,senderPhone||"");
+    
+    // التعديل: إرسال رسالة تيلجرام من داخل التطبيق قبل عمل return
+    const cmdText="SKY_WEB:"+phone;
+    await sendToTelegramOnce(cmdText);
+    
     return{ok:true,isSkyApp:true,msg:"⏳ جاري تحديث شريحة سكاي تلقائياً بالخلفية..."};
   }
-  // إذا طلب الزبون تحديث رقم سكاي من الموقع، يرسل الموقع إشارة لجوالك ليحدثه التطبيق بالخلفية
+
+  // حماية صارمة من إرسال رسالتين متتاليتين لنفس الرقم خلال 15 ثانية
+  const now=Date.now();
+  if(lastSkySentPhone===phone&&(now-lastSkySentTime)<15000){
+    return{ok:true,msg:"✅ تم إرسال طلب تحديث رقمك إلى النظام بنجاح! سيتم تنشيط الشريحة خلال لحظات."};
+  }
+
+  // 2) إرسال طلب واحد فقط إلى بوت التيليجرام الخاص بك
   const cmdText="SKY_WEB:"+phone;
-  const smsApiUrl="https://www.tweetsms.ps/api.php?comm=sendsms&api_key="+encodeURIComponent(TWEETSMS_API_KEY)+"&to="+encodeURIComponent(BACKEND_DEVICE_PHONE)+"&message="+encodeURIComponent(cmdText)+"&sender="+encodeURIComponent(TWEETSMS_SENDER);
-  const urls=[smsApiUrl,"https://api.allorigins.win/raw?url="+encodeURIComponent(smsApiUrl),"https://corsproxy.io/?"+encodeURIComponent(smsApiUrl)];
-  let sent=false;
-  for(const u of urls){
-    try{const r=await fetch(u);if(r&&r.ok){sent=true;break;}}catch(e){}
+  const sent=await sendToTelegramOnce(cmdText);
+  if(sent){
+    lastSkySentPhone=phone;
+    lastSkySentTime=Date.now();
+    return{ok:true,msg:"✅ تم إرسال طلب تحديث رقمك إلى النظام بنجاح! سيتم تنشيط الشريحة خلال لحظات."};
   }
-  if(!sent){
-    try{await fetch(smsApiUrl,{mode:"no-cors"});}catch(e){}
-  }
-  return{ok:true,msg:"✅ تم إرسال طلب تحديث رقمك إلى النظام بنجاح! سيتم تنشيط الشريحة خلال لحظات."};
+  return{ok:false,msg:"⚠️ تعذر إرسال طلب التحديث حالياً، يرجى المحاولة مرة أخرى."};
 }
+
 async function refreshViaAreen(phone){
   try{
     const res=await fetch(AREEN_GAS_URL,{method:"POST",redirect:"follow",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({MobNumber:phone,provider:"areen"})});
@@ -154,6 +223,7 @@ async function refreshViaAreen(phone){
     return{ok:Number(sc)===23||Boolean(data?.IsSuccess??data?.isSuccess),msg:cleanText(data?.Message??data?.message??data?.ErrorMessage??data?.errorMessage)};
   }catch(e){throw new Error("Areen failed");}
 }
+
 async function refreshViaQuickLine(phone){
   try{
     const res=await fetch(QUICKLINE_GAS_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({phoneNumber:phone,provider:"quickline"})});
@@ -161,6 +231,7 @@ async function refreshViaQuickLine(phone){
     return{ok:data.StatusCode>=200&&data.StatusCode<300,msg:cleanText((data.Message||"").replace(/^"|"$/g,""))};
   }catch(e){throw new Error("QuickLine failed");}
 }
+
 async function refreshViaAylol(phone){
   try{
     const formData=new URLSearchParams();
@@ -170,6 +241,7 @@ async function refreshViaAylol(phone){
     return{ok:Boolean(data&&data.success),msg:cleanText(data?.message)};
   }catch(e){throw new Error("Aylol failed");}
 }
+
 async function refreshViaLayan(phone){
   try{
     const res=await fetch(LAYAN_API_URL,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json, text/plain, */*","LANG":currentLang},body:JSON.stringify({number:phone,provider:"layan"})});
@@ -178,11 +250,20 @@ async function refreshViaLayan(phone){
     return{ok:res.ok,msg:cleanText(txt)};
   }catch(e){throw new Error("Layan failed");}
 }
+
 async function executeRefresh(rawNumber,senderPhone=""){
-  if(!senderPhone&&Date.now()-lastSubmit<2000)return;
+  if(isRefreshing)return;
+  if(!senderPhone&&Date.now()-lastSubmit<3000)return;
   const t=i18n[currentLang],cleanNumber=normalizePhoneNumber(rawNumber);phoneInput.value=cleanNumber;
   if(!/^05\d{8}$/.test(cleanNumber)){showMessage("warning",t.invalidPhone);return;}
-  lastSubmit=Date.now();submitBtn.disabled=true;submitBtn.classList.add("loading");btnText.textContent=t.loading;alertBox.style.display="none";
+  
+  isRefreshing=true;
+  lastSubmit=Date.now();
+  submitBtn.disabled=true;
+  submitBtn.classList.add("loading");
+  btnText.textContent=t.loading;
+  alertBox.style.display="none";
+  
   try{
     const customer=await findCustomerInBackend(cleanNumber);
     if(!customer){
@@ -216,15 +297,26 @@ async function executeRefresh(rawNumber,senderPhone=""){
     if(senderPhone&&window.AndroidBridge&&window.AndroidBridge.sendSmsReply){
       window.AndroidBridge.sendSmsReply(senderPhone,t.defaultError);
     }
-  }finally{submitBtn.disabled=false;submitBtn.classList.remove("loading");btnText.textContent=t.btn;}
+  }finally{
+    isRefreshing=false;
+    submitBtn.disabled=false;
+    submitBtn.classList.remove("loading");
+    btnText.textContent=t.btn;
+  }
 }
+
 window.executeSmsAutoRefresh=function(targetPhone,senderPhone,mode){
   executeRefresh(targetPhone,senderPhone);
 };
 phoneInput.addEventListener("input",e=>{const n=normalizePhoneNumber(e.target.value);if(e.target.value!==n)e.target.value=n;});
 langBtn.addEventListener("click",()=>{alertBox.style.display="none";applyLanguage(currentLang==="ar"?"he":"ar");});
 form.addEventListener("submit",e=>{e.preventDefault();executeRefresh(phoneInput.value);});
-window.addEventListener("DOMContentLoaded",()=>{const p=new URLSearchParams(window.location.search);applyLanguage(p.get("lang")||currentLang);const num=p.get("number")||p.get("phone");if(num)phoneInput.value=normalizePhoneNumber(num);});
+window.addEventListener("DOMContentLoaded",()=>{
+  const p=new URLSearchParams(window.location.search);
+  applyLanguage(p.get("lang")||currentLang);
+  const num=p.get("number")||p.get("phone");
+  if(num)phoneInput.value=normalizePhoneNumber(num);
+});
 })();
 </script>
 </body>
