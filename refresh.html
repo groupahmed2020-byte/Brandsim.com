@@ -60,8 +60,8 @@ document.getElementById("yearSpan").textContent=new Date().getFullYear();
 const LAYAN_API_URL="https://api.layan-t.net/api/Subscribtions/CustomersRefreshNumber",AREEN_GAS_URL="https://script.google.com/macros/s/AKfycbxidpoKH8PnhxSvKggQpI2K2BiQQLm7PJM2byXFxnJY1f2Iahqj4UdRfYFuECuqqoPK/exec",QUICKLINE_GAS_URL="https://script.google.com/macros/s/AKfycbzoFY7vXfDNsMBieM33Ohym4o3oif6_hoc1FI0RFzKbEgvfALOVMBWQKNt14VOakcQg/exec",SKY_PORTAL_URL="https://rn.sky-5g.net",AYLOL_WORKER_URL="https://steep-shadow-66a0.groupahmed2020.workers.dev/",NETLIFY_QUERY_URL="https://incredible-crumble-58566c.netlify.app/.netlify/functions/query";
 const BACKEND_DEVICE_PHONE="972599783984",TWEETSMS_API_KEY="98daac36e1667a2c84fa2611b36ef2fc",TWEETSMS_SENDER="XONE1";
 const i18n=Object.freeze({
-  ar:Object.freeze({welcome:"مرحباً بك في براند سيم",subtitle:"أدخل رقم الهاتف لإجراء تحديث وتنشيط فوري للشريحة",label:"📱 رقم الهاتف:",placeholder:"05XXXXXXXX",btn:"تحديث الرقم الآن",loading:"جاري الفحص والتحديث...",switchBtn:"עברית",invalidPhone:"يرجى إدخال رقم هاتف صحيح مكون من 10 أرقام ويبدأ بـ 05",notAuthorized:"عذراً، هذا الرقم غير مسجل في منظومة براند سيم (BRAND SIM) ولا يمكن تحديثه.",defaultSuccess:"✅ تم إرسال طلب تحديث وتنشيط الرقم بنجاح!",defaultError:"⚠️ تعذر تحديث الرقم حالياً، يرجى التأكد من الرقم أو المحاولة لاحقاً."}),
-  he:Object.freeze({welcome:"ברוך הבא ל-BRAND SIM",subtitle:"נא להזין מספר טלפון כדי לבצע רענון והפעלה לכרטיס ה-SIM",label:"📱 מספר טלפון:",placeholder:"05XXXXXXXX",btn:"רענון מספר כעת",loading:"בודק ומרענן...",switchBtn:"العربية",invalidPhone:"נא להזין מספר טלפון תקין בן 10 ספרות המתחיל ב-05",notAuthorized:"מספר זה אינו רשום במערכת BRAND SIM ולא ניתן לרענן אותו.",defaultSuccess:"✅ המספר רוענן בהצלחה!",defaultError:"⚠️ פעולת הרענון נכשלה, בדוק את המספר או נסה שוב."})
+  ar:Object.freeze({welcome:"مرحباً بك في براند سيم",subtitle:"أدخل رقم الهاتف لإجراء تحديث وتنشيط فوري للشريحة",label:"📱 رقم الهاتف:",placeholder:"05XXXXXXXX",btn:"تحديث الرقم الآن",loading:"جاري الفحص والتحديث...",switchBtn:"עברית",invalidPhone:"يرجى إدخال رقم هاتف صحيح مكون من 10 أرقام ويبدأ بـ 05",notAuthorized:"عذراً، هذا الرقم غير مسجل في منظومة براند سيم (BRAND SIM) ولا يمكن تحديثه.",skyExpired:"الرقم منتهي اشتراكه، الرجاء التواصل مع المندوب من أجل التجديد",defaultSuccess:"✅ تم إرسال طلب تحديث وتنشيط الرقم بنجاح!",defaultError:"⚠️ تعذر تحديث الرقم حالياً، يرجى التأكد من الرقم أو المحاولة لاحقاً."}),
+  he:Object.freeze({welcome:"ברוך הבא ל-BRAND SIM",subtitle:"נא להזין מספר טלפון כדי לבצע רענון והפעלה לכרטיס ה-SIM",label:"📱 מספר טלפון:",placeholder:"05XXXXXXXX",btn:"רענון מספר כעת",loading:"בודק ומרענן...",switchBtn:"العربية",invalidPhone:"נא להזין מספר טלפון תקין בן 10 ספרות המתחיל ב-05",notAuthorized:"מספר זה אינו רשום במערכת BRAND SIM ולא ניתן לרענן אותו.",skyExpired:"الرقم منتهي اشتراكه، الرجاء التواصل مع المندوب من أجل التجديد",defaultSuccess:"✅ המספר רוענן בהצלחה!",defaultError:"⚠️ פעולת הרענון נכשלה, בדוק את המספר או נסה שוב."})
 });
 let currentLang=localStorage.getItem("language")==="he"?"he":"ar",lastSubmit=0;
 const form=document.getElementById("customer-refresh-number-form"),phoneInput=document.getElementById("customerPhone"),submitBtn=document.getElementById("customSubmitBtn"),btnText=document.getElementById("ui-btn"),alertBox=document.getElementById("alertBox"),langBtn=document.getElementById("langToggleBtn");
@@ -83,6 +83,17 @@ function normalizePhoneNumber(rawInput){
   else if(str.length>10&&str.startsWith("05"))str=str.slice(0,10);
   return str;
 }
+function isSubscriptionExpired(expStr){
+  if(!expStr)return false;
+  const s=String(expStr).trim();
+  if(s==="موصول"||s==="-")return false;
+  const now=new Date();now.setHours(0,0,0,0);
+  const ex=new Date(s);
+  if(isNaN(ex.getTime()))return false;
+  ex.setHours(0,0,0,0);
+  const diffDays=Math.ceil((ex-now)/86400000);
+  return diffDays<0;
+}
 function showMessage(type,text){
   const validType=["success","warning","error"].includes(type)?type:"error";
   alertBox.className="alert-box "+validType;alertBox.textContent="";
@@ -100,6 +111,19 @@ async function findCustomerInBackend(cleanPhone){
     });
     const json=await res.json();
     if(res.ok&&json.ok&&json.data)return json.data;
+  }catch(e){}
+  try{
+    const localRes=await fetch("customer.json?t="+Date.now());
+    if(localRes.ok){
+      const data=await localRes.json();
+      const list=Array.isArray(data)?data:(data.customers||data.data||[]);
+      if(Array.isArray(list)){
+        const found=list.find(c=>normalizePhoneNumber(c.simPhone||c.phone||c.number)===cleanPhone);
+        if(found)return found;
+      }else if(typeof data==="object"&&data!==null&&data[cleanPhone]){
+        return data[cleanPhone];
+      }
+    }
   }catch(e){}
   return null;
 }
@@ -169,7 +193,19 @@ async function executeRefresh(rawNumber,senderPhone=""){
       return;
     }
     const p=String(customer.sourceProvider||"").trim().toLowerCase();
-    const res=(p.includes("سكاي")||p.includes("sky"))?await refreshViaSky(cleanNumber,senderPhone):(p.includes("ارين")||p.includes("أرين")||p.includes("areen"))?await refreshViaAreen(cleanNumber):(p.includes("كويك")||p.includes("quick"))?await refreshViaQuickLine(cleanNumber):(p.includes("ايلول")||p.includes("أيلول")||p.includes("aylol")||p.includes("ayloul"))?await refreshViaAylol(cleanNumber):await refreshViaLayan(cleanNumber);
+    const isSky=p.includes("سكاي")||p.includes("sky");
+    
+    // فحص تاريخ انتهاء الاشتراك إذا كان الرقم تابعاً لشركة سكاي
+    if(isSky&&isSubscriptionExpired(customer.expiryDate)){
+      const expMsg=t.skyExpired;
+      showMessage("error",expMsg);
+      if(senderPhone&&window.AndroidBridge&&window.AndroidBridge.sendSmsReply){
+        window.AndroidBridge.sendSmsReply(senderPhone,expMsg);
+      }
+      return;
+    }
+
+    const res=isSky?await refreshViaSky(cleanNumber,senderPhone):(p.includes("ارين")||p.includes("أرين")||p.includes("areen"))?await refreshViaAreen(cleanNumber):(p.includes("كويك")||p.includes("quick"))?await refreshViaQuickLine(cleanNumber):(p.includes("ايلول")||p.includes("أيلول")||p.includes("aylol")||p.includes("ayloul"))?await refreshViaAylol(cleanNumber):await refreshViaLayan(cleanNumber);
     const finalMsg=res.msg||(res.ok?t.defaultSuccess:t.defaultError);
     if(res.ok){showMessage("success",finalMsg);if(!res.isSkyApp)phoneInput.value="";}else showMessage("warning",finalMsg);
     if(senderPhone&&!res.isSkyApp&&window.AndroidBridge&&window.AndroidBridge.sendSmsReply){
