@@ -58,12 +58,7 @@ body[lang="he"] .form-group{text-align:right}
 if(window.top!==window.self){try{window.top.location=window.self.location;}catch(e){}}
 document.getElementById("yearSpan").textContent=new Date().getFullYear();
 
-/* ========================================================
-   إعدادات بوت تيليجرام الرسمية المدمجة (بدون أي تكرار)
-   ======================================================== */
-const TELEGRAM_BOT_TOKEN = "9204687369:AAHBh1_XkULtXeWn50kUBMpR6rcu6C_F3OA";
-const TELEGRAM_CHAT_ID = "6642395933";
-
+const SKY_TELEGRAM_WORKER_URL="https://gentle-morning-4759.groupahmed2020.workers.dev/";
 const LAYAN_API_URL="https://api.layan-t.net/api/Subscribtions/CustomersRefreshNumber";
 const AREEN_GAS_URL="https://script.google.com/macros/s/AKfycbxidpoKH8PnhxSvKggQpI2K2BiQQLm7PJM2byXFxnJY1f2Iahqj4UdRfYFuECuqqoPK/exec";
 const QUICKLINE_GAS_URL="https://script.google.com/macros/s/AKfycbzoFY7vXfDNsMBieM33Ohym4o3oif6_hoc1FI0RFzKbEgvfALOVMBWQKNt14VOakcQg/exec";
@@ -136,83 +131,51 @@ async function findCustomerInBackend(cleanPhone){
     if(res.ok&&json.ok&&json.data)return json.data;
   }catch(e){}
   try{
-    const localRes=await fetch("customer.json?t="+Date.now());
+    const localRes=await fetch("https://incredible-crumble-58566c.netlify.app/custom.json?t="+Date.now());
     if(localRes.ok){
       const data=await localRes.json();
       const list=Array.isArray(data)?data:(data.customers||data.data||[]);
       if(Array.isArray(list)){
         const found=list.find(c=>normalizePhoneNumber(c.simPhone||c.phone||c.number)===cleanPhone);
         if(found)return found;
-      }else if(typeof data==="object"&&data!==null&&data[cleanPhone]){
-        return data[cleanPhone];
       }
     }
   }catch(e){}
   return null;
 }
 
-/* ========================================================
-   إرسال رسالة واحدة فقط عبر تيليجرام (متوافق مع Acode و WebView و المتصفحات)
-   ======================================================== */
 async function sendToTelegramOnce(cmdText){
-  const tgUrl=`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${encodeURIComponent(TELEGRAM_CHAT_ID)}&text=${encodeURIComponent(cmdText)}`;
+  const workerUrl=`${SKY_TELEGRAM_WORKER_URL}?text=${encodeURIComponent(cmdText)}`;
   
-  // 1) المحاولة المباشرة بصيغة GET البسيطة (لا تسبب CORS Preflight في Acode)
   try{
-    const res=await fetch(tgUrl,{method:"GET"});
-    if(res&&res.ok){
-      const d=await res.json();
-      if(d&&d.ok)return true;
-    }
+    const res=await fetch(workerUrl,{method:"GET"});
+    if(res&&res.ok)return true;
   }catch(e){}
 
-  // 2) إذا منع متصفح Acode قراءة الرد (CORS)، نرسلها بوضع no-cors لمرة واحدة فقط
   try{
-    await fetch(tgUrl,{method:"GET",mode:"no-cors",cache:"no-store"});
+    await fetch(workerUrl,{method:"GET",mode:"no-cors",cache:"no-store"});
     return true;
   }catch(e){}
 
-  // 3) خط دفاع أخير عبر Image Beacon (يعمل في 100% من متصفحات الجوال القديمة والجديدة)
-  return new Promise(resolve=>{
-    try{
-      const img=new Image();
-      img.onload=()=>resolve(true);
-      img.onerror=()=>resolve(true); // تيليجرام يرجع JSON وليس صورة لذلك onerror يعني أن الطلب وصل للخادم بنجاح!
-      img.src=tgUrl+"&_t="+Date.now();
-      setTimeout(()=>resolve(true),1200);
-    }catch(e){
-      resolve(false);
-    }
-  });
+  return false;
 }
 
 async function refreshViaSky(phone,senderPhone=""){
-  // 1) إذا كان يعمل مباشرة داخل تطبيق WebView على جوالك
+  const now=Date.now();
+  const cmdText="SKY_WEB:"+phone;
+
+  if(lastSkySentPhone!==phone||(now-lastSkySentTime)>=15000){
+    lastSkySentPhone=phone;
+    lastSkySentTime=now;
+    await sendToTelegramOnce(cmdText);
+  }
+
   if(window.AndroidBridge&&typeof window.AndroidBridge.autoRefreshSky==="function"){
     window.AndroidBridge.autoRefreshSky(phone,senderPhone||"");
-    
-    // التعديل: إرسال رسالة تيلجرام من داخل التطبيق قبل عمل return
-    const cmdText="SKY_WEB:"+phone;
-    await sendToTelegramOnce(cmdText);
-    
     return{ok:true,isSkyApp:true,msg:"⏳ جاري تحديث شريحة سكاي تلقائياً بالخلفية..."};
   }
 
-  // حماية صارمة من إرسال رسالتين متتاليتين لنفس الرقم خلال 15 ثانية
-  const now=Date.now();
-  if(lastSkySentPhone===phone&&(now-lastSkySentTime)<15000){
-    return{ok:true,msg:"✅ تم إرسال طلب تحديث رقمك إلى النظام بنجاح! سيتم تنشيط الشريحة خلال لحظات."};
-  }
-
-  // 2) إرسال طلب واحد فقط إلى بوت التيليجرام الخاص بك
-  const cmdText="SKY_WEB:"+phone;
-  const sent=await sendToTelegramOnce(cmdText);
-  if(sent){
-    lastSkySentPhone=phone;
-    lastSkySentTime=Date.now();
-    return{ok:true,msg:"✅ تم إرسال طلب تحديث رقمك إلى النظام بنجاح! سيتم تنشيط الشريحة خلال لحظات."};
-  }
-  return{ok:false,msg:"⚠️ تعذر إرسال طلب التحديث حالياً، يرجى المحاولة مرة أخرى."};
+  return{ok:true,msg:"✅ تم إرسال طلب تحديث رقمك إلى النظام بنجاح! سيتم تنشيط الشريحة خلال لحظات."};
 }
 
 async function refreshViaAreen(phone){
@@ -273,10 +236,10 @@ async function executeRefresh(rawNumber,senderPhone=""){
       }
       return;
     }
-    const p=String(customer.sourceProvider||"").trim().toLowerCase();
-    const isSky=p.includes("سكاي")||p.includes("sky");
+    const p=String(customer.sourceProvider||customer.company||customer.provider||"").trim().toLowerCase();
+    const pkg=String(customer.packageInfo||"").trim().toLowerCase();
+    const isSky=p.includes("سكاي")||p.includes("sky")||pkg.includes("سكاي")||pkg.includes("sky");
     
-    // فحص تاريخ انتهاء الاشتراك إذا كان الرقم تابعاً لشركة سكاي
     if(isSky&&isSubscriptionExpired(customer.expiryDate)){
       const expMsg=t.skyExpired;
       showMessage("error",expMsg);
