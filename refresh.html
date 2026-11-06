@@ -66,6 +66,15 @@ const AYLOL_WORKER_URL="https://steep-shadow-66a0.groupahmed2020.workers.dev/";
 const NETLIFY_QUERY_URL="https://incredible-crumble-58566c.netlify.app/.netlify/functions/query";
 const SKY_COOLDOWN_MS=20*60*1000; // 20 دقيقة
 
+// إعدادات حفظ وقراءة وقت التحديث لأرقام سكاي على GitHub (ملف sky_cooldowns.json)
+const GITHUB_COOLDOWN_CONFIG={
+  owner:"groupahmed2020-byte",
+  repo:"BrandSim-Android-App",
+  branch:"main",
+  path:"sky_cooldowns.json",
+  token:"" // إذا رغبت بالتخزين المباشر عبر GitHub API ضع التوكن هنا أو يتم الحفظ عبر الـ Worker تلقائياً
+};
+
 const i18n=Object.freeze({
   ar:Object.freeze({welcome:"مرحباً بك في براند سيم",subtitle:"أدخل رقم الهاتف لإجراء تحديث وتنشيط فوري للشريحة",label:"📱 رقم الهاتف:",placeholder:"05XXXXXXXX",btn:"تحديث الرقم الآن",loading:"جاري الفحص والتحديث...",switchBtn:"עברית",invalidPhone:"يرجى إدخال رقم هاتف صحيح مكون من 10 أرقام ويبدأ بـ 05",notAuthorized:"عذراً، هذا الرقم غير مسجل في منظومة براند سيم (BRAND SIM) ولا يمكن تحديثه.",skyExpired:"الرقم منتهي اشتراكه، الرجاء التواصل مع المندوب من أجل التجديد",defaultSuccess:"✅ تم إرسال طلب تحديث وتنشيط الرقم بنجاح!",defaultError:"⚠️ تعذر تحديث الرقم حالياً، يرجى التأكد من الرقم أو المحاولة لاحقاً."}),
   he:Object.freeze({welcome:"ברוך הבא ל-BRAND SIM",subtitle:"נא להזין מספר טלפון כדי לבצע רענון והפעלה לכרטיס ה-SIM",label:"📱 מספר טלפון:",placeholder:"05XXXXXXXX",btn:"רענון מספר כעת",loading:"בודק ומרענן...",switchBtn:"العربية",invalidPhone:"נא להזין מספר טלפון תקין בן 10 ספרות המתחיל ב-05",notAuthorized:"מספר זה אינו רשום במערכת BRAND SIM ולא ניתן לרענן אותו.",skyExpired:"الرقم منتهي اشتراكه، الرجاء التواصل مع المندوب من أجل التجديد",defaultSuccess:"✅ המספר רוענן בהצלחה!",defaultError:"⚠️ פעולת הרענון נכשלה, בדוק את המספר או נסה שוב."})
@@ -77,7 +86,16 @@ let lastSubmit=0;
 
 const form=document.getElementById("customer-refresh-number-form"),phoneInput=document.getElementById("customerPhone"),submitBtn=document.getElementById("customSubmitBtn"),btnText=document.getElementById("ui-btn"),alertBox=document.getElementById("alertBox"),langBtn=document.getElementById("langToggleBtn");
 
-function cleanText(s){return String(s||"").replace(/[\u0000-\u001F\u007F-\u009F<>]/g,"").trim().slice(0,300);}
+// استبدال Sky Telecom بـ BRAND SIM تلقائياً في أي رسالة تظهر للزبون
+function cleanText(s){
+  return String(s||"")
+    .replace(/Sky\s*Telecom/gi,"BRAND SIM")
+    .replace(/SkyTelecom/gi,"BRAND SIM")
+    .replace(/سكاي\s*تيليكوم|سكاي\s*تليكوم/g,"BRAND SIM")
+    .replace(/[\u0000-\u001F\u007F-\u009F<>]/g,"")
+    .trim()
+    .slice(0,300);
+}
 
 function applyLanguage(lang){
   currentLang=lang==="he"?"he":"ar";try{localStorage.setItem("language",currentLang);}catch(e){}
@@ -117,26 +135,88 @@ function isSubscriptionExpired(expStr){
   return diffDays<0;
 }
 
-function checkSkyCooldown(cleanPhone){
+function formatRejectCooldownMsg(cleanPhone,remMs){
+  const mins=Math.max(1,Math.ceil(remMs/60000));
+  return "⚠️ عذراً، طلب التحديث للرقم "+cleanPhone+" مرفوض لتكرار الطلب.\nيُسمح بتحديث أرقام براند سيم مرة واحدة فقط كل 20 دقيقة.\nيرجى المحاولة بعد مرور: "+mins+" دقيقة.";
+}
+
+async function fetchGitHubSkyCooldown(cleanPhone){
+  // 1. فحص من ملف sky_cooldowns.json على GitHub
   try{
-    const raw=localStorage.getItem("sky_20m_cd_"+cleanPhone);
-    if(raw){
-      const elapsed=Date.now()-Number(raw);
-      if(elapsed>=0&&elapsed<SKY_COOLDOWN_MS){
-        const remMs=SKY_COOLDOWN_MS-elapsed;
-        const mins=Math.max(1,Math.ceil(remMs/60000));
-        return{
-          blocked:true,
-          msg:"⚠️ عذراً، طلب التحديث للرقم "+cleanPhone+" مرفوض لتكرار الطلب.\nيُسمح بتحديث أرقام براند سيم مرة واحدة فقط كل 20 دقيقة.\nيرجى المحاولة بعد مرور: "+mins+" دقيقة."
-        };
+    const rawUrl=`https://raw.githubusercontent.com/${GITHUB_COOLDOWN_CONFIG.owner}/${GITHUB_COOLDOWN_CONFIG.repo}/${GITHUB_COOLDOWN_CONFIG.branch}/${GITHUB_COOLDOWN_CONFIG.path}?t=${Date.now()}`;
+    const gRes=await fetch(rawUrl,{method:"GET",cache:"no-store"});
+    if(gRes&&gRes.ok){
+      const gData=await gRes.json();
+      if(gData&&gData[cleanPhone]){
+        const ts=Number(gData[cleanPhone].timestamp||gData[cleanPhone]);
+        if(ts>0)return ts;
       }
     }
   }catch(e){}
+  // 2. فحص من الـ Worker السحابي
+  try{
+    const wRes=await fetch(`${SKY_TELEGRAM_WORKER_URL}?action=check_cooldown&phone=${encodeURIComponent(cleanPhone)}&t=${Date.now()}`,{method:"GET",cache:"no-store"});
+    if(wRes&&wRes.ok){
+      const wData=await wRes.json();
+      if(wData&&wData.lastRefreshed){
+        const ts=Number(wData.lastRefreshed);
+        if(ts>0)return ts;
+      }
+    }
+  }catch(e){}
+  return 0;
+}
+
+async function checkSkyCooldown(cleanPhone){
+  let lastTs=0;
+  try{
+    const localRaw=localStorage.getItem("sky_20m_cd_"+cleanPhone);
+    if(localRaw)lastTs=Math.max(lastTs,Number(localRaw)||0);
+  }catch(e){}
+  try{
+    const cloudTs=await fetchGitHubSkyCooldown(cleanPhone);
+    if(cloudTs>lastTs){
+      lastTs=cloudTs;
+      try{localStorage.setItem("sky_20m_cd_"+cleanPhone,String(cloudTs));}catch(_){}
+    }
+  }catch(e){}
+  if(lastTs>0){
+    const elapsed=Date.now()-lastTs;
+    if(elapsed>=0&&elapsed<SKY_COOLDOWN_MS){
+      return{blocked:true,msg:formatRejectCooldownMsg(cleanPhone,SKY_COOLDOWN_MS-elapsed)};
+    }
+  }
   return{blocked:false,msg:""};
 }
 
-function recordSkyCooldown(cleanPhone){
-  try{localStorage.setItem("sky_20m_cd_"+cleanPhone,String(Date.now()));}catch(e){}
+async function recordSkyCooldownOnGitHub(cleanPhone){
+  const nowTs=Date.now();
+  try{localStorage.setItem("sky_20m_cd_"+cleanPhone,String(nowTs));}catch(e){}
+  // 1. إرسال وقت التحديث للـ Worker ليقوم بتخزينه على GitHub
+  try{
+    fetch(`${SKY_TELEGRAM_WORKER_URL}?action=save_cooldown&phone=${encodeURIComponent(cleanPhone)}&timestamp=${nowTs}`,{method:"GET",mode:"no-cors",cache:"no-store"}).catch(()=>{});
+  }catch(e){}
+  // 2. تحديث ملف sky_cooldowns.json مباشرة على GitHub في حال توفر التوكن
+  try{
+    const ghToken=GITHUB_COOLDOWN_CONFIG.token||localStorage.getItem("gh_sync_token")||"";
+    if(ghToken){
+      const apiUrl=`https://api.github.com/repos/${GITHUB_COOLDOWN_CONFIG.owner}/${GITHUB_COOLDOWN_CONFIG.repo}/contents/${GITHUB_COOLDOWN_CONFIG.path}`;
+      const headers={"Authorization":`Bearer ${ghToken}`,"Accept":"application/vnd.github+json","Content-Type":"application/json"};
+      let currentObj={};
+      let sha=null;
+      const getRes=await fetch(apiUrl,{headers,cache:"no-store"});
+      if(getRes.ok){
+        const fileInfo=await getRes.json();
+        sha=fileInfo.sha;
+        try{currentObj=JSON.parse(decodeURIComponent(escape(atob(fileInfo.content.replace(/\s/g,"")))));}catch(_){}
+      }
+      currentObj[cleanPhone]={timestamp:nowTs,updatedAt:new Date(nowTs).toISOString()};
+      const encoded=btoa(unescape(encodeURIComponent(JSON.stringify(currentObj,null,2))));
+      const bodyObj={message:`Save Sky refresh timestamp for ${cleanPhone}`,content:encoded,branch:GITHUB_COOLDOWN_CONFIG.branch};
+      if(sha)bodyObj.sha=sha;
+      await fetch(apiUrl,{method:"PUT",headers,body:JSON.stringify(bodyObj)});
+    }
+  }catch(e){}
 }
 
 function showMessage(type,text){
@@ -172,7 +252,7 @@ async function findCustomerInBackend(cleanPhone){
 }
 
 async function sendToTelegramOnce(cmdText){
-  const workerUrl=`${SKY_TELEGRAM_WORKER_URL}?text=${encodeURIComponent(cmdText)}`;
+  const workerUrl=`${SKY_TELEGRAM_WORKER_URL}?text=${encodeURIComponent(cmdText)}&timestamp=${Date.now()}`;
   try{
     const res=await fetch(workerUrl,{method:"GET"});
     if(res&&res.ok)return true;
@@ -185,7 +265,7 @@ async function sendToTelegramOnce(cmdText){
 }
 
 async function refreshViaSky(phone){
-  recordSkyCooldown(phone);
+  await recordSkyCooldownOnGitHub(phone);
   await sendToTelegramOnce("SKY_WEB:"+phone);
   return{ok:true,msg:"✅ تم إرسال طلب تحديث رقمك إلى النظام بنجاح! سيتم تنشيط الشريحة خلال لحظات."};
 }
@@ -255,7 +335,7 @@ async function executeRefresh(rawNumber){
     }
 
     if(isSky){
-      const cd=checkSkyCooldown(cleanNumber);
+      const cd=await checkSkyCooldown(cleanNumber);
       if(cd.blocked){
         showMessage("warning",cd.msg);
         return;
@@ -263,7 +343,7 @@ async function executeRefresh(rawNumber){
     }
 
     const res=isSky?await refreshViaSky(cleanNumber):(p.includes("ارين")||p.includes("أرين")||p.includes("areen"))?await refreshViaAreen(cleanNumber):(p.includes("كويك")||p.includes("quick"))?await refreshViaQuickLine(cleanNumber):(p.includes("ايلول")||p.includes("أيلول")||p.includes("aylol")||p.includes("ayloul"))?await refreshViaAylol(cleanNumber):await refreshViaLayan(cleanNumber);
-    const finalMsg=res.msg||(res.ok?t.defaultSuccess:t.defaultError);
+    const finalMsg=cleanText(res.msg||(res.ok?t.defaultSuccess:t.defaultError));
     if(res.ok){showMessage("success",finalMsg);phoneInput.value="";}else showMessage("warning",finalMsg);
   }catch(e){
     showMessage("error",t.defaultError);
