@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; img-src * data: blob:; style-src * 'unsafe-inline'; font-src * data:; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src *;">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline'; connect-src 'self' https://rough-queen-e596.groupahmed2020.workers.dev https://ipwho.is https://ipapi.co;">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="no-referrer">
 <title>BRAND SIM | تحديث وتنشيط الشرائح</title>
@@ -13,7 +13,7 @@
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Cairo',sans-serif;-webkit-tap-highlight-color:transparent}
 body{background-color:#04101c;color:#fff;min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:14px;overflow-x:hidden;position:relative}
 body[lang="he"]{font-family:'Rubik',sans-serif}
-body::before{content:"";position:fixed;inset:0;z-index:-1;background-image:linear-gradient(rgba(4,16,28,0.18),rgba(4,16,28,0.35)),url('tower-bg.jpg'),url('1000046718.jpg');background-position:center center;background-repeat:no-repeat;background-size:cover}
+body::before{content:"";position:fixed;inset:0;z-index:-1;background-image:linear-gradient(rgba(4,16,28,0.18),rgba(4,16,28,0.35)),url('tower-bg.jpg');background-position:center center;background-repeat:no-repeat;background-size:cover}
 .card{width:100%;max-width:460px;border:2px solid #00e5ff;border-radius:22px;padding:28px 20px 22px;background:rgba(4,18,31,0.38);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);box-shadow:0 0 25px rgba(0,229,255,0.35);text-align:center;position:relative}
 .logo-wrapper{display:inline-flex;align-items:center;justify-content:center;gap:12px;margin-bottom:14px;direction:ltr}
 .logo-icon{background:rgba(0,229,255,0.15);border:1.5px solid #00e5ff;color:#00e5ff;width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 0 12px rgba(0,229,255,0.35)}
@@ -48,426 +48,204 @@ body[lang="he"] .form-group{text-align:right}
 </head>
 <body lang="ar">
 <div class="card" id="mainAppCard">
-  <div class="logo-wrapper"><div class="logo-icon"><i class="fas fa-sim-card"></i></div><div class="logo-text">BRAND SIM</div></div>
-  <h2 class="welcome-title" id="ui-welcome">مرحباً بك في براند سيم</h2>
-  <p class="subtitle" id="ui-subtitle">أدخل رقم الهاتف لإجراء تحديث وتنشيط فوري للشريحة</p>
-  <form id="customer-refresh-number-form" novalidate>
-    <div class="form-group"><label for="customerPhone" id="ui-label">📱 رقم الهاتف:</label><input type="tel" id="customerPhone" class="form-control" placeholder="05XXXXXXXX" maxlength="10" inputmode="numeric" autocomplete="tel" required></div>
-    <button type="submit" id="customSubmitBtn" class="btn-submit"><span id="ui-btn">تحديث الرقم الآن</span><i class="fas fa-sync-alt fa-spin spinner"></i></button>
-  </form>
-  <div id="alertBox" class="alert-box" role="alert"></div>
-  <div class="footer-bar"><button type="button" class="lang-btn" id="langToggleBtn">עברית</button><span class="copyright">BRAND SIM © <span id="yearSpan"></span></span></div>
+<div class="logo-wrapper"><div class="logo-icon"><i class="fas fa-sim-card"></i></div><div class="logo-text">BRAND SIM</div></div>
+<h2 class="welcome-title" id="ui-welcome">مرحباً بك في براند سيم</h2>
+<p class="subtitle" id="ui-subtitle">أدخل رقم الهاتف لإجراء تحديث وتنشيط فوري للشريحة</p>
+<form id="customer-refresh-number-form" novalidate>
+<div class="form-group"><label for="customerPhone" id="ui-label">📱 رقم الهاتف:</label><input type="tel" id="customerPhone" class="form-control" placeholder="05XXXXXXXX" maxlength="10" inputmode="numeric" autocomplete="tel" required></div>
+<button type="submit" id="customSubmitBtn" class="btn-submit"><span id="ui-btn">تحديث الرقم الآن</span><i class="fas fa-sync-alt fa-spin spinner"></i></button>
+</form>
+<div id="alertBox" class="alert-box" role="alert"></div>
+<div class="footer-bar"><button type="button" class="lang-btn" id="langToggleBtn">עברית</button><span class="copyright">BRAND SIM © <span id="yearSpan"></span></span></div>
 </div>
 <script>
 (function(){"use strict";
 if(window.top!==window.self){try{window.top.location=window.self.location;}catch(e){}}
 const yearEl=document.getElementById("yearSpan");if(yearEl)yearEl.textContent=new Date().getFullYear();
-
-const SKY_TELEGRAM_WORKER_URL="https://gentle-morning-4759.groupahmed2020.workers.dev/";
-const LAYAN_API_URL="https://api.layan-t.net/api/Subscribtions/CustomersRefreshNumber";
-const AREEN_GAS_URL="https://script.google.com/macros/s/AKfycbxidpoKH8PnhxSvKggQpI2K2BiQQLm7PJM2byXFxnJY1f2Iahqj4UdRfYFuECuqqoPK/exec";
-const QUICKLINE_GAS_URL="https://script.google.com/macros/s/AKfycbzoFY7vXfDNsMBieM33Ohym4o3oif6_hoc1FI0RFzKbEgvfALOVMBWQKNt14VOakcQg/exec";
-const AYLOL_WORKER_URL="https://steep-shadow-66a0.groupahmed2020.workers.dev/";
-const NETLIFY_QUERY_URL="https://incredible-crumble-58566c.netlify.app/.netlify/functions/query";
-const SKY_COOLDOWN_MS=20*60*1000;
-
+const GATEWAY_API_URL="https://rough-queen-e596.groupahmed2020.workers.dev/";
 const i18n=Object.freeze({
-  ar:Object.freeze({welcome:"مرحباً بك في براند سيم",subtitle:"أدخل رقم الهاتف لإجراء تحديث وتنشيط فوري للشريحة",label:"📱 رقم الهاتف:",placeholder:"05XXXXXXXX",btn:"تحديث الرقم الآن",loading:"جاري الفحص والتحديث...",switchBtn:"עברית",invalidPhone:"يرجى إدخال رقم هاتف صحيح مكون من 10 أرقام ويبدأ بـ 05",notAuthorized:"عذراً، هذا الرقم غير مسجل في منظومة براند سيم (BRAND SIM) ولا يمكن تحديثه.",skyExpired:"الرقم منتهي اشتراكه، الرجاء التواصل مع المندوب من أجل التجديد",defaultSuccess:"✅ تم إرسال طلب تحديث وتنشيط الرقم بنجاح!",defaultError:"⚠️ تعذر تحديث الرقم حالياً، يرجى التأكد من الرقم أو المحاولة لاحقاً.",vpnBlockTitle:"تم إيقاف الموقع لأسباب أمنية",vpnBlockMsg:"عذراً، لا يُسمح باستخدام الموقع أثناء تشغيل خدمات VPN أو Proxy. يرجى إيقاف الـ VPN وإعادة تحميل الصفحة.",devBlockTitle:"تم إيقاف الموقع لأسباب أمنية",devBlockMsg:"عذراً، تم اكتشاف فتح أدوات المطور (DevTools). لا يُسمح بفحص النظام وقد تم إيقاف الصفحة عن العمل."}),
-  he:Object.freeze({welcome:"ברוך הבא ל-BRAND SIM",subtitle:"נא להזין מספר טלפון כדי לבצע רענון והפעלה לכרטיס ה-SIM",label:"📱 מספר טלפון:",placeholder:"05XXXXXXXX",btn:"רענון מספר כעת",loading:"בודק ומרענן...",switchBtn:"العربية",invalidPhone:"נא להזין מספר טלפון תקין בן 10 ספרות המתחיל ב-05",notAuthorized:"מספר זה אינו רשום במערכת BRAND SIM ולא ניתן לרענן אותו.",skyExpired:"الرقم منتهي اشتراكه، الرجاء التواصل مع المندوب من أجل التجديد",defaultSuccess:"✅ המספר רוענן בהצלחה!",defaultError:"⚠️ פעולת הרענון נכשלה, בדוק את המספר או נסה שוב.",vpnBlockTitle:"האתר נחסם מטעמי אבטחה",vpnBlockMsg:"לא ניתן להשתמש באתר בזמן הפעלת VPN או Proxy. נא לכבות את ה-VPN ולרענן את הדף.",devBlockTitle:"האתר נחסם מטעמי אבטחה",devBlockMsg:"זוהתה פתיחה של כלי מפתחים (DevTools). הפעילות באתר הופסקה מיידית."})
+ar:Object.freeze({welcome:"مرحباً بك في براند سيم",subtitle:"أدخل رقم الهاتف لإجراء تحديث وتنشيط فوري للشريحة",label:"📱 رقم الهاتف:",placeholder:"05XXXXXXXX",btn:"تحديث الرقم الآن",loading:"جاري الفحص والتحديث...",switchBtn:"עברית",invalidPhone:"يرجى إدخال رقم هاتف صحيح مكون من 10 أرقام ويبدأ بـ 05",defaultSuccess:"✅ تم إرسال طلب تحديث وتنشيط الرقم بنجاح!",defaultError:"⚠️ تعذر تحديث الرقم حالياً، يرجى التأكد من الرقم أو المحاولة لاحقاً.",vpnBlockTitle:"تم إيقاف الموقع لأسباب أمنية",vpnBlockMsg:"عذراً، لا يُسمح باستخدام الموقع أثناء تشغيل خدمات VPN أو Proxy. يرجى إيقاف الـ VPN وإعادة تحميل الصفحة.",devBlockTitle:"تم إيقاف الموقع لأسباب أمنية",devBlockMsg:"عذراً، تم اكتشاف فتح أدوات المطور (DevTools). لا يُسمح بفحص النظام وقد تم إيقاف الصفحة عن العمل."}),
+he:Object.freeze({welcome:"ברוך הבא ל-BRAND SIM",subtitle:"נא להזין מספר טלפון כדי לבצע רענון והפעלה לכרטיס ה-SIM",label:"📱 מספר טלפון:",placeholder:"05XXXXXXXX",btn:"רענון מספר כעת",loading:"בודק ומרענן...",switchBtn:"العربية",invalidPhone:"נא להזין מספר טלפון תקין בן 10 ספרות המתחיל ב-05",defaultSuccess:"✅ המספר רוענן בהצלחה!",defaultError:"⚠️ פעולת הרענון נכשלה, בדוק את המספר או נסה שוב.",vpnBlockTitle:"האתר נחסם מטעמי אבטחה",vpnBlockMsg:"לא ניתן להשתמש באתר בזמן הפעלת VPN או Proxy. נא לכבות את ה-VPN ולרענן את הדף.",devBlockTitle:"האתר נחסם מטעמי אבטחה",devBlockMsg:"זוהתה פתיחה של כלי מפתחים (DevTools). הפעילות באתר הופסקה מיידית."})
 });
-
 function safeGetStorage(k){try{return localStorage.getItem(k);}catch(e){return null;}}
 function safeSetStorage(k,v){try{localStorage.setItem(k,v);}catch(e){}}
-
 let currentLang=safeGetStorage("language")==="he"?"he":"ar";
 let isRefreshing=false;
 let lastSubmit=0;
 let systemHalted=false;
-let vpnVerifiedCache=null;
-
 const form=document.getElementById("customer-refresh-number-form"),phoneInput=document.getElementById("customerPhone"),submitBtn=document.getElementById("customSubmitBtn"),btnText=document.getElementById("ui-btn"),alertBox=document.getElementById("alertBox"),langBtn=document.getElementById("langToggleBtn");
-
-// دالة التجميد والإيقاف الكامل للموقع عند اكتشاف DevTools أو VPN
 function haltSite(reasonType){
-  if(systemHalted)return;
-  systemHalted=true;
-  isRefreshing=true;
-  const t=i18n[currentLang]||i18n.ar;
-  const title=reasonType==="vpn"?t.vpnBlockTitle:t.devBlockTitle;
-  const msg=reasonType==="vpn"?t.vpnBlockMsg:t.devBlockMsg;
-  try{
-    document.body.innerHTML="";
-    const overlay=document.createElement("div");
-    overlay.className="sec-lock-overlay";
-    const card=document.createElement("div");
-    card.className="sec-lock-card";
-    const icon=document.createElement("div");
-    icon.className="sec-lock-icon";
-    icon.textContent="🚫";
-    const h2=document.createElement("div");
-    h2.className="sec-lock-title";
-    h2.textContent=title;
-    const p=document.createElement("div");
-    p.className="sec-lock-msg";
-    p.textContent=msg;
-    card.append(icon,h2,p);
-    overlay.appendChild(card);
-    document.body.appendChild(overlay);
-  }catch(e){}
+if(systemHalted)return;
+systemHalted=true;
+isRefreshing=true;
+const t=i18n[currentLang]||i18n.ar;
+const title=reasonType==="vpn"?t.vpnBlockTitle:t.devBlockTitle;
+const msg=reasonType==="vpn"?t.vpnBlockMsg:t.devBlockMsg;
+try{
+document.body.innerHTML="";
+const overlay=document.createElement("div");
+overlay.className="sec-lock-overlay";
+const card=document.createElement("div");
+card.className="sec-lock-card";
+const icon=document.createElement("div");
+icon.className="sec-lock-icon";
+icon.textContent="🚫";
+const h2=document.createElement("div");
+h2.className="sec-lock-title";
+h2.textContent=title;
+const p=document.createElement("div");
+p.className="sec-lock-msg";
+p.textContent=msg;
+card.append(icon,h2,p);
+overlay.appendChild(card);
+document.body.appendChild(overlay);
+}catch(e){}
 }
-
-// 1. حماية ضد أدوات المطور (Anti-DevTools & Anti-Inspection)
 (function initAntiDevTools(){
-  // منع الزر الأيمن
-  window.addEventListener("contextmenu",e=>{e.preventDefault();return false;});
-  // منع اختصارات لوحة المفاتيح الخاصة بالمطورين (F12, Ctrl+Shift+I/J/C, Ctrl+U, Ctrl+S)
-  window.addEventListener("keydown",e=>{
-    const key=String(e.key||"").toUpperCase();
-    if(e.keyCode===123||key==="F12"||(e.ctrlKey&&e.shiftKey&&["I","J","C","K"].includes(key))||(e.metaKey&&e.altKey&&["I","J","C","U"].includes(key))||(e.ctrlKey&&["U","S"].includes(key))){
-      e.preventDefault();
-      e.stopPropagation();
-      haltSite("devtools");
-      return false;
-    }
-  },true);
-
-  // فحص أبعاد النافذة وفارق الحجم (يعمل على الكمبيوتر ومتصفحات سطح المكتب)
-  function checkWindowDimensions(){
-    if(systemHalted)return;
-    const isMobile=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||"");
-    if(!isMobile&&window.outerWidth>0&&window.outerHeight>0){
-      const widthDiff=window.outerWidth-window.innerWidth;
-      const heightDiff=window.outerHeight-window.innerHeight;
-      if(widthDiff>160||heightDiff>160){
-        haltSite("devtools");
-      }
-    }
-  }
-
-  // فحص التوقيت و debugger وفحص الكونسول (يعمل على جميع الأجهزة)
-  function checkDebuggerTrap(){
-    if(systemHalted)return;
-    const start=performance.now();
-    try{(function(){}).constructor("debugger")();}catch(e){}
-    const end=performance.now();
-    if(end-start>120){
-      haltSite("devtools");
-    }
-  }
-
-  setInterval(()=>{
-    checkWindowDimensions();
-    checkDebuggerTrap();
-  },1200);
-  window.addEventListener("resize",checkWindowDimensions);
+window.addEventListener("contextmenu",e=>{e.preventDefault();return false;});
+window.addEventListener("keydown",e=>{
+const key=String(e.key||"").toUpperCase();
+if(e.keyCode===123||key==="F12"||(e.ctrlKey&&e.shiftKey&&["I","J","C","K"].includes(key))||(e.metaKey&&e.altKey&&["I","J","C","U"].includes(key))||(e.ctrlKey&&["U","S"].includes(key))){
+e.preventDefault();
+e.stopPropagation();
+haltSite("devtools");
+return false;
+}
+},true);
+function checkWindowDimensions(){
+if(systemHalted)return;
+const isMobile=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||"");
+if(!isMobile&&window.outerWidth>0&&window.outerHeight>0){
+const widthDiff=window.outerWidth-window.innerWidth;
+const heightDiff=window.outerHeight-window.innerHeight;
+if(widthDiff>160||heightDiff>160){haltSite("devtools");}
+}
+}
+setInterval(checkWindowDimensions,1200);
+window.addEventListener("resize",checkWindowDimensions);
 })();
-
-// 2. فحص VPN و Proxy (المنطقة الزمنية + فحص مزود الـ IP والـ ASN)
 async function detectVPNOrProxy(){
-  if(systemHalted)return true;
-  // فحص تطابق المنطقة الزمنية للجهاز مع المنطقة المحلية لتجنب VPN الخارجي السريع
-  let tz="";
-  try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||"";}catch(e){}
-  const localTimezones=["Asia/Jerusalem","Asia/Hebron","Asia/Gaza","Asia/Tel_Aviv","Asia/Amman"];
-  const datacenterKeywords=/vpn|proxy|tor|hosting|datacenter|cloud|digitalocean|linode|vultr|amazonaws|google\s*cloud|microsoft|hetzner|ovh|choopa|m247|nord|expressvpn|surfshark|cyberghost|proton|mullvad|windscribe|pia|private\s*internet|leaseweb|contabo|scaleway|upcloud|hostinger|akamai|fastly|tzulo|psychz|franTech|buyvm|datacamp|zenlayer/i;
-
-  // فحص 1: عبر ipwho.is (يدعم HTTPS مجاناً ويعطي بيانات security و ISP)
-  try{
-    const ctrl1=new AbortController();
-    const t1=setTimeout(()=>ctrl1.abort(),3500);
-    const res1=await fetch("https://ipwho.is/?t="+Date.now(),{signal:ctrl1.signal,cache:"no-store"});
-    clearTimeout(t1);
-    if(res1.ok){
-      const d1=await res1.json();
-      if(d1&&d1.success!==false){
-        if(d1.security&&(d1.security.vpn===true||d1.security.proxy===true||d1.security.tor===true||d1.security.hosting===true)){
-          return true;
-        }
-        const orgIsp=((d1.connection?.org||"")+" "+(d1.connection?.isp||"")+" "+(d1.connection?.domain||"")).trim();
-        if(datacenterKeywords.test(orgIsp))return true;
-        const cc=String(d1.country_code||"").toUpperCase();
-        if(cc&&!["IL","PS","JO"].includes(cc))return true;
-        if(tz&&localTimezones.includes(tz)&&cc&&!["IL","PS","JO"].includes(cc))return true;
-        vpnVerifiedCache=false;
-        return false;
-      }
-    }
-  }catch(e){}
-
-  // فحص 2 احتياطي: عبر ipapi.co
-  try{
-    const ctrl2=new AbortController();
-    const t2=setTimeout(()=>ctrl2.abort(),3500);
-    const res2=await fetch("https://ipapi.co/json/",{signal:ctrl2.signal,cache:"no-store"});
-    clearTimeout(t2);
-    if(res2.ok){
-      const d2=await res2.json();
-      if(d2&&!d2.error){
-        const org2=String(d2.org||d2.asn||"");
-        if(datacenterKeywords.test(org2))return true;
-        const cc2=String(d2.country_code||"").toUpperCase();
-        if(cc2&&!["IL","PS","JO"].includes(cc2))return true;
-        vpnVerifiedCache=false;
-        return false;
-      }
-    }
-  }catch(e){}
-
-  // في حال تعذر الوصول لخدمات الفحص، نتحقق من المنطقة الزمنية للجهاز إن كانت خارج المنطقة كلياً
-  if(tz&&!localTimezones.includes(tz)&&!/^(Asia|Europe|Africa)/i.test(tz)){
-    return true;
-  }
-  return false;
+if(systemHalted)return true;
+let tz="";
+try{tz=Intl.DateTimeFormat().resolvedOptions().timeZone||"";}catch(e){}
+const localTimezones=["Asia/Jerusalem","Asia/Hebron","Asia/Gaza","Asia/Tel_Aviv","Asia/Amman"];
+const datacenterKeywords=/vpn|proxy|tor|hosting|datacenter|cloud|digitalocean|linode|vultr|amazonaws|google\s*cloud|microsoft|hetzner|ovh|choopa|m247|nord|expressvpn|surfshark|cyberghost|proton|mullvad|windscribe|pia|private\s*internet|leaseweb|contabo|scaleway|upcloud|hostinger|akamai|fastly|tzulo|psychz|franTech|buyvm|datacamp|zenlayer/i;
+try{
+const ctrl1=new AbortController();
+const t1=setTimeout(()=>ctrl1.abort(),3500);
+const res1=await fetch("https://ipwho.is/?t="+Date.now(),{signal:ctrl1.signal,cache:"no-store"});
+clearTimeout(t1);
+if(res1.ok){
+const d1=await res1.json();
+if(d1&&d1.success!==false){
+if(d1.security&&(d1.security.vpn===true||d1.security.proxy===true||d1.security.tor===true||d1.security.hosting===true))return true;
+const orgIsp=((d1.connection?.org||"")+" "+(d1.connection?.isp||"")+" "+(d1.connection?.domain||"")).trim();
+if(datacenterKeywords.test(orgIsp))return true;
+const cc=String(d1.country_code||"").toUpperCase();
+if(cc&&!["IL","PS","JO"].includes(cc))return true;
+return false;
 }
-
+}
+}catch(e){}
+try{
+const ctrl2=new AbortController();
+const t2=setTimeout(()=>ctrl2.abort(),3500);
+const res2=await fetch("https://ipapi.co/json/",{signal:ctrl2.signal,cache:"no-store"});
+clearTimeout(t2);
+if(res2.ok){
+const d2=await res2.json();
+if(d2&&!d2.error){
+const org2=String(d2.org||d2.asn||"");
+if(datacenterKeywords.test(org2))return true;
+const cc2=String(d2.country_code||"").toUpperCase();
+if(cc2&&!["IL","PS","JO"].includes(cc2))return true;
+return false;
+}
+}
+}catch(e){}
+if(tz&&!localTimezones.includes(tz)&&!/^(Asia|Europe|Africa)/i.test(tz))return true;
+return false;
+}
 async function enforceSecurityBeforeAction(){
-  if(systemHalted)return false;
-  const isVpn=await detectVPNOrProxy();
-  if(isVpn){
-    haltSite("vpn");
-    return false;
-  }
-  return true;
+if(systemHalted)return false;
+const isVpn=await detectVPNOrProxy();
+if(isVpn){haltSite("vpn");return false;}
+return true;
 }
-
-function cleanText(s){
-  return String(s||"")
-    .replace(/Sky\s*Telecom/gi,"BRAND SIM")
-    .replace(/SkyTelecom/gi,"BRAND SIM")
-    .replace(/سكاي\s*تيليكوم|سكاي\s*تليكوم/g,"BRAND SIM")
-    .replace(/[\u0000-\u001F\u007F-\u009F<>]/g,"")
-    .trim()
-    .slice(0,300);
-}
-
 function applyLanguage(lang){
-  if(systemHalted)return;
-  currentLang=lang==="he"?"he":"ar";safeSetStorage("language",currentLang);
-  const t=i18n[currentLang];document.body.setAttribute("lang",currentLang);
-  document.getElementById("ui-welcome").textContent=t.welcome;document.getElementById("ui-subtitle").textContent=t.subtitle;
-  document.getElementById("ui-label").textContent=t.label;phoneInput.placeholder=t.placeholder;
-  btnText.textContent=t.btn;langBtn.textContent=t.switchBtn;
+if(systemHalted)return;
+currentLang=lang==="he"?"he":"ar";safeSetStorage("language",currentLang);
+const t=i18n[currentLang];document.body.setAttribute("lang",currentLang);
+document.getElementById("ui-welcome").textContent=t.welcome;document.getElementById("ui-subtitle").textContent=t.subtitle;
+document.getElementById("ui-label").textContent=t.label;phoneInput.placeholder=t.placeholder;
+btnText.textContent=t.btn;langBtn.textContent=t.switchBtn;
 }
-
 function normalizePhoneNumber(rawInput){
-  if(!rawInput)return"";
-  let str=String(rawInput).replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g,d=>"۰۱۲۳۴۵۶۷۸۹".indexOf(d));
-  if(str.includes("_"))str=str.split("_")[0];str=str.replace(/[^0-9]/g,"");
-  if(str.startsWith("00972")||str.startsWith("00970"))str="0"+str.slice(5);
-  else if((str.startsWith("972")||str.startsWith("970"))&&str.length>=11)str="0"+str.slice(3);
-  else if(str.length===9&&str.startsWith("5"))str="0"+str;
-  else if(str.length>10&&str.startsWith("05"))str=str.slice(0,10);
-  return str;
+if(!rawInput)return"";
+let str=String(rawInput).replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g,d=>"۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+if(str.includes("_"))str=str.split("_")[0];str=str.replace(/[^0-9]/g,"");
+if(str.startsWith("00972")||str.startsWith("00970"))str="0"+str.slice(5);
+else if((str.startsWith("972")||str.startsWith("970"))&&str.length>=11)str="0"+str.slice(3);
+else if(str.length===9&&str.startsWith("5"))str="0"+str;
+else if(str.length>10&&str.startsWith("05"))str=str.slice(0,10);
+return str;
 }
-
-function isSubscriptionExpired(expStr){
-  if(!expStr)return false;
-  const s=String(expStr).trim();
-  if(s==="موصول"||s==="-"||s==="مفتوح"||s==="دائم")return false;
-  const now=new Date();now.setHours(0,0,0,0);
-  let ex=new Date(s);
-  if(isNaN(ex.getTime())){
-    const parts=s.split(/[\/\-]/);
-    if(parts.length===3){
-      if(parts[0].length===4)ex=new Date(Number(parts[0]),Number(parts[1])-1,Number(parts[2]));
-      else ex=new Date(Number(parts[2]),Number(parts[1])-1,Number(parts[0]));
-    }
-  }
-  if(isNaN(ex.getTime()))return false;
-  ex.setHours(0,0,0,0);
-  const diffDays=Math.ceil((ex-now)/86400000);
-  return diffDays<0;
-}
-
-function formatRejectCooldownMsg(cleanPhone,remMs){
-  const mins=Math.max(1,Math.ceil(remMs/60000));
-  return "⚠️ عذراً، طلب التحديث للرقم "+cleanPhone+" مرفوض لتكرار الطلب.\nيُسمح بتحديث أرقام براند سيم مرة واحدة فقط كل 20 دقيقة.\nيرجى المحاولة بعد مرور: "+mins+" دقيقة.";
-}
-
-async function fetchWorkerSkyCooldown(cleanPhone){
-  try{
-    const wRes=await fetch(`${SKY_TELEGRAM_WORKER_URL}?action=check_cooldown&phone=${encodeURIComponent(cleanPhone)}&t=${Date.now()}`,{method:"GET",cache:"no-store"});
-    if(wRes&&wRes.ok){
-      const wData=await wRes.json();
-      const ts=Number(wData?.lastRefreshed||wData?.timestamp||wData?.[cleanPhone]?.timestamp||wData?.[cleanPhone]||0);
-      if(ts>0)return ts;
-    }
-  }catch(e){}
-  return 0;
-}
-
-async function checkSkyCooldown(cleanPhone){
-  let lastTs=0;
-  const localRaw=safeGetStorage("sky_20m_cd_"+cleanPhone);
-  if(localRaw)lastTs=Math.max(lastTs,Number(localRaw)||0);
-  try{
-    const cloudTs=await fetchWorkerSkyCooldown(cleanPhone);
-    if(cloudTs>lastTs){
-      lastTs=cloudTs;
-      safeSetStorage("sky_20m_cd_"+cleanPhone,String(cloudTs));
-    }
-  }catch(e){}
-  if(lastTs>0){
-    const elapsed=Date.now()-lastTs;
-    if(elapsed>=0&&elapsed<SKY_COOLDOWN_MS){
-      return{blocked:true,msg:formatRejectCooldownMsg(cleanPhone,SKY_COOLDOWN_MS-elapsed)};
-    }
-  }
-  return{blocked:false,msg:""};
-}
-
-async function recordSkyCooldownViaWorker(cleanPhone){
-  const nowTs=Date.now();
-  safeSetStorage("sky_20m_cd_"+cleanPhone,String(nowTs));
-  try{
-    const saveUrl=`${SKY_TELEGRAM_WORKER_URL}?action=save_cooldown&phone=${encodeURIComponent(cleanPhone)}&timestamp=${nowTs}`;
-    fetch(saveUrl,{method:"GET",cache:"no-store"}).catch(()=>{
-      fetch(saveUrl,{method:"GET",mode:"no-cors",cache:"no-store"}).catch(()=>{});
-    });
-  }catch(e){}
-}
-
 function showMessage(type,text){
-  if(systemHalted)return;
-  const validType=["success","warning","error"].includes(type)?type:"error";
-  alertBox.className="alert-box "+validType;alertBox.textContent="";
-  const icon=document.createElement("i");icon.className="fas "+(validType==="success"?"fa-check-circle":validType==="warning"?"fa-exclamation-triangle":"fa-times-circle");
-  const span=document.createElement("span");span.textContent=cleanText(text);
-  alertBox.append(icon,span);alertBox.style.display="flex";
+if(systemHalted)return;
+const validType=["success","warning","error"].includes(type)?type:"error";
+alertBox.className="alert-box "+validType;alertBox.textContent="";
+const icon=document.createElement("i");icon.className="fas "+(validType==="success"?"fa-check-circle":validType==="warning"?"fa-exclamation-triangle":"fa-times-circle");
+const span=document.createElement("span");span.textContent=String(text||"").slice(0,300);
+alertBox.append(icon,span);alertBox.style.display="flex";
 }
-
-async function findCustomerInBackend(cleanPhone){
-  try{
-    const res=await fetch(NETLIFY_QUERY_URL,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({phone:cleanPhone})
-    });
-    const json=await res.json();
-    if(res.ok&&json.ok&&json.data)return json.data;
-  }catch(e){}
-  return null;
-}
-
-async function sendToTelegramOnce(cmdText){
-  const workerUrl=`${SKY_TELEGRAM_WORKER_URL}?text=${encodeURIComponent(cmdText)}&timestamp=${Date.now()}`;
-  try{
-    const res=await fetch(workerUrl,{method:"GET"});
-    if(res&&res.ok)return true;
-  }catch(e){}
-  try{
-    await fetch(workerUrl,{method:"GET",mode:"no-cors",cache:"no-store"});
-    return true;
-  }catch(e){}
-  return false;
-}
-
-async function refreshViaSky(phone){
-  await recordSkyCooldownViaWorker(phone);
-  await sendToTelegramOnce("SKY_WEB:"+phone);
-  return{ok:true,msg:"✅ تم إرسال طلب تحديث رقمك إلى النظام بنجاح! سيتم تنشيط الشريحة خلال لحظات."};
-}
-
-async function refreshViaAreen(phone){
-  try{
-    const res=await fetch(AREEN_GAS_URL,{method:"POST",redirect:"follow",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({MobNumber:phone,provider:"areen"})});
-    const data=JSON.parse(await res.text());
-    const sc=data?.StatusCode??data?.statusCode??data?.Status??data?.status;
-    return{ok:Number(sc)===23||Boolean(data?.IsSuccess??data?.isSuccess),msg:cleanText(data?.Message??data?.message??data?.ErrorMessage??data?.errorMessage)};
-  }catch(e){throw new Error("Areen failed");}
-}
-
-async function refreshViaQuickLine(phone){
-  try{
-    const res=await fetch(QUICKLINE_GAS_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({phoneNumber:phone,provider:"quickline"})});
-    const data=await res.json();
-    return{ok:data.StatusCode>=200&&data.StatusCode<300,msg:cleanText((data.Message||"").replace(/^"|"$/g,""))};
-  }catch(e){throw new Error("QuickLine failed");}
-}
-
-async function refreshViaAylol(phone){
-  try{
-    const formData=new URLSearchParams();
-    formData.append("phone",phone);
-    const res=await fetch(AYLOL_WORKER_URL,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:formData.toString()});
-    const data=await res.json();
-    return{ok:Boolean(data&&data.success),msg:cleanText(data?.message)};
-  }catch(e){throw new Error("Aylol failed");}
-}
-
-async function refreshViaLayan(phone){
-  try{
-    const res=await fetch(LAYAN_API_URL,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json, text/plain, */*","LANG":currentLang},body:JSON.stringify({number:phone,provider:"layan"})});
-    let txt=await res.text();
-    try{const j=JSON.parse(txt);txt=typeof j==="string"?j:(j?.message||j?.title||j?.error||txt);}catch(_){txt=txt.replace(/^"|"$/g,"");}
-    return{ok:res.ok,msg:cleanText(txt)};
-  }catch(e){throw new Error("Layan failed");}
-}
-
 async function executeRefresh(rawNumber){
-  if(systemHalted||isRefreshing)return;
-  if(Date.now()-lastSubmit<3000)return;
-  const t=i18n[currentLang],cleanNumber=normalizePhoneNumber(rawNumber);phoneInput.value=cleanNumber;
-  if(!/^05\d{8}$/.test(cleanNumber)){showMessage("warning",t.invalidPhone);return;}
-  
-  isRefreshing=true;
-  lastSubmit=Date.now();
-  submitBtn.disabled=true;
-  submitBtn.classList.add("loading");
-  btnText.textContent=t.loading;
-  alertBox.style.display="none";
-  
-  try{
-    const securityOk=await enforceSecurityBeforeAction();
-    if(!securityOk)return;
-
-    const customer=await findCustomerInBackend(cleanNumber);
-    if(!customer){
-      showMessage("error",t.notAuthorized);
-      return;
-    }
-    const p=String(customer.sourceProvider||customer.company||customer.provider||"").trim().toLowerCase();
-    const pkg=String(customer.packageInfo||"").trim().toLowerCase();
-    const isSky=p.includes("سكاي")||p.includes("sky")||pkg.includes("سكاي")||pkg.includes("sky");
-    
-    if(isSky&&isSubscriptionExpired(customer.expiryDate)){
-      showMessage("error",t.skyExpired);
-      return;
-    }
-
-    if(isSky){
-      const cd=await checkSkyCooldown(cleanNumber);
-      if(cd.blocked){
-        showMessage("warning",cd.msg);
-        return;
-      }
-    }
-
-    const res=isSky?await refreshViaSky(cleanNumber):(p.includes("ارين")||p.includes("أرين")||p.includes("areen"))?await refreshViaAreen(cleanNumber):(p.includes("كويك")||p.includes("quick"))?await refreshViaQuickLine(cleanNumber):(p.includes("ايلول")||p.includes("أيلول")||p.includes("aylol")||p.includes("ayloul"))?await refreshViaAylol(cleanNumber):await refreshViaLayan(cleanNumber);
-    const finalMsg=cleanText(res.msg||(res.ok?t.defaultSuccess:t.defaultError));
-    if(res.ok){showMessage("success",finalMsg);phoneInput.value="";}else showMessage("warning",finalMsg);
-  }catch(e){
-    if(!systemHalted)showMessage("error",t.defaultError);
-  }finally{
-    if(!systemHalted){
-      isRefreshing=false;
-      submitBtn.disabled=false;
-      submitBtn.classList.remove("loading");
-      btnText.textContent=t.btn;
-    }
-  }
+if(systemHalted||isRefreshing)return;
+if(Date.now()-lastSubmit<3000)return;
+const t=i18n[currentLang],cleanNumber=normalizePhoneNumber(rawNumber);phoneInput.value=cleanNumber;
+if(!/^05\d{8}$/.test(cleanNumber)){showMessage("warning",t.invalidPhone);return;}
+isRefreshing=true;
+lastSubmit=Date.now();
+submitBtn.disabled=true;
+submitBtn.classList.add("loading");
+btnText.textContent=t.loading;
+alertBox.style.display="none";
+try{
+const securityOk=await enforceSecurityBeforeAction();
+if(!securityOk)return;
+const res=await fetch(GATEWAY_API_URL,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({phone:cleanNumber,lang:currentLang})
+});
+const data=await res.json();
+const msg=data?.msg||(data?.ok?t.defaultSuccess:t.defaultError);
+if(data?.ok){
+showMessage("success",msg);
+phoneInput.value="";
+}else{
+showMessage(data?.type||"warning",msg);
 }
-
+}catch(e){
+if(!systemHalted)showMessage("error",t.defaultError);
+}finally{
+if(!systemHalted){
+isRefreshing=false;
+submitBtn.disabled=false;
+submitBtn.classList.remove("loading");
+btnText.textContent=t.btn;
+}
+}
+}
 phoneInput.addEventListener("input",e=>{const n=normalizePhoneNumber(e.target.value);if(e.target.value!==n)e.target.value=n;});
 langBtn.addEventListener("click",()=>{if(!systemHalted){alertBox.style.display="none";applyLanguage(currentLang==="ar"?"he":"ar");}});
 form.addEventListener("submit",e=>{e.preventDefault();executeRefresh(phoneInput.value);});
 submitBtn.addEventListener("click",e=>{e.preventDefault();executeRefresh(phoneInput.value);});
 window.addEventListener("DOMContentLoaded",()=>{
-  const p=new URLSearchParams(window.location.search);
-  applyLanguage(p.get("lang")||currentLang);
-  const num=p.get("number")||p.get("phone");
-  if(num)phoneInput.value=normalizePhoneNumber(num);
-  enforceSecurityBeforeAction();
+const p=new URLSearchParams(window.location.search);
+applyLanguage(p.get("lang")||currentLang);
+const num=p.get("number")||p.get("phone");
+if(num)phoneInput.value=normalizePhoneNumber(num);
+enforceSecurityBeforeAction();
 });
 })();
 </script>
