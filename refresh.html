@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; img-src * data: blob:; style-src * 'unsafe-inline'; font-src * data:; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src *;">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="no-referrer">
+<title>BRAND SIM | تحديث وتنشيط الشرائح</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Rubik:wght@400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Cairo', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  background-color: #04101c;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 14px;
+  overflow-x: hidden;
+  position: relative;
+}
+body[lang="he"] {
+  font-family: 'Rubik', sans-serif;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: linear-gradient(rgba(4, 16, 28, 0.18), rgba(4, 16, 28, 0.35)), url('tower-bg.jpg'), url('1000046718.jpg');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.card {
+  width: 100%;
+  max-width: 460px;
+  border: 2px solid #00e5ff;
+  border-radius: 22px;
+  padding: 28px 20px 22px;
+  background: rgba(4, 18, 31, 0.38);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  box-shadow: 0 0 25px rgba(0, 229, 255, 0.35);
+  text-align: center;
+  position: relative;
+}
+.logo-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  direction: ltr;
+}
+.logo-icon {
+  background: rgba(0, 229, 255, 0.15);
+  border: 1.5px solid #00e5ff;
+  color: #00e5ff;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.35);
+}
+.logo-text {
+  font-size: 2.1rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #fff;
+  text-shadow: 0 0 12px #00e5ff, 0 0 24px #00e5ff;
+}
+.welcome-title {
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: #00e5ff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+}
+.subtitle {
+  font-size: .95rem;
+  color: #e2f4fc;
+  margin-bottom: 22px;
+  line-height: 1.6;
+  font-weight: 700;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
+}
+.form-group {
+  text-align: right;
+  margin-bottom: 18px;
+}
+body[lang="he"] .form-group {
+  text-align: right;
+}
+.form-group label {
+  display: block;
+  font-weight: 800;
+  font-size: .92rem;
+  margin-bottom: 8px;
+  color: #00e5ff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+.form-control {
+  width: 100%;
+  padding: 13px 16px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  border: 1.5px solid rgba(0, 229, 255, 0.45);
+  border-radius: 12px;
+  text-align: center;
+  direction: ltr;
+  color: #fff;
+  background: rgba(4, 21, 35, 0.75);
+  outline: none;
+  transition: .2s;
+}
+.form-control::placeholder {
+  color: rgba(194, 226, 242, 0.5);
+}
+.form-control:focus {
+  border-color: #00e5ff;
+  background: rgba(4, 21, 35, 0.9);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
+}
+.btn-submit {
+  width: 100%;
+  padding: 13px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #001b29;
+  background: linear-gradient(90deg, #00e5ff, #00a8cc);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: .2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 0 15px rgba(0, 229, 255, 0.45);
+}
+.btn-submit:active {
+  transform: scale(0.98);
+}
+.btn-submit:disabled {
+  background: rgba(148, 163, 184, 0.4);
+  color: #cbd5e1;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+.spinner {
+  display: none;
+}
+.btn-submit.loading .spinner {
+  display: inline-block;
+}
+.alert-box {
+  margin-top: 18px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: .92rem;
+  font-weight: 700;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  line-height: 1.6;
+  word-break: break-word;
+  white-space: pre-line;
+  background: rgba(6, 35, 53, 0.88);
+}
+.alert-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+.cooldown-timer-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+  padding: 6px 18px;
+  border-radius: 20px;
+  background: rgba(255, 171, 0, 0.16);
+  border: 1.5px solid rgba(255, 215, 64, 0.65);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 800;
+  direction: ltr;
+  letter-spacing: 2px;
+  box-shadow: 0 0 12px rgba(255, 171, 0, 0.25);
+}
+.cooldown-timer-badge i {
+  color: #ffd740;
+  font-size: .95rem;
+}
+.alert-box.success {
+  display: flex;
+  color: #69f0ae;
+  border: 1.5px solid #00c853;
+  box-shadow: 0 0 12px rgba(0, 200, 83, 0.25);
+}
+.alert-box.warning {
+  display: flex;
+  color: #ffd740;
+  border: 1.5px solid #ffab00;
+  box-shadow: 0 0 12px rgba(255, 171, 0, 0.25);
+}
+.alert-box.error {
+  display: flex;
+  color: #ff5252;
+  border: 1.5px solid #ff1744;
+  box-shadow: 0 0 12px rgba(255, 23, 68, 0.25);
+}
+.footer-bar {
+  margin-top: 24px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(0, 229, 255, 0.25);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.lang-btn {
+  color: #00e5ff;
+  background: rgba(0, 229, 255, 0.1);
+  font-weight: 800;
+  font-size: .85rem;
+  cursor: pointer;
+  padding: 5px 16px;
+  border-radius: 20px;
+  border: 1.5px solid #00e5ff;
+  transition: .2s;
+  user-select: none;
+}
+.lang-btn:hover {
+  background: #00e5ff;
+  color: #001b29;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+}
+.copyright {
+  color: #c2e2f2;
+  font-size: .85rem;
+  font-weight: 700;
+  direction: ltr;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+}
+</style>
+</head>
+<body lang="ar">
+<div class="card">
+  <div class="logo-wrapper">
+    <div class="logo-icon"><i class="fas fa-sim-card"></i></div>
+    <div class="logo-text">BRAND SIM</div>
+  </div>
+  <h2 class="welcome-title" id="ui-welcome">مرحباً بك في براند سيم</h2>
+  <p class="subtitle" id="ui-subtitle">أدخل رقم الهاتف لإجراء تحديث وتنشيط فوري للشريحة</p>
+  <form id="customer-refresh-number-form" novalidate>
+    <div class="form-group">
+      <label for="customerPhone" id="ui-label">📱 رقم الهاتف:</label>
+      <input type="tel" id="customerPhone" class="form-control" placeholder="05XXXXXXXX" maxlength="10" inputmode="numeric" autocomplete="tel" required>
+    </div>
+    <button type="submit" id="customSubmitBtn" class="btn-submit">
+      <span id="ui-btn">تحديث الرقم الآن</span>
+      <i class="fas fa-sync-alt fa-spin spinner"></i>
+    </button>
+  </form>
+  <div id="alertBox" class="alert-box" role="alert"></div>
+  <div class="footer-bar">
+    <button type="button" class="lang-btn" id="langToggleBtn">עברית</button>
+    <span class="copyright">BRAND SIM © <span id="yearSpan">2026</span></span>
+  </div>
+</div>
+
+<script>
+(function() {
+  "use strict";
+  if (window.top !== window.self) {
+    try { window.top.location = window.self.location; } catch (e) {}
+  }
+  document.getElementById("yearSpan").textContent = new Date().getFullYear();
+
+  // رابط Google Apps Script الخاص بك (الإصدار 11)
+  const GATEWAY_API_URL = "https://script.google.com/macros/s/AKfycbxjszGltYTgKw1-D_d4oyp-ZQoNv8PwpVjFSol5iMJ3cm5Yby-NwLUVCx8D5trDsH5V/exec";
+
+  const SKY_COOLDOWN_MS = 3 * 60 * 60 * 1000;
+  const SKY_STORAGE_KEY = "brandsim_sky_cooldowns";
+  const memoryCooldowns = {};
+  let countdownInterval = null;
+  let activeCooldownPhone = null;
+
+  const i18n = Object.freeze({
+    ar: Object.freeze({
+      welcome: "مرحباً بك في براند سيم",
+      subtitle: "أدخل رقم الهاتف لإجراء تحديث وتنشيط فوري للشريحة",
+      label: "📱 رقم الهاتف:",
+      placeholder: "05XXXXXXXX",
+      btn: "تحديث الرقم الآن",
+      loading: "جاري الفحص والتحديث...",
+      switchBtn: "עברית",
+      invalidPhone: "يرجى إدخال رقم هاتف صحيح مكون من 10 أرقام ويبدأ بـ 05",
+      notAuthorized: "عذراً، هذا الرقم غير مسجل في منظومة براند سيم (BRAND SIM) ولا يمكن تحديثه.",
+      skyExpired: "الرقم منتهي اشتراكه، الرجاء التواصل مع المندوب من أجل التجديد",
+      skyCooldownPrefix: "عذراً، لقد قمت بتحديث هذا الرقم مسبقاً.\nالوقت المتبقي لمعاودة التحديث: ",
+      cooldownReady: "انتهت فترة الانتظار! يمكنك تحديث الرقم الآن.",
+      defaultSuccess: "تم إرسال طلب تحديث وتنشيط الرقم بنجاح!",
+      defaultError: "تعذر تحديث الرقم حالياً، يرجى التأكد من الرقم أو المحاولة لاحقاً."
+    }),
+    he: Object.freeze({
+      welcome: "ברוך הבא ל-BRAND SIM",
+      subtitle: "נא להזין מספר טלפון כדי לבצע רענון והפעלה לכרטיס ה-SIM",
+      label: "📱 מספר טלפון:",
+      placeholder: "05XXXXXXXX",
+      btn: "רענון מספר כעת",
+      loading: "בודק ומרענן...",
+      switchBtn: "العربية",
+      invalidPhone: "נא להזין מספר טלפון תקין בן 10 ספרות המתחיל ב-05",
+      notAuthorized: "מספר זה אינו רשום במערכת BRAND SIM ולא ניתן לרענן אותו.",
+      skyExpired: "המנוי של מספר זה פג תוקף, אנא פנה לנציג לצורך חידוש.",
+      skyCooldownPrefix: "מספר זה כבר רוענן לאחרונה.\nהזמן שנותר לרענון חוזר: ",
+      cooldownReady: "זמן ההמתנה הסתיים! ניתן לרענן את המספר כעת.",
+      defaultSuccess: "המספר רוענן בהצלחה!",
+      defaultError: "פעולת הרענון נכשלה, בדוק את המספר או נסה שוב."
+    })
+  });
+
+  let currentLang = "ar";
+  try { if (localStorage.getItem("language") === "he") currentLang = "he"; } catch (e) {}
+  let isRefreshing = false;
+  let lastSubmit = 0;
+
+  const form = document.getElementById("customer-refresh-number-form");
+  const phoneInput = document.getElementById("customerPhone");
+  const submitBtn = document.getElementById("customSubmitBtn");
+  const btnText = document.getElementById("ui-btn");
+  const alertBox = document.getElementById("alertBox");
+  const langBtn = document.getElementById("langToggleBtn");
+
+  function stopCountdownTimer() {
+    if (countdownInterval) {
+      clearInterval(countdownInterval);
+      countdownInterval = null;
+    }
+    activeCooldownPhone = null;
+  }
+
+  function cleanText(s) {
+    return String(s || "")
+      .replace(/Sky\s*Telecom|SkyTelecom|سكاي\s*تيليكوم|سكاي\s*تليكوم/gi, "BRAND SIM")
+      .replace(/[\u0000-\u001F\u007F-\u009F<>]/g, "")
+      .replace(/^[⚠️✅❌⚡⏳\s]+/u, "")
+      .trim()
+      .slice(0, 300);
+  }
+
+  function getCooldownRecords() {
+    let records = Object.assign({}, memoryCooldowns);
+    try {
+      if (window.name && window.name.indexOf("BSIM:") === 0) {
+        Object.assign(records, JSON.parse(window.name.slice(5)));
+      }
+    } catch (e) {}
+    try {
+      const sData = sessionStorage.getItem(SKY_STORAGE_KEY);
+      if (sData) Object.assign(records, JSON.parse(sData));
+    } catch (e) {}
+    try {
+      const lData = localStorage.getItem(SKY_STORAGE_KEY);
+      if (lData) Object.assign(records, JSON.parse(lData));
+    } catch (e) {}
+    return records;
+  }
+
+  function persistCooldownRecords(records) {
+    const now = Date.now();
+    for (const num in records) {
+      if (now - Number(records[num]) >= SKY_COOLDOWN_MS) {
+        delete records[num];
+        delete memoryCooldowns[num];
+      } else {
+        memoryCooldowns[num] = Number(records[num]);
+      }
+    }
+    const json = JSON.stringify(records);
+    try { window.name = "BSIM:" + json; } catch (e) {}
+    try { sessionStorage.setItem(SKY_STORAGE_KEY, json); } catch (e) {}
+    try { localStorage.setItem(SKY_STORAGE_KEY, json); } catch (e) {}
+  }
+
+  function getRemainingCooldownMs(phone) {
+    const records = getCooldownRecords();
+    const startTime = Number(records[phone] || 0);
+    if (!startTime) return 0;
+    const elapsed = Date.now() - startTime;
+    return elapsed < SKY_COOLDOWN_MS ? (SKY_COOLDOWN_MS - elapsed) : 0;
+  }
+
+  function saveSkyCooldown(phone, customRemainingMs) {
+    const now = Date.now();
+    const records = getCooldownRecords();
+    const startTime = (typeof customRemainingMs === "number" && customRemainingMs > 0 && customRemainingMs <= SKY_COOLDOWN_MS)
+      ? (now - (SKY_COOLDOWN_MS - customRemainingMs))
+      : now;
+    records[phone] = startTime;
+    persistCooldownRecords(records);
+  }
+
+  function formatRemainingText(ms, lang) {
+    const totalSec = Math.max(1, Math.ceil(ms / 1000));
+    const hours = Math.floor(totalSec / 3600);
+    const minutes = Math.floor((totalSec % 3600) / 60);
+    const seconds = totalSec % 60;
+
+    if (lang === "he") {
+      const parts = [];
+      if (hours === 1) parts.push("שעה אחת");
+      else if (hours === 2) parts.push("שעתיים");
+      else if (hours > 2) parts.push(hours + " שעות");
+
+      if (minutes === 1) parts.push("דקה אחת");
+      else if (minutes > 1) parts.push(minutes + " דקות");
+
+      if (hours === 0 && seconds > 0) {
+        parts.push(seconds + " שניות");
+      }
+      return parts.join(" ו-") || (seconds + " שניות");
+    }
+
+    const parts = [];
+    if (hours === 1) parts.push("ساعة واحدة");
+    else if (hours === 2) parts.push("ساعتين");
+    else if (hours > 2) parts.push(hours + " ساعات");
+
+    if (minutes === 1) parts.push("دقيقة واحدة");
+    else if (minutes === 2) parts.push("دقيقتين");
+    else if (minutes >= 3 && minutes <= 10) parts.push(minutes + " دقائق");
+    else if (minutes > 10) parts.push(minutes + " دقيقة");
+
+    if (hours === 0 && seconds > 0) {
+      if (seconds === 1) parts.push("ثانية واحدة");
+      else if (seconds === 2) parts.push("ثانيتين");
+      else if (seconds >= 3 && seconds <= 10) parts.push(seconds + " ثوانٍ");
+      else parts.push(seconds + " ثانية");
+    }
+    return parts.join(" و ") || (seconds + " ثانية");
+  }
+
+  function formatDigitalClock(ms) {
+    const totalSec = Math.max(0, Math.ceil(ms / 1000));
+    const h = String(Math.floor(totalSec / 3600)).padStart(2, "0");
+    const m = String(Math.floor((totalSec % 3600) / 60)).padStart(2, "0");
+    const s = String(totalSec % 60).padStart(2, "0");
+    return h + ":" + m + ":" + s;
+  }
+
+  function isSkyNumberResponse(data) {
+    if (!data) return false;
+    if (data.isSky === true || String(data.provider || data.company || data.source || "").toLowerCase().indexOf("sky") !== -1) {
+      return true;
+    }
+    return /سيتم تنشيط الشريحة خلال لحظات|تم إرسال طلب تحديث رقمك إلى النظام|הכרטיס יופעל תוך רגעים|בקשת הרענון נשלחה|Sky\s*Telecom|SkyTelecom|سكاي/i.test(String(data.msg || data.rawMsg || ""));
+  }
+
+  function isCooldownServerResponse(data) {
+    if (!data) return false;
+    if (data.cooldown === true || data.isCooldown === true) return true;
+    const msg = String(data.msg || data.rawMsg || "");
+    return /قمت بتحديث.*مسبق|قمت بتحديث.*قبل|المحاولة.*بعد.*ساع|بعد\s*3\s*ساعات|3\s*שעות|רעננת.*לאחרונה|נסה.*בעוד/i.test(msg);
+  }
+
+  function extractServerRemainingMs(data) {
+    if (!data) return 0;
+    const msFields = [data.remainingMs, data.cooldownMs, data.timeLeftMs, data.waitMs, data.leftMs];
+    for (let i = 0; i < msFields.length; i++) {
+      if (Number(msFields[i]) > 0) return Number(msFields[i]);
+    }
+    const secFields = [data.remainingSeconds, data.retryAfter, data.secondsLeft, data.waitSeconds, data.leftSeconds];
+    for (let i = 0; i < secFields.length; i++) {
+      if (Number(secFields[i]) > 0) return Number(secFields[i]) * 1000;
+    }
+    const minFields = [data.remainingMinutes, data.minutesLeft, data.waitMinutes, data.leftMinutes];
+    for (let i = 0; i < minFields.length; i++) {
+      if (Number(minFields[i]) > 0) return Number(minFields[i]) * 60 * 1000;
+    }
+    const expFields = [data.expiresAt, data.cooldownUntil, data.unlockAt, data.nextAllowedAt];
+    for (let i = 0; i < expFields.length; i++) {
+      if (Number(expFields[i]) > Date.now()) return Number(expFields[i]) - Date.now();
+    }
+    const lastFields = [data.lastRefresh, data.lastUpdated, data.timestamp];
+    for (let i = 0; i < lastFields.length; i++) {
+      if (Number(lastFields[i]) > 0 && (Date.now() - Number(lastFields[i]) < SKY_COOLDOWN_MS)) {
+        return SKY_COOLDOWN_MS - (Date.now() - Number(lastFields[i]));
+      }
+    }
+    const msg = String(data.msg || data.rawMsg || "");
+    const clockMatch = msg.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?/);
+    if (clockMatch) {
+      const h = Number(clockMatch[1] || 0);
+      const m = Number(clockMatch[2] || 0);
+      const s = Number(clockMatch[3] || 0);
+      return ((h * 3600) + (m * 60) + s) * 1000;
+    }
+    const minMatch = msg.match(/(\d+)\s*(?:دقيقة|دقائق|דקות)/);
+    if (minMatch) {
+      let totalMin = Number(minMatch[1]);
+      if (/ساعتين|שעתיים/.test(msg)) totalMin += 120;
+      else if (/ساعة|שעה/.test(msg)) totalMin += 60;
+      return totalMin * 60 * 1000;
+    }
+    return 0;
+  }
+
+  function showMessage(type, text) {
+    stopCountdownTimer();
+    const validType = ["success", "warning", "error"].indexOf(type) !== -1 ? type : "error";
+    alertBox.className = "alert-box " + validType;
+    alertBox.textContent = "";
+
+    const row = document.createElement("div");
+    row.className = "alert-row";
+
+    const icon = document.createElement("i");
+    icon.className = "fas " + (validType === "success" ? "fa-check-circle" : validType === "warning" ? "fa-exclamation-triangle" : "fa-times-circle");
+    const span = document.createElement("span");
+    span.textContent = cleanText(text);
+
+    row.append(icon, span);
+    alertBox.appendChild(row);
+    alertBox.style.display = "flex";
+  }
+
+  function showCooldownMessage(phone) {
+    stopCountdownTimer();
+    activeCooldownPhone = phone;
+
+    const renderTick = function() {
+      const remainingMs = getRemainingCooldownMs(phone);
+      const t = i18n[currentLang];
+
+      if (remainingMs <= 0) {
+        stopCountdownTimer();
+        showMessage("success", t.cooldownReady);
+        return;
+      }
+
+      alertBox.className = "alert-box warning";
+      alertBox.textContent = "";
+
+      const row = document.createElement("div");
+      row.className = "alert-row";
+
+      const icon = document.createElement("i");
+      icon.className = "fas fa-exclamation-triangle";
+
+      const span = document.createElement("span");
+      span.textContent = t.skyCooldownPrefix + formatRemainingText(remainingMs, currentLang);
+
+      row.append(icon, span);
+
+      const badge = document.createElement("div");
+      badge.className = "cooldown-timer-badge";
+      const clockIcon = document.createElement("i");
+      clockIcon.className = "fas fa-hourglass-half";
+      const clockText = document.createElement("span");
+      clockText.textContent = formatDigitalClock(remainingMs);
+      badge.append(clockIcon, clockText);
+
+      alertBox.append(row, badge);
+      alertBox.style.display = "flex";
+    };
+
+    renderTick();
+    countdownInterval = setInterval(renderTick, 1000);
+  }
+
+  function applyLanguage(lang) {
+    currentLang = lang === "he" ? "he" : "ar";
+    try { localStorage.setItem("language", currentLang); } catch (e) {}
+    const t = i18n[currentLang];
+    document.body.setAttribute("lang", currentLang);
+    document.getElementById("ui-welcome").textContent = t.welcome;
+    document.getElementById("ui-subtitle").textContent = t.subtitle;
+    document.getElementById("ui-label").textContent = t.label;
+    phoneInput.placeholder = t.placeholder;
+    btnText.textContent = t.btn;
+    langBtn.textContent = t.switchBtn;
+    if (activeCooldownPhone) {
+      showCooldownMessage(activeCooldownPhone);
+    }
+  }
+
+  function normalizePhoneNumber(rawInput) {
+    if (!rawInput) return "";
+    let str = String(rawInput)
+      .replace(/[٠-٩]/g, function(d) { return "٠١٢٣٤٥٦٧٨٩".indexOf(d); })
+      .replace(/[۰-۹]/g, function(d) { return "۰۱۲۳۴۵۶۷۸۹".indexOf(d); });
+    if (str.indexOf("_") !== -1) str = str.split("_")[0];
+    str = str.replace(/[^0-9]/g, "");
+    if (str.indexOf("00972") === 0 || str.indexOf("00970") === 0) str = "0" + str.slice(5);
+    else if ((str.indexOf("972") === 0 || str.indexOf("970") === 0) && str.length >= 11) str = "0" + str.slice(3);
+    else if (str.length === 9 && str.indexOf("5") === 0) str = "0" + str;
+    else if (str.length > 10 && str.indexOf("05") === 0) str = str.slice(0, 10);
+    return str;
+  }
+
+  async function executeRefresh(rawNumber) {
+    if (isRefreshing) return;
+    const t = i18n[currentLang];
+    const cleanNumber = normalizePhoneNumber(rawNumber);
+    phoneInput.value = cleanNumber;
+
+    if (!/^05\d{8}$/.test(cleanNumber)) {
+      showMessage("warning", t.invalidPhone);
+      return;
+    }
+
+    if (getRemainingCooldownMs(cleanNumber) > 0) {
+      showCooldownMessage(cleanNumber);
+      return;
+    }
+
+    if (Date.now() - lastSubmit < 3000) return;
+
+    isRefreshing = true;
+    lastSubmit = Date.now();
+    submitBtn.disabled = true;
+    submitBtn.classList.add("loading");
+    btnText.textContent = t.loading;
+    stopCountdownTimer();
+    alertBox.style.display = "none";
+
+    try {
+      const res = await fetch(GATEWAY_API_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ phone: cleanNumber, lang: currentLang }),
+        redirect: "follow"
+      });
+      const data = await res.json();
+
+      if (isCooldownServerResponse(data)) {
+        const serverMs = extractServerRemainingMs(data);
+        if (getRemainingCooldownMs(cleanNumber) <= 0) {
+          saveSkyCooldown(cleanNumber, serverMs > 0 ? serverMs : SKY_COOLDOWN_MS);
+        } else if (serverMs > 0) {
+          saveSkyCooldown(cleanNumber, serverMs);
+        }
+        showCooldownMessage(cleanNumber);
+        return;
+      }
+
+      if (isSkyNumberResponse(data) || (data && data.ok)) {
+        saveSkyCooldown(cleanNumber);
+      }
+
+      const rawMsg = (data && data.msg) ? data.msg : ((data && data.ok) ? t.defaultSuccess : t.defaultError);
+      const finalMsg = cleanText(rawMsg);
+      if (data && data.ok) {
+        showMessage("success", finalMsg);
+        phoneInput.value = "";
+      } else {
+        showMessage((data && data.type) ? data.type : "warning", finalMsg);
+      }
+    } catch (e) {
+      showMessage("error", t.defaultError);
+    } finally {
+      isRefreshing = false;
+      submitBtn.disabled = false;
+      submitBtn.classList.remove("loading");
+      btnText.textContent = t.btn;
+    }
+  }
+
+  phoneInput.addEventListener("input", function(e) {
+    const n = normalizePhoneNumber(e.target.value);
+    if (e.target.value !== n) e.target.value = n;
+  });
+
+  langBtn.addEventListener("click", function() {
+    if (!activeCooldownPhone) {
+      alertBox.style.display = "none";
+    }
+    applyLanguage(currentLang === "ar" ? "he" : "ar");
+  });
+
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    executeRefresh(phoneInput.value);
+  });
+
+  window.addEventListener("DOMContentLoaded", function() {
+    const p = new URLSearchParams(window.location.search);
+    applyLanguage(p.get("lang") || currentLang);
+    const num = p.get("number") || p.get("phone");
+    if (num) phoneInput.value = normalizePhoneNumber(num);
+  });
+})();
+</script>
+</body>
+</html>
