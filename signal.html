@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ترتيب الشبكات حسب قوة البرج</title>
+    <style>
+        :root {
+            --bg-color: #f0f7ff;
+            --card-bg: #ffffff;
+            --border-color: #dbeafe;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --primary: #1d4ed8;
+            --badge-5g: #8b5cf6;
+            --badge-4g: #3b82f6;
+            --badge-3g: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 500px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            padding: 20px;
+            border: 2px solid var(--border-color);
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-main);
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .network-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .network-card {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            background: var(--card-bg);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: transform 0.2s;
+        }
+
+        .network-card:hover {
+            border-color: var(--primary);
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .badges {
+            display: flex;
+            gap: 4px;
+        }
+
+        .badge {
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+        .badge.b-5g { background-color: var(--badge-5g); }
+        .badge.b-4g { background-color: var(--badge-4g); }
+        .badge.b-3g { background-color: var(--badge-3g); }
+
+        .network-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rank-number {
+            background: #1e293b;
+            color: #fff;
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: bold;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+            direction: ltr;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 4px;
+            transition: width 1s ease-in-out;
+        }
+
+        .card-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .coverage-text {
+            font-weight: bold;
+            color: var(--text-main);
+        }
+
+        button.btn-locate {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        button.btn-locate:hover {
+            background-color: #153eab;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <button class="btn-locate" onclick="startScan()" id="scanBtn">📍 تحديث قوة الشبكات حسب موقعي</button>
+        
+        <div class="header-title">
+            <span>📶</span> ترتيب الشبكات (من الأقوى للأضعف حسب البرج المتصل):
+        </div>
+
+        <div id="networkList" class="network-list">
+            <div class="loading-state">
+                اضغط على الزر أعلاه لفحص الأبراج الحقيقية في محيطك...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // تعريف الشبكات الأساسية مع إضافة مضاعفات (Penalties) لضمان عدم تطابق النسب المئوية
+        const NETWORKS = [
+            { id: 'pelephone', nameEn: 'Pelephone', nameAr: 'بيليفون', group: 'PELEPHONE', desc: 'برج Pelephone الأساسي', badges: ['5G', '4G', '3G'], penalty: 0 },
+            { id: 'ramilevy', nameEn: 'Rami Levy', nameAr: 'رامي ليفي', group: 'PELEPHONE', desc: 'تعمل على نفس أبراج Pelephone', badges: ['5G', '4G', '3G'], penalty: 1.5 },
+            
+            { id: 'partner', nameEn: 'Partner', nameAr: 'بارتنر / أورانج', group: 'PHI', desc: 'برج Partner الأساسي (PHI)', badges: ['5G', '4G', '3G'], penalty: 0 },
+            { id: 'hot', nameEn: 'HOT Mobile', nameAr: 'هوت موبايل', group: 'PHI', desc: 'تشترك في نفس أبراج Partner', badges: ['5G', '4G', '3G'], penalty: 1 },
+            { id: '019', nameEn: '019 Mobile', nameAr: '٠١٩ موبايل', group: 'PHI', desc: 'تعمل على أبراج Partner', badges: ['5G', '4G', '3G'], penalty: 3 },
+            
+            // مجموعة سيلكوم مع مضاعفاتها
+            { id: 'cellcom', nameEn: 'Cellcom', nameAr: 'سيلكوم', group: 'CELLCOM', desc: 'برج Cellcom الأساسي', badges: ['5G', '4G', '3G'], penalty: 0 },
+            { id: 'golan', nameEn: 'Golan', nameAr: 'جولان', group: 'CELLCOM', desc: 'تعتمد على أبراج Cellcom', badges: ['5G', '4G', '3G'], penalty: 1.5 },
+            { id: 'wecom', nameEn: 'Wecom', nameAr: 'ويكوم', group: 'CELLCOM', desc: 'تشترك في بنية Cellcom', badges: ['5G', '4G', '3G'], penalty: 2.5 },
+            
+            // شبكات التجوال التي تتصل بأقوى برج مع مضاعفات مختلفة
+            { id: 'symphony', nameEn: 'Symphony', nameAr: 'سيمفوني', group: 'ROAMING', desc: 'تجوال: تتصل بأقوى شبكة متاحة', badges: ['5G', '4G', '3G'], penalty: 1 },
+            { id: 'kalam', nameEn: 'Kalam', nameAr: 'شريحة كلام', group: 'ROAMING', desc: 'تجوال: تتصل بأقوى شبكة متاحة', badges: ['5G', '4G', '3G'], penalty: 2 },
+            { id: 'alloha', nameEn: 'Alloha', nameAr: 'ألوها', group: 'ROAMING', desc: 'تجوال: تتصل بأقوى شبكة متاحة', badges: ['5G', '4G', '3G'], penalty: 3 }
+        ];
+
+        let userLat = 31.5469; 
+        let userLon = 34.4951;
+
+        function startScan() {
+            const btn = document.getElementById('scanBtn');
+            btn.innerText = '⏳ جاري تحديد الموقع...';
+            btn.disabled = true;
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (pos) => {
+                        userLat = pos.coords.latitude;
+                        userLon = pos.coords.longitude;
+                        fetchRealTowers();
+                    },
+                    (err) => {
+                        alert('تعذر الوصول للموقع. سيتم الفحص بناءً على الإحداثيات الافتراضية.');
+                        fetchRealTowers();
+                    },
+                    { enableHighAccuracy: true, timeout: 5000 }
+                );
+            } else {
+                fetchRealTowers();
+            }
+        }
+
+        async function fetchRealTowers() {
+            document.getElementById('networkList').innerHTML = '<div class="loading-state">📡 جاري البحث عن الأبراج الحقيقية في محيط 5 كيلومتر...</div>';
+            
+            const radius = 5000;
+            const query = `
+                [out:json][timeout:25];
+                (
+                  node["man_made"~"mast|tower|communications_tower"](around:${radius},${userLat},${userLon});
+                  node["tower:type"="communication"](around:${radius},${userLat},${userLon});
+                  node["telecom"~"antenna|mast|base_station"](around:${radius},${userLat},${userLon});
+                );
+                out center tags;
+            `;
+
+            try {
+                const response = await fetch('https://overpass-api.de/api/interpreter', {
+                    method: 'POST',
+                    body: query
+                });
+                const data = await response.json();
+                
+                let groupDistances = {
+                    PELEPHONE: 5000,
+                    PHI: 5000,
+                    CELLCOM: 5000
+                };
+
+                // حساب المسافات الأساسية
+                data.elements.forEach(el => {
+                    const lat = el.lat || el.center.lat;
+                    const lon = el.lon || el.center.lon;
+                    const dist = calculateDistance(userLat, userLon, lat, lon);
+                    
+                    const tags = el.tags || {};
+                    const operatorRaw = (tags.operator || tags.name || '').toLowerCase();
+
+                    if (operatorRaw.includes('pelephone') || operatorRaw.includes('פלאפון')) {
+                        groupDistances.PELEPHONE = Math.min(groupDistances.PELEPHONE, dist);
+                    } else if (operatorRaw.includes('partner') || operatorRaw.includes('hot') || operatorRaw.includes('phi')) {
+                        groupDistances.PHI = Math.min(groupDistances.PHI, dist);
+                    } else if (operatorRaw.includes('cellcom') || operatorRaw.includes('סלקום') || operatorRaw.includes('golan')) {
+                        groupDistances.CELLCOM = Math.min(groupDistances.CELLCOM, dist);
+                    } else {
+                        // الأبراج العامة تفيد الجميع
+                        groupDistances.PELEPHONE = Math.min(groupDistances.PELEPHONE, dist + 200);
+                        groupDistances.PHI = Math.min(groupDistances.PHI, dist + 200);
+                        groupDistances.CELLCOM = Math.min(groupDistances.CELLCOM, dist + 200);
+                    }
+                });
+
+                calculateAndRenderResults(groupDistances);
+
+            } catch (error) {
+                document.getElementById('networkList').innerHTML = '<div class="loading-state" style="color:red;">⚠️ حدث خطأ في الاتصال بقاعدة بيانات الأبراج. تأكد من اتصال الإنترنت.</div>';
+            } finally {
+                const btn = document.getElementById('scanBtn');
+                btn.innerText = '📍 تحديث قوة الشبكات حسب موقعي';
+                btn.disabled = false;
+            }
+        }
+
+        function calculateAndRenderResults(distances) {
+            // شبكات التجوال (سيمفوني، ألوها، كلام) تأخذ أقوى برج متاح في المنطقة
+            const bestRoamingDist = Math.min(distances.PELEPHONE, distances.PHI, distances.CELLCOM);
+            distances.ROAMING = bestRoamingDist;
+
+            let results = NETWORKS.map(network => {
+                let baseDistance = distances[network.group];
+                
+                // تحويل المسافة إلى نسبة (100% تعني أن البرج بجانبك تماماً)
+                let rawPercentage = 100 - (baseDistance / 5000) * 100;
+                
+                // تطبيق المضاعف (الخصم) لكسر التطابق بين الشبكات التي تعمل على نفس البرج
+                let finalPercentage = rawPercentage - network.penalty;
+                
+                // التأكد من أن التغطية ضمن المنطق (لا تتجاوز 99%)
+                finalPercentage = Math.round(Math.max(5, Math.min(99, finalPercentage)));
+
+                return {
+                    ...network,
+                    coverage: finalPercentage
+                };
+            });
+
+            // الترتيب من الأقوى للأضعف
+            results.sort((a, b) => b.coverage - a.coverage);
+
+            renderUI(results);
+        }
+
+        function renderUI(results) {
+            const list = document.getElementById('networkList');
+            list.innerHTML = '';
+
+            results.forEach((net, index) => {
+                const badgesHtml = net.badges.map(b => `<span class="badge b-${b.toLowerCase()}">${b}</span>`).join('');
+                
+                const card = document.createElement('div');
+                card.className = 'network-card';
+                card.innerHTML = `
+                    <div class="card-top">
+                        <div class="badges">
+                            ${badgesHtml}
+                        </div>
+                        <div class="network-name">
+                            ${net.nameEn} (${net.nameAr}) <span class="rank-number">#${index + 1}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width: 0%" data-target="${net.coverage}%"></div>
+                    </div>
+
+                    <div class="card-bottom">
+                        <span class="coverage-text">قوة التغطية ${net.coverage}%</span>
+                        <span>${net.desc}</span>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+
+            setTimeout(() => {
+                document.querySelectorAll('.progress-bar').forEach(bar => {
+                    bar.style.width = bar.getAttribute('data-target');
+                });
+            }, 100);
+        }
+
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371e3;
+            const p1 = lat1 * Math.PI / 180;
+            const p2 = lat2 * Math.PI / 180;
+            const dp = (lat2 - lat1) * Math.PI / 180;
+            const dl = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dp/2) * Math.sin(dp/2) + Math.cos(p1) * Math.cos(p2) * Math.sin(dl/2) * Math.sin(dl/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        startScan();
+    </script>
+</body>
+</html>
