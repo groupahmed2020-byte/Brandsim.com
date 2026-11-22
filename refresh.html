@@ -8,7 +8,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="format-detection" content="telephone=no">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; img-src 'self' data: blob: https: file: content:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline'; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://*.googleusercontent.com https://*.google.com https://incredible-crumble-58566c.netlify.app; base-uri 'self'; form-action 'self';">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="no-referrer">
 <title>BRAND SIM | تحديث وتنشيط الشرائح</title>
@@ -170,16 +169,6 @@ body::before {
   background: rgba(4, 21, 35, 0.95);
   box-shadow: 0 0 12px rgba(0, 229, 255, 0.4);
 }
-.hp-trap {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  width: 0 !important;
-  height: 0 !important;
-  top: 0 !important;
-  left: 0 !important;
-  pointer-events: none !important;
-}
 .btn-submit {
   width: 100%;
   min-height: 52px;
@@ -298,20 +287,6 @@ body::before {
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
   white-space: nowrap;
 }
-@media (max-width: 360px) {
-  .card {
-    padding: 20px 14px 16px;
-    border-radius: 18px;
-  }
-  .form-control {
-    font-size: 1.12rem;
-    min-height: 48px;
-  }
-  .btn-submit {
-    font-size: 0.98rem;
-    min-height: 48px;
-  }
-}
 </style>
 </head>
 <body lang="ar">
@@ -338,7 +313,6 @@ body::before {
         dir="ltr"
         required
       >
-      <input type="text" id="websiteUrlTrap" name="b_hp_trap" class="hp-trap" tabindex="-1" autocomplete="new-password" aria-hidden="true">
     </div>
     <button type="submit" id="customSubmitBtn" class="btn-submit">
       <span id="ui-btn">تحديث الرقم الآن</span>
@@ -355,17 +329,7 @@ body::before {
 <script>
 (function() {
   "use strict";
-  if (window.top !== window.self) {
-    try { window.top.location = window.self.location; } catch (e) {}
-  }
-  window.scrollTo(0, 0);
   document.getElementById("yearSpan").textContent = new Date().getFullYear();
-
-  try {
-    localStorage.removeItem("brandsim_refresh_cooldowns");
-    sessionStorage.removeItem("brandsim_refresh_cooldowns");
-    if (window.name && window.name.indexOf("BSIM:") === 0) window.name = "";
-  } catch (e) {}
 
   const GATEWAY_API_URL = "https://script.google.com/macros/s/AKfycbxpvDw2RXxnPflfrPHIgki51Qovtk9BS7p30tK8aoBIUXD6Hqs6SDsnxMYMX9AJo6OP/exec";
   const CUSTOMERS_DB_URLS = [
@@ -373,8 +337,8 @@ body::before {
     "customers.json"
   ];
 
-  const i18n = Object.freeze({
-    ar: Object.freeze({
+  const i18n = {
+    ar: {
       welcome: "مرحباً بك في براند سيم",
       subtitle: "أدخل رقم الهاتف لإجراء تحديث وتنشيط فوري للشريحة",
       label: "📱 رقم الهاتف:",
@@ -384,9 +348,9 @@ body::before {
       switchBtn: "עברית",
       invalidPhone: "يرجى إدخال رقم هاتف صحيح مكون من 10 أرقام ويبدأ بـ 05",
       defaultSuccess: "تم إرسال طلب تحديث وتنشيط الرقم بنجاح!",
-      defaultError: "تعذر تحديث الرقم حالياً، يرجى التأكد من الرقم أو المحاولة لاحقاً."
-    }),
-    he: Object.freeze({
+      defaultError: "تعذر الاتصال بالخادم، يرجى المحاولة مرة أخرى."
+    },
+    he: {
       welcome: "ברוך הבא ל-BRAND SIM",
       subtitle: "נא להזין מספר טלפון כדי לבצע רענון והפעלה לכרטיס ה-SIM",
       label: "📱 מספר טלפון:",
@@ -396,9 +360,9 @@ body::before {
       switchBtn: "العربية",
       invalidPhone: "נא להזין מספר טלפון תקין בן 10 ספרות המתחיל ב-05",
       defaultSuccess: "המספר רוענן בהצלחה!",
-      defaultError: "פעולת הרענון נכשלה, בדוק את המספר أو נסה שוב."
-    })
-  });
+      defaultError: "שגיאת תקשורת, נסה שוב."
+    }
+  };
 
   let currentLang = "ar";
   try { if (localStorage.getItem("language") === "he") currentLang = "he"; } catch (e) {}
@@ -406,7 +370,6 @@ body::before {
 
   const form = document.getElementById("customer-refresh-number-form");
   const phoneInput = document.getElementById("customerPhone");
-  const hpInput = document.getElementById("websiteUrlTrap");
   const submitBtn = document.getElementById("customSubmitBtn");
   const btnText = document.getElementById("ui-btn");
   const alertBox = document.getElementById("alertBox");
@@ -414,10 +377,10 @@ body::before {
 
   function cleanText(s) {
     return String(s || "")
-      .replace(/[ --<>]/g, "")
+      .replace(/[\u0000-\u001F\u007F-\u009F<>]/g, "")
       .replace(/^[⚠️✅❌⚡⏳\s]+/u, "")
       .trim()
-      .slice(0, 300);
+      .slice(0, 350);
   }
 
   function showMessage(type, text) {
@@ -485,11 +448,8 @@ body::before {
     return "";
   }
 
-  async function executeRefresh(rawNumber, isUserEvent) {
+  async function executeRefresh(rawNumber) {
     if (isRefreshing) return;
-    const trapVal = (hpInput && !isUserEvent) ? hpInput.value : "";
-    if (trapVal) return;
-
     const t = i18n[currentLang];
     const cleanNumber = normalizePhoneNumber(rawNumber);
     phoneInput.value = cleanNumber;
@@ -515,9 +475,7 @@ body::before {
         body: JSON.stringify({
           phone: cleanNumber,
           provider: detectedProvider,
-          lang: currentLang,
-          hp: trapVal,
-          ts: Date.now()
+          lang: currentLang
         }),
         redirect: "follow"
       });
@@ -563,11 +521,17 @@ body::before {
 
   form.addEventListener("submit", function(e) {
     e.preventDefault();
-    executeRefresh(phoneInput.value, Boolean(e && e.isTrusted));
+    executeRefresh(phoneInput.value);
+  });
+
+  submitBtn.addEventListener("click", function(e) {
+    if (e.target === submitBtn || submitBtn.contains(e.target)) {
+      e.preventDefault();
+      executeRefresh(phoneInput.value);
+    }
   });
 
   window.addEventListener("DOMContentLoaded", function() {
-    window.scrollTo(0, 0);
     const p = new URLSearchParams(window.location.search);
     applyLanguage(p.get("lang") || currentLang);
     const num = p.get("number") || p.get("phone");
