@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="format-detection" content="telephone=no">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; img-src 'self' data: blob: https: file: content:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline'; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://*.googleusercontent.com https://*.google.com; base-uri 'self'; form-action 'self';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; img-src 'self' data: blob: https: file: content:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com; script-src 'self' 'unsafe-inline'; connect-src 'self' https://script.google.com https://script.googleusercontent.com https://*.googleusercontent.com https://*.google.com https://incredible-crumble-58566c.netlify.app; base-uri 'self'; form-action 'self';">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="no-referrer">
 <title>BRAND SIM | تحديث وتنشيط الشرائح</title>
@@ -244,27 +244,6 @@ body::before {
   gap: 10px;
   width: 100%;
 }
-.cooldown-timer-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 4px;
-  padding: 6px 18px;
-  border-radius: 20px;
-  background: rgba(255, 171, 0, 0.16);
-  border: 1.5px solid rgba(255, 215, 64, 0.65);
-  color: #fff;
-  font-size: 1.05rem;
-  font-weight: 800;
-  direction: ltr;
-  letter-spacing: 2px;
-  box-shadow: 0 0 12px rgba(255, 171, 0, 0.25);
-}
-.cooldown-timer-badge i {
-  color: #ffd740;
-  font-size: 0.95rem;
-}
 .alert-box.success {
   display: flex;
   color: #69f0ae;
@@ -382,14 +361,17 @@ body::before {
   window.scrollTo(0, 0);
   document.getElementById("yearSpan").textContent = new Date().getFullYear();
 
-  // رابط بوابة BRAND SIM (النسخة المحدثة Version 12)
-  const GATEWAY_API_URL = "https://script.google.com/macros/s/AKfycbxpvDw2RXxnPflfrPHIgki51Qovtk9BS7p30tK8aoBIUXD6Hqs6SDsnxMYMX9AJo6OP/exec";
+  try {
+    localStorage.removeItem("brandsim_refresh_cooldowns");
+    sessionStorage.removeItem("brandsim_refresh_cooldowns");
+    if (window.name && window.name.indexOf("BSIM:") === 0) window.name = "";
+  } catch (e) {}
 
-  const COOLDOWN_MS = 3 * 60 * 60 * 1000;
-  const STORAGE_KEY = "brandsim_refresh_cooldowns";
-  const memoryCooldowns = {};
-  let countdownInterval = null;
-  let activeCooldownPhone = null;
+  const GATEWAY_API_URL = "https://script.google.com/macros/s/AKfycbxpvDw2RXxnPflfrPHIgki51Qovtk9BS7p30tK8aoBIUXD6Hqs6SDsnxMYMX9AJo6OP/exec";
+  const CUSTOMERS_DB_URLS = [
+    "https://incredible-crumble-58566c.netlify.app/customers.json",
+    "customers.json"
+  ];
 
   const i18n = Object.freeze({
     ar: Object.freeze({
@@ -401,10 +383,6 @@ body::before {
       loading: "جاري الفحص والتحديث...",
       switchBtn: "עברית",
       invalidPhone: "يرجى إدخال رقم هاتف صحيح مكون من 10 أرقام ويبدأ بـ 05",
-      notAuthorized: "عذراً، هذا الرقم غير مسجل في منظومة براند سيم (BRAND SIM) ولا يمكن تحديثه.",
-      expiredSub: "الرقم منتهي اشتراكه، الرجاء التواصل مع المندوب من أجل التجديد",
-      cooldownPrefix: "عذراً، لقد قمت بتحديث هذا الرقم مسبقاً.\nالوقت المتبقي لمعاودة التحديث: ",
-      cooldownReady: "انتهت فترة الانتظار! يمكنك تحديث الرقم الآن.",
       defaultSuccess: "تم إرسال طلب تحديث وتنشيط الرقم بنجاح!",
       defaultError: "تعذر تحديث الرقم حالياً، يرجى التأكد من الرقم أو المحاولة لاحقاً."
     }),
@@ -417,19 +395,14 @@ body::before {
       loading: "בודק ומרענן...",
       switchBtn: "العربية",
       invalidPhone: "נא להזין מספר טלפון תקין בן 10 ספרות המתחיל ב-05",
-      notAuthorized: "מספר זה אינו רשום במערכת BRAND SIM ולא ניתן לרענן אותו.",
-      expiredSub: "המנוי של מספר זה פג תוקף, אנא פנה לנציג לצורך חידוש.",
-      cooldownPrefix: "מספר זה כבר רוענן לאחרונה.\nהזמן שנותר לרענון חוזר: ",
-      cooldownReady: "זמן ההמתנה הסתיים! ניתן לרענן את המספר כעת.",
       defaultSuccess: "המספר רוענן בהצלחה!",
-      defaultError: "פעולת הרענון נכשלה, בדוק את המספר أو נסה شوب."
+      defaultError: "פעולת הרענון נכשלה, בדוק את המספר أو נסה שוב."
     })
   });
 
   let currentLang = "ar";
   try { if (localStorage.getItem("language") === "he") currentLang = "he"; } catch (e) {}
   let isRefreshing = false;
-  let lastSubmit = 0;
 
   const form = document.getElementById("customer-refresh-number-form");
   const phoneInput = document.getElementById("customerPhone");
@@ -439,173 +412,15 @@ body::before {
   const alertBox = document.getElementById("alertBox");
   const langBtn = document.getElementById("langToggleBtn");
 
-  function stopCountdownTimer() {
-    if (countdownInterval) {
-      clearInterval(countdownInterval);
-      countdownInterval = null;
-    }
-    activeCooldownPhone = null;
-  }
-
   function cleanText(s) {
     return String(s || "")
-      .replace(/[\u0000-\u001F\u007F-\u009F<>]/g, "")
+      .replace(/[ --<>]/g, "")
       .replace(/^[⚠️✅❌⚡⏳\s]+/u, "")
       .trim()
       .slice(0, 300);
   }
 
-  function getCooldownRecords() {
-    let records = Object.assign({}, memoryCooldowns);
-    try {
-      if (window.name && window.name.indexOf("BSIM:") === 0) {
-        Object.assign(records, JSON.parse(window.name.slice(5)));
-      }
-    } catch (e) {}
-    try {
-      const sData = sessionStorage.getItem(STORAGE_KEY);
-      if (sData) Object.assign(records, JSON.parse(sData));
-    } catch (e) {}
-    try {
-      const lData = localStorage.getItem(STORAGE_KEY);
-      if (lData) Object.assign(records, JSON.parse(lData));
-    } catch (e) {}
-    return records;
-  }
-
-  function persistCooldownRecords(records) {
-    const now = Date.now();
-    for (const num in records) {
-      if (now - Number(records[num]) >= COOLDOWN_MS) {
-        delete records[num];
-        delete memoryCooldowns[num];
-      } else {
-        memoryCooldowns[num] = Number(records[num]);
-      }
-    }
-    const json = JSON.stringify(records);
-    try { window.name = "BSIM:" + json; } catch (e) {}
-    try { sessionStorage.setItem(STORAGE_KEY, json); } catch (e) {}
-    try { localStorage.setItem(STORAGE_KEY, json); } catch (e) {}
-  }
-
-  function getRemainingCooldownMs(phone) {
-    const records = getCooldownRecords();
-    const startTime = Number(records[phone] || 0);
-    if (!startTime) return 0;
-    const elapsed = Date.now() - startTime;
-    return elapsed < COOLDOWN_MS ? (COOLDOWN_MS - elapsed) : 0;
-  }
-
-  function saveCooldown(phone, customRemainingMs) {
-    const now = Date.now();
-    const records = getCooldownRecords();
-    const startTime = (typeof customRemainingMs === "number" && customRemainingMs > 0 && customRemainingMs <= COOLDOWN_MS)
-      ? (now - (COOLDOWN_MS - customRemainingMs))
-      : now;
-    records[phone] = startTime;
-    persistCooldownRecords(records);
-  }
-
-  function formatRemainingText(ms, lang) {
-    const totalSec = Math.max(1, Math.ceil(ms / 1000));
-    const hours = Math.floor(totalSec / 3600);
-    const minutes = Math.floor((totalSec % 3600) / 60);
-    const seconds = totalSec % 60;
-
-    if (lang === "he") {
-      const parts = [];
-      if (hours === 1) parts.push("שעה אחת");
-      else if (hours === 2) parts.push("שעתיים");
-      else if (hours > 2) parts.push(hours + " שעות");
-
-      if (minutes === 1) parts.push("דקה אחת");
-      else if (minutes > 1) parts.push(minutes + " דקות");
-
-      if (hours === 0 && seconds > 0) {
-        parts.push(seconds + " שניות");
-      }
-      return parts.join(" و-") || (seconds + " שניות");
-    }
-
-    const parts = [];
-    if (hours === 1) parts.push("ساعة واحدة");
-    else if (hours === 2) parts.push("ساعتين");
-    else if (hours > 2) parts.push(hours + " ساعات");
-
-    if (minutes === 1) parts.push("دقيقة واحدة");
-    else if (minutes === 2) parts.push("دقيقتين");
-    else if (minutes >= 3 && minutes <= 10) parts.push(minutes + " دقائق");
-    else if (minutes > 10) parts.push(minutes + " دقيقة");
-
-    if (hours === 0 && seconds > 0) {
-      if (seconds === 1) parts.push("ثانية واحدة");
-      else if (seconds === 2) parts.push("ثانيتين");
-      else if (seconds >= 3 && seconds <= 10) parts.push(seconds + " ثوانٍ");
-      else parts.push(seconds + " ثانية");
-    }
-    return parts.join(" و ") || (seconds + " ثانية");
-  }
-
-  function formatDigitalClock(ms) {
-    const totalSec = Math.max(0, Math.ceil(ms / 1000));
-    const h = String(Math.floor(totalSec / 3600)).padStart(2, "0");
-    const m = String(Math.floor((totalSec % 3600) / 60)).padStart(2, "0");
-    const s = String(totalSec % 60).padStart(2, "0");
-    return h + ":" + m + ":" + s;
-  }
-
-  function isCooldownServerResponse(data) {
-    if (!data) return false;
-    if (data.cooldown === true || data.isCooldown === true) return true;
-    const msg = String(data.msg || data.rawMsg || "");
-    return /قمت بتحديث.*مسبق|قمت بتحديث.*قبل|المحاولة.*بعد.*ساع|بعد\s*3\s*ساعات|لتكرار الطلب|3\s*שעות|רעננת.*לאחרונה|נסה.*בעוד/i.test(msg);
-  }
-
-  function extractServerRemainingMs(data) {
-    if (!data) return 0;
-    const msFields = [data.remainingMs, data.cooldownMs, data.timeLeftMs, data.waitMs, data.leftMs];
-    for (let i = 0; i < msFields.length; i++) {
-      if (Number(msFields[i]) > 0) return Number(msFields[i]);
-    }
-    const secFields = [data.remainingSeconds, data.retryAfter, data.secondsLeft, data.waitSeconds, data.leftSeconds];
-    for (let i = 0; i < secFields.length; i++) {
-      if (Number(secFields[i]) > 0) return Number(secFields[i]) * 1000;
-    }
-    const minFields = [data.remainingMinutes, data.minutesLeft, data.waitMinutes, data.leftMinutes];
-    for (let i = 0; i < minFields.length; i++) {
-      if (Number(minFields[i]) > 0) return Number(minFields[i]) * 60 * 1000;
-    }
-    const expFields = [data.expiresAt, data.cooldownUntil, data.unlockAt, data.nextAllowedAt];
-    for (let i = 0; i < expFields.length; i++) {
-      if (Number(expFields[i]) > Date.now()) return Number(expFields[i]) - Date.now();
-    }
-    const lastFields = [data.lastRefresh, data.lastUpdated, data.timestamp];
-    for (let i = 0; i < lastFields.length; i++) {
-      if (Number(lastFields[i]) > 0 && (Date.now() - Number(lastFields[i]) < COOLDOWN_MS)) {
-        return COOLDOWN_MS - (Date.now() - Number(lastFields[i]));
-      }
-    }
-    const msg = String(data.msg || data.rawMsg || "");
-    const clockMatch = msg.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?/);
-    if (clockMatch) {
-      const h = Number(clockMatch[1] || 0);
-      const m = Number(clockMatch[2] || 0);
-      const s = Number(clockMatch[3] || 0);
-      return ((h * 3600) + (m * 60) + s) * 1000;
-    }
-    const minMatch = msg.match(/(\d+)\s*(?:دقيقة|دقائق|דקות)/);
-    if (minMatch) {
-      let totalMin = Number(minMatch[1]);
-      if (/ساعتين|שעתיים/.test(msg)) totalMin += 120;
-      else if (/ساعة|שעה/.test(msg)) totalMin += 60;
-      return totalMin * 60 * 1000;
-    }
-    return 0;
-  }
-
   function showMessage(type, text) {
-    stopCountdownTimer();
     const validType = ["success", "warning", "error"].indexOf(type) !== -1 ? type : "error";
     alertBox.className = "alert-box " + validType;
     alertBox.textContent = "";
@@ -623,50 +438,6 @@ body::before {
     alertBox.style.display = "flex";
   }
 
-  function showCooldownMessage(phone) {
-    stopCountdownTimer();
-    activeCooldownPhone = phone;
-
-    const renderTick = function() {
-      const remainingMs = getRemainingCooldownMs(phone);
-      const t = i18n[currentLang];
-
-      if (remainingMs <= 0) {
-        stopCountdownTimer();
-        showMessage("success", t.cooldownReady);
-        return;
-      }
-
-      alertBox.className = "alert-box warning";
-      alertBox.textContent = "";
-
-      const row = document.createElement("div");
-      row.className = "alert-row";
-
-      const icon = document.createElement("i");
-      icon.className = "fas fa-exclamation-triangle";
-
-      const span = document.createElement("span");
-      span.textContent = t.cooldownPrefix + formatRemainingText(remainingMs, currentLang);
-
-      row.append(icon, span);
-
-      const badge = document.createElement("div");
-      badge.className = "cooldown-timer-badge";
-      const clockIcon = document.createElement("i");
-      clockIcon.className = "fas fa-hourglass-half";
-      const clockText = document.createElement("span");
-      clockText.textContent = formatDigitalClock(remainingMs);
-      badge.append(clockIcon, clockText);
-
-      alertBox.append(row, badge);
-      alertBox.style.display = "flex";
-    };
-
-    renderTick();
-    countdownInterval = setInterval(renderTick, 1000);
-  }
-
   function applyLanguage(lang) {
     currentLang = lang === "he" ? "he" : "ar";
     try { localStorage.setItem("language", currentLang); } catch (e) {}
@@ -678,9 +449,6 @@ body::before {
     phoneInput.placeholder = t.placeholder;
     btnText.textContent = t.btn;
     langBtn.textContent = t.switchBtn;
-    if (activeCooldownPhone) {
-      showCooldownMessage(activeCooldownPhone);
-    }
   }
 
   function normalizePhoneNumber(rawInput) {
@@ -695,6 +463,26 @@ body::before {
     else if (str.length === 9 && str.indexOf("5") === 0) str = "0" + str;
     if (str.length > 10 && str.indexOf("05") === 0) str = str.slice(0, 10);
     return str;
+  }
+
+  async function lookupCustomerProvider(phone) {
+    for (let u = 0; u < CUSTOMERS_DB_URLS.length; u++) {
+      try {
+        const res = await fetch(CUSTOMERS_DB_URLS[u] + "?t=" + Date.now(), { cache: "no-store" });
+        if (!res.ok) continue;
+        const parsed = await res.json();
+        const list = Array.isArray(parsed) ? parsed : (parsed.customers || parsed.data || []);
+        if (Array.isArray(list)) {
+          for (let i = 0; i < list.length; i++) {
+            const item = list[i];
+            if (normalizePhoneNumber(item.simPhone || item.phone || item.number || "") === phone) {
+              return item.source || item.subCompany || item.provider || "";
+            }
+          }
+        }
+      } catch (e) {}
+    }
+    return "";
   }
 
   async function executeRefresh(rawNumber, isUserEvent) {
@@ -713,27 +501,20 @@ body::before {
 
     try { phoneInput.blur(); } catch (e) {}
 
-    if (getRemainingCooldownMs(cleanNumber) > 0) {
-      showCooldownMessage(cleanNumber);
-      return;
-    }
-
-    if (Date.now() - lastSubmit < 3000) return;
-
     isRefreshing = true;
-    lastSubmit = Date.now();
     submitBtn.disabled = true;
     submitBtn.classList.add("loading");
     btnText.textContent = t.loading;
-    stopCountdownTimer();
     alertBox.style.display = "none";
 
     try {
+      const detectedProvider = await lookupCustomerProvider(cleanNumber);
       const res = await fetch(GATEWAY_API_URL, {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify({
           phone: cleanNumber,
+          provider: detectedProvider,
           lang: currentLang,
           hp: trapVal,
           ts: Date.now()
@@ -741,21 +522,6 @@ body::before {
         redirect: "follow"
       });
       const data = await res.json();
-
-      if (isCooldownServerResponse(data)) {
-        const serverMs = extractServerRemainingMs(data);
-        if (getRemainingCooldownMs(cleanNumber) <= 0) {
-          saveCooldown(cleanNumber, serverMs > 0 ? serverMs : COOLDOWN_MS);
-        } else if (serverMs > 0) {
-          saveCooldown(cleanNumber, serverMs);
-        }
-        showCooldownMessage(cleanNumber);
-        return;
-      }
-
-      if (data && data.ok) {
-        saveCooldown(cleanNumber, Number(data.cooldownMs) > 0 ? Number(data.cooldownMs) : COOLDOWN_MS);
-      }
 
       const rawMsg = (data && data.msg) ? data.msg : ((data && data.ok) ? t.defaultSuccess : t.defaultError);
       const finalMsg = cleanText(rawMsg);
@@ -791,9 +557,7 @@ body::before {
   });
 
   langBtn.addEventListener("click", function() {
-    if (!activeCooldownPhone) {
-      alertBox.style.display = "none";
-    }
+    alertBox.style.display = "none";
     applyLanguage(currentLang === "ar" ? "he" : "ar");
   });
 
